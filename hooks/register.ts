@@ -48,15 +48,14 @@ export const register: Register = on => {
     await $.command.register({
       name: COMMAND,
       description: 'Design, check or export with Elyx: say what you want. Give an .elyx file to browse it, with --app in the Elyx app',
-      argumentHint: '<what to do> | [--app] <file.elyx>',
+      argumentHint: '[what to do] | [--app] <file.elyx>',
     })
 
     return next(e)
   })
 
   on('command.run', { command: COMMAND }, async ($, e) => {
-    const args = e.args.trim()
-    if (!args) return { text: `Usage: /${COMMAND} <what to do>, or /${COMMAND} [--app] <file.elyx>` }
+    const args = e.args.trim() || 'Ask the person what they want to design, then design it.'
 
     const [, flag, quoted] = args.match(OPEN) ?? []
     if (!quoted) {

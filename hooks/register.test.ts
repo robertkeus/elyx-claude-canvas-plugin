@@ -8,14 +8,22 @@ const run = (args: string) =>
     presentation: { isFullscreen: false, columns: 80 },
   }) as const
 
-test('nothing typed answers with the usage', async ($, on) => {
+test('nothing typed has Claude ask what to design', async ($, on) => {
+  const clock = mock.clock(on)
+  const sent: string[] = []
   on('command.register', () => ({ value: { command: 'elyx' } }))
   on('session.start', (_, e) => ({ cwd: e.cwd }))
+  on('prompt.submit', (_, e) => {
+    sent.push(e.text)
+    return { text: e.text }
+  })
   await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
 
-  const { text } = await $.command.run(run(''))
+  await $.command.run(run(''))
+  await clock.advance(0)
 
-  expect(text).toBe('Usage: /elyx <what to do>, or /elyx [--app] <file.elyx>')
+  expect(sent).toHaveLength(1)
+  expect(sent[0]).toStartWith('Do this with Elyx: Ask the person what they want to design')
 })
 
 test('a request goes to Claude, even one that ends in a file name', async ($, on) => {
