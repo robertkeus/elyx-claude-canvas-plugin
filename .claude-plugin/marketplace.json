@@ -1,0 +1,5 @@
+{
+  "name": "elyx",
+  "owner": { "name": "Robert Keus" },
+  "plugins": [{ "name": "elyx-canvas", "source": "./" }]
+}
