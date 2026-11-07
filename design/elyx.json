@@ -1,0 +1,4 @@
+{
+  "assets": { "include": ["sample/images", "icons"] },
+  "canvasColor": { "file": "tokens/colors.elyx", "token": "colors.stage" }
+}

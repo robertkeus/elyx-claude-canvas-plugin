@@ -1,0 +1,8 @@
+import "readme/app.elyx" as App
+
+// The app window from the README, as a full screen.
+export layerSelected = frame : App.appWindow {
+  title: "Layer selected",
+  caption: "Click anything, however small. The quick-edit bar opens right there, and the rail holds the rest.",
+  corner-radius: 0px
+}

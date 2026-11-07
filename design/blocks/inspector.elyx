@@ -1,0 +1,705 @@
+import "icons/pointer.svg" as pointerIcon
+import "icons/braces.svg" as codeIcon
+import "icons/file.svg" as fileIcon
+import "icons/grid.svg" as gridIcon
+import "icons/arrow-right.svg" as arrowIcon
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "tokens/spacing.elyx" as Spacing
+import "components/controls.elyx" as Controls
+import "components/panel.elyx" as Panel
+import "components/type.elyx" as Text
+
+// The right rail. Insert sections into `body`.
+export rail = frame {
+  left: 0px,
+  top: 0px,
+  width: Spacing.size.inspector,
+  height: 100%,
+  fill: Colors.colors.surface,
+  border: {color: Colors.colors.line, width: 1px, sides: .left},
+  layout: {direction: .column},
+  children: [tabs, body],
+
+  tabs = frame {
+    width: 100%,
+    height: Spacing.size.top-bar,
+    layout: {direction: .row, justify-content: .end, align-items: .center, item-gap: 4px},
+    padding: [0px, 10px],
+    children: [layer, source, file],
+
+    layer = frame : Controls.iconButtonActive {
+      glyph {
+        contents: pointerIcon
+      }
+    }
+
+    source = frame : Controls.iconButtonSoft {
+      glyph {
+        contents: codeIcon
+      }
+    }
+
+    file = frame : Controls.iconButtonSoft {
+      glyph {
+        contents: fileIcon
+      }
+    }
+  }
+
+  body = frame {
+    width: 100%,
+    layout: {direction: .column, item-gap: 20px},
+    padding: [6px, 16px],
+    slot: .true
+  }
+}
+
+// A titled group in the rail.
+export section = frame {
+  left: 320px,
+  top: 0px,
+  width: 100%,
+  layout: {direction: .column, item-gap: 6px},
+  children: [head],
+
+  head = frame {
+    width: 100%,
+    height: 22px,
+    layout: {direction: .row, align-items: .center, item-gap: 6px},
+    children: [name, spacer],
+
+    name = text : Text.label {
+      contents: "Section"
+    }
+
+    spacer = frame {}
+  }
+}
+
+// What the rail shows when nothing is selected: the open file.
+export fileRail = frame : rail {
+  left: 640px,
+  top: 0px,
+
+  body {
+    overrides: [insert(file, after = .nil), insert(context, after = file), insert(canvas, after = context), insert(library, after = canvas)]
+  }
+
+  file = frame : section {
+    overrides: [insert(name, after = section.head), insert(place, after = name), insert(modified, after = place)],
+
+    head {
+      name {
+        contents: "File"
+      }
+    }
+
+    name = frame : Panel.chipPair {
+      key {
+        contents: "Name"
+      }
+
+      value {
+        label {
+          contents: "index.elyx"
+        }
+      }
+    }
+
+    place = frame : Panel.pair {
+      key {
+        contents: "Path"
+      }
+
+      value {
+        contents: "design/index.elyx"
+      }
+    }
+
+    modified = frame : Panel.pair {
+      key {
+        contents: "Last modified"
+      }
+
+      value {
+        contents: "7 Nov 2026, 06:40"
+      }
+    }
+  }
+
+  context = frame : section {
+    overrides: [insert(theme, after = section.head), insert(surface, after = theme)],
+
+    head {
+      name {
+        contents: "Context"
+      }
+    }
+
+    theme = frame : Panel.chipPair {
+      key {
+        contents: "theme"
+      }
+    }
+
+    surface = frame : Panel.chipPair {
+      key {
+        contents: "lang"
+      }
+    }
+  }
+
+  canvas = frame : section {
+    overrides: [insert(draw, after = section.head)],
+
+    head {
+      name {
+        contents: "Canvas"
+      }
+    }
+
+    draw = frame {
+      width: 100%,
+      height: 26px,
+      layout: {direction: .row, align-items: .center},
+      children: [label, spacer, toggle],
+
+      label = text : Text.meta {
+        contents: "Draw connections",
+        font-size: 13
+      }
+
+      spacer = frame {}
+
+      toggle = frame : Controls.toggle {}
+    }
+  }
+
+  library = frame : section {
+    overrides: [insert(one, after = section.head), insert(two, after = one), insert(three, after = two), insert(four, after = three)],
+
+    head {
+      overrides: [insert(all, after = section.head.spacer)],
+
+      name {
+        contents: "Changed recently"
+      }
+
+      all = asset {
+        width: 15px,
+        height: 15px,
+        contents: gridIcon,
+        fill: Colors.colors.muted
+      }
+    }
+
+    one = frame : Panel.linkPair {
+      name {
+        contents: "sign-in.elyx"
+      }
+    }
+
+    two = frame : Panel.linkPair {
+      name {
+        contents: "today.elyx"
+      }
+    }
+
+    three = frame : Panel.linkPair {
+      name {
+        contents: "button.elyx"
+      }
+    }
+
+    four = frame : Panel.linkPair {
+      name {
+        contents: "colors.elyx"
+      }
+    }
+  }
+}
+
+// What the rail shows for a selected text layer.
+export layerRail = frame : rail {
+  left: 960px,
+  top: 0px,
+
+  body {
+    overrides: [insert(identity, after = .nil), insert(scope, after = identity), insert(content, after = scope), insert(style, after = content), insert(source, after = style)]
+  }
+
+  identity = frame {
+    width: 100%,
+    layout: {direction: .column, item-gap: 2px},
+    children: [name, path],
+
+    name = text : Text.heading {
+      contents: "label",
+      font-size: 16
+    }
+
+    path = frame {
+      layout: {direction: .row, align-items: .center, item-gap: 4px},
+      children: [one, sepOne, two, sepTwo, three, sepThree, four],
+
+      one = text : Text.meta {
+        contents: "landing"
+      }
+
+      sepOne = text : Text.hint {
+        contents: "›"
+      }
+
+      two = text : Text.meta {
+        contents: "hero"
+      }
+
+      sepTwo = text : Text.hint {
+        contents: "›"
+      }
+
+      three = text : Text.meta {
+        contents: "copy"
+      }
+
+      sepThree = text : Text.hint {
+        contents: "›"
+      }
+
+      four = text : Text.meta {
+        contents: "cta",
+        fill: Colors.colors.accent
+      }
+    }
+  }
+
+  scope = frame : section {
+    overrides: [insert(choice, after = section.head), insert(note, after = choice)],
+
+    head {
+      name {
+        contents: "Apply to"
+      }
+    }
+
+    choice = frame : Controls.segments {
+      width: 100%
+    }
+
+    note = text : Text.hint {
+      width: 100%,
+      contents: "Writes to screens/landing.elyx"
+    }
+  }
+
+  content = frame : section {
+    overrides: [insert(words, after = section.head)],
+
+    head {
+      name {
+        contents: "Text"
+      }
+    }
+
+    words = frame : Controls.field {
+      width: 100%,
+      height: 56px,
+      layout.align-items: .start,
+      padding-top: 9px,
+
+      value {
+        contents: "Start free trial"
+      }
+    }
+  }
+
+  style = frame : section {
+    overrides: [insert(colorRow, after = section.head), insert(sizeRow, after = colorRow), insert(weightRow, after = sizeRow), insert(boxRow, after = weightRow)],
+
+    head {
+      name {
+        contents: "Style"
+      }
+    }
+
+    colorRow = frame : Controls.picker {
+      width: 100%,
+
+      swatch {
+        fill[0].color: #FFF8F1
+      }
+
+      name {
+        contents: "colors.on-clay"
+      }
+    }
+
+    sizeRow = frame : Controls.picker {
+      width: 100%,
+
+      swatch {
+        display: .none
+      }
+
+      name {
+        contents: "fontSize.sm"
+      }
+
+      value {
+        contents: "13"
+      }
+    }
+
+    weightRow = frame : Controls.picker {
+      width: 100%,
+
+      swatch {
+        display: .none
+      }
+
+      name {
+        contents: "SemiBold"
+      }
+    }
+
+    boxRow = frame : Panel.pair {
+      key {
+        contents: "Size"
+      }
+
+      value {
+        contents: "87 × 16"
+      }
+    }
+  }
+
+  source = frame : section {
+    overrides: [insert(base, after = section.head), insert(code, after = base)],
+
+    head {
+      name {
+        contents: "Source"
+      }
+    }
+
+    base = frame : Panel.linkPair {
+      name {
+        contents: "button / primary"
+      }
+    }
+
+    code = frame : Panel.linkPair {
+      name {
+        contents: "ui/button.tsx#Button"
+      }
+    }
+  }
+}
+
+// The rail on the home page: where you left off.
+export recentRail = frame : rail {
+  left: 1280px,
+  top: 0px,
+
+  tabs {
+    display: .none
+  }
+
+  body {
+    padding-top: 18px,
+    overrides: [insert(recent, after = .nil)]
+  }
+
+  recent = frame : section {
+    overrides: [insert(one, after = section.head), insert(two, after = one), insert(three, after = two), insert(four, after = three)],
+
+    head {
+      name {
+        contents: "Recent files"
+      }
+    }
+
+    one = frame : Panel.linkPair {
+      name {
+        contents: "sign-in.elyx"
+      }
+    }
+
+    two = frame : Panel.linkPair {
+      name {
+        contents: "button.elyx"
+      }
+    }
+
+    three = frame : Panel.linkPair {
+      name {
+        contents: "colors.elyx"
+      }
+    }
+
+    four = frame : Panel.linkPair {
+      name {
+        contents: "today.elyx"
+      }
+    }
+  }
+}
+
+// The rail for a component: where it lives and where it is used.
+export componentRail = frame : rail {
+  left: 1600px,
+  top: 0px,
+
+  body {
+    overrides: [insert(file, after = .nil), insert(variants, after = file), insert(usedBy, after = variants)]
+  }
+
+  file = frame : section {
+    overrides: [insert(name, after = section.head), insert(place, after = name), insert(code, after = place)],
+
+    head {
+      name {
+        contents: "Component"
+      }
+    }
+
+    name = frame : Panel.chipPair {
+      key {
+        contents: "Name"
+      }
+
+      value {
+        label {
+          contents: "button.elyx"
+        }
+      }
+    }
+
+    place = frame : Panel.pair {
+      key {
+        contents: "Path"
+      }
+
+      value {
+        contents: "components/button.elyx"
+      }
+    }
+
+    code = frame : Panel.pair {
+      key {
+        contents: "Code"
+      }
+
+      value {
+        contents: "ui/button.tsx",
+        fill[0].color: Colors.colors.accent
+      }
+    }
+  }
+
+  variants = frame : section {
+    overrides: [insert(one, after = section.head), insert(two, after = one), insert(three, after = two), insert(four, after = three)],
+
+    head {
+      name {
+        contents: "Variants"
+      }
+    }
+
+    one = frame : Panel.chipPair {
+      key {
+        contents: "primary"
+      }
+
+      value {
+        label {
+          contents: "Base"
+        }
+      }
+    }
+
+    two = frame : Panel.pair {
+      key {
+        contents: "quiet"
+      }
+
+      value {
+        contents: "9 uses"
+      }
+    }
+
+    three = frame : Panel.pair {
+      key {
+        contents: "outline"
+      }
+
+      value {
+        contents: "6 uses"
+      }
+    }
+
+    four = frame : Panel.pair {
+      key {
+        contents: "danger"
+      }
+
+      value {
+        contents: "2 uses"
+      }
+    }
+  }
+
+  usedBy = frame : section {
+    overrides: [insert(one, after = section.head), insert(two, after = one), insert(three, after = two), insert(four, after = three)],
+
+    head {
+      overrides: [insert(all, after = section.head.spacer)],
+
+      name {
+        contents: "Used in 4 screens"
+      }
+
+      all = asset {
+        width: 15px,
+        height: 15px,
+        contents: gridIcon,
+        fill: Colors.colors.muted
+      }
+    }
+
+    one = frame : Panel.linkPair {
+      name {
+        contents: "sign-in.elyx"
+      }
+    }
+
+    two = frame : Panel.linkPair {
+      name {
+        contents: "landing.elyx"
+      }
+    }
+
+    three = frame : Panel.linkPair {
+      name {
+        contents: "pricing.elyx"
+      }
+    }
+
+    four = frame : Panel.linkPair {
+      name {
+        contents: "settings.elyx"
+      }
+    }
+  }
+}
+
+// The rail for a selected token: its value everywhere, and what follows it.
+export tokenRail = frame : rail {
+  left: 1920px,
+  top: 0px,
+
+  body {
+    overrides: [insert(identity, after = .nil), insert(value, after = identity), insert(contexts, after = value), insert(usedBy, after = contexts)]
+  }
+
+  identity = frame {
+    width: 100%,
+    layout: {direction: .column, item-gap: 10px},
+    children: [preview, names],
+
+    preview = frame {
+      width: 100%,
+      height: 84px,
+      corner-radius: Radius.radius.lg,
+      fill: #D4633A
+    }
+
+    names = frame {
+      layout: {direction: .column, item-gap: 1px},
+      children: [name, place],
+
+      name = text : Text.heading {
+        contents: "colors.clay",
+        font-size: 16
+      }
+
+      place = text : Text.meta {
+        contents: "tokens/colors.elyx"
+      }
+    }
+  }
+
+  value = frame : section {
+    overrides: [insert(entry, after = section.head)],
+
+    head {
+      name {
+        contents: "Value"
+      }
+    }
+
+    entry = frame : Controls.field {
+      width: 100%,
+
+      value {
+        contents: "#D4633A"
+      }
+    }
+  }
+
+  contexts = frame : section {
+    overrides: [insert(base, after = section.head), insert(darkValue, after = base)],
+
+    head {
+      name {
+        contents: "Contexts"
+      }
+    }
+
+    base = frame : Panel.swatchPair {}
+
+    darkValue = frame : Panel.swatchPair {
+      swatch {
+        fill[0].color: #E8805A
+      }
+
+      key {
+        contents: "theme=dark"
+      }
+
+      value {
+        contents: "#E8805A"
+      }
+    }
+
+  }
+
+  usedBy = frame : section {
+    overrides: [insert(one, after = section.head), insert(two, after = one), insert(three, after = two)],
+
+    head {
+      name {
+        contents: "Used by 34 layers"
+      }
+    }
+
+    one = frame : Panel.linkPair {
+      name {
+        contents: "button / primary"
+      }
+    }
+
+    two = frame : Panel.linkPair {
+      name {
+        contents: "plan / pro"
+      }
+    }
+
+    three = frame : Panel.linkPair {
+      name {
+        contents: "mark / dot"
+      }
+    }
+  }
+}

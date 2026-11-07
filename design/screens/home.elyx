@@ -1,0 +1,317 @@
+import "sample/images/landing.png" as landingCardShot
+import "sample/images/pricing.png" as pricingCardShot
+import "sample/images/welcome.png" as welcomeCardShot
+import "sample/images/signIn.png" as signInCardShot
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "tokens/spacing.elyx" as Spacing
+import "tokens/typography.elyx" as Type
+import "blocks/center.elyx" as Center
+import "blocks/inspector.elyx" as Inspector
+import "blocks/sidebar.elyx" as Sidebar
+import "components/canvas.elyx" as Canvas
+import "components/card.elyx" as Card
+import "components/controls.elyx" as Controls
+import "components/type.elyx" as Text
+
+export home = frame {
+  title: "Home",
+  caption: "The first thing you see: what is in this design, and what changed.",
+  left: 0px,
+  top: 0px,
+  width: Spacing.size.screen,
+  height: Spacing.size.screen-height,
+  fill: Colors.colors.surface,
+  layout: {direction: .row},
+  children: [side, main, rail],
+
+  side = frame : Sidebar.screensSidebar {}
+
+  main = frame : Center.center {
+    stage {
+      overrides: [insert(page, after = .nil)],
+
+      hud {
+        display: .none
+      }
+    }
+
+    crumbBar {
+      name {
+        contents: "Home"
+      }
+    }
+
+    page = frame {
+      left: 48px,
+      top: 36px,
+      width: Spacing.size.page-width,
+      layout: {direction: .column, item-gap: 16px},
+      children: [head, chips, rule, stats, changes, day, activity],
+
+      head = frame {
+        width: 100%,
+        layout: {direction: .column, item-gap: 3px},
+        children: [name, note],
+
+        name = text : Text.pageTitle {
+          contents: "Overview"
+        }
+
+        note = text : Text.body {
+          contents: "Everything in Driftwood, at a glance",
+          fill: Colors.colors.muted
+        }
+      }
+
+      chips = frame {
+        layout: {direction: .row, item-gap: 4px},
+        children: [allChip, screensChip, partsChip, tokensChip, assetsChip],
+
+        allChip = frame : Controls.filterActive {
+          label {
+            contents: "All"
+          }
+        }
+
+        screensChip = frame : Controls.filter {
+          label {
+            contents: "Screens"
+          }
+        }
+
+        partsChip = frame : Controls.filter {
+          label {
+            contents: "Components"
+          }
+        }
+
+        tokensChip = frame : Controls.filter {
+          label {
+            contents: "Tokens"
+          }
+        }
+
+        assetsChip = frame : Controls.filter {
+          label {
+            contents: "Assets"
+          }
+        }
+      }
+
+      rule = frame {
+        width: 100%,
+        height: 1px,
+        fill: Colors.colors.line-strong
+      }
+
+      stats = frame {
+        width: 100%,
+        layout: {direction: .row, item-gap: 8px},
+        children: [screensStat, partsStat, tokensStat, assetsStat],
+
+        screensStat = frame : Card.stat {
+          number {
+            contents: "8"
+          }
+
+          label {
+            contents: "Screens"
+          }
+        }
+
+        partsStat = frame : Card.stat {
+          number {
+            contents: "16"
+          }
+
+          label {
+            contents: "Components"
+          }
+        }
+
+        tokensStat = frame : Card.stat {
+          number {
+            contents: "46"
+          }
+
+          label {
+            contents: "Tokens"
+          }
+        }
+
+        assetsStat = frame : Card.stat {
+          number {
+            contents: "33"
+          }
+
+          label {
+            contents: "Assets"
+          }
+        }
+      }
+
+      changes = text : Text.body {
+        contents: "7 file changes across 2 commits"
+      }
+
+      day = text : Text.sectionTitle {
+        contents: "Fri 6 Nov"
+      }
+
+      activity = frame {
+        width: 100%,
+        layout: {direction: .row, item-gap: 14px},
+        children: [timeline, entry],
+
+        timeline = frame {
+          width: 12px,
+          height: 274px,
+          children: [stem, knot],
+
+          stem = frame {
+            left: 5.5px,
+            top: 0px,
+            width: 1px,
+            height: 100%,
+            fill: Colors.colors.line-strong
+          }
+
+          knot = frame {
+            left: 0px,
+            top: 24px,
+            width: 12px,
+            height: 12px,
+            corner-radius: Radius.radius.full,
+            fill: Colors.colors.stage,
+            border: {color: Colors.colors.dash, width: 1.5px}
+          }
+        }
+
+        entry = frame : Card.sheet {
+          width: 766px,
+          layout.item-gap: 14px,
+          padding: 16px,
+          overrides: [insert(summary, after = .nil), insert(files, after = summary), insert(more, after = files)],
+
+          summary = frame {
+            width: 100%,
+            layout: {direction: .row, align-items: .end, item-gap: 8px},
+            children: [words, spacer, added],
+
+            words = frame {
+              layout: {direction: .column, item-gap: 2px},
+              children: [subject, author],
+
+              subject = text : Text.figure {
+                contents: "feat: add pricing and the welcome flow",
+                font-size: Type.fontSize.lg,
+                font-style: "SemiBold",
+                fill: Colors.colors.heading
+              }
+
+              author = text : Text.meta {
+                contents: "Mara Oakes committed to main"
+              }
+            }
+
+            spacer = frame {}
+
+            added = text : Text.meta {
+              contents: "2 new, 2 updated",
+              fill: Colors.colors.positive
+            }
+          }
+
+          files = frame {
+            width: 100%,
+            layout: {direction: .row, item-gap: 12px},
+            children: [landingCard, pricingCard, welcomeCard, signInCard],
+
+            landingCard = frame : Card.changeTile {
+              shot {
+                fill: {image: {ref: landingCardShot}}
+              }
+
+              name {
+                contents: "landing.elyx"
+              }
+
+              foot {
+                note {
+                  contents: "Updated",
+                  fill[0].color: Colors.colors.accent
+                }
+              }
+            }
+
+            pricingCard = frame : Card.changeTile {
+              shot {
+                fill: {image: {ref: pricingCardShot}}
+              }
+
+              name {
+                contents: "pricing.elyx"
+              }
+
+              foot {
+                note {
+                  contents: "New",
+                  fill[0].color: Colors.colors.positive
+                }
+              }
+            }
+
+            welcomeCard = frame : Card.changeTile {
+              shot {
+                fill: {image: {ref: welcomeCardShot}}
+              }
+
+              name {
+                contents: "welcome.elyx"
+              }
+
+              foot {
+                note {
+                  contents: "New",
+                  fill[0].color: Colors.colors.positive
+                }
+              }
+            }
+
+            signInCard = frame : Card.changeTile {
+              shot {
+                fill: {image: {ref: signInCardShot}}
+              }
+
+              name {
+                contents: "sign-in.elyx"
+              }
+
+              foot {
+                note {
+                  contents: "Updated",
+                  fill[0].color: Colors.colors.accent
+                }
+              }
+            }
+          }
+
+          more = frame : Controls.button {
+            width: 100%,
+            fill: Colors.colors.surface,
+            border: {color: Colors.colors.line-strong, width: 1px},
+            layout.justify-content: .start,
+
+            label {
+              contents: "Show all 4 files",
+              fill[0].color: Colors.colors.muted
+            }
+          }
+        }
+      }
+    }
+  }
+
+  rail = frame : Inspector.recentRail {}
+}

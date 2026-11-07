@@ -1,0 +1,202 @@
+import "icons/house.svg" as homeIcon
+import "icons/chevron-left.svg" as backIcon
+import "icons/chevron-right.svg" as forwardIcon
+import "icons/x.svg" as closeIcon
+import "icons/columns.svg" as splitIcon
+import "icons/pointer.svg" as pointerIcon
+import "icons/eye.svg" as eyeIcon
+import "icons/moon.svg" as moonIcon
+import "icons/sparkles.svg" as sparkIcon
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "tokens/spacing.elyx" as Spacing
+import "components/controls.elyx" as Controls
+import "components/type.elyx" as Text
+
+// The round Ask Claude button, in the corner where the editor keeps its assistant.
+export orb = frame {
+  left: 1000px,
+  top: 0px,
+  width: 36px,
+  height: 36px,
+  corner-radius: Radius.radius.full,
+  fill: {linear-gradient: {angle: 135deg, stops: [stop(0%, Colors.colors.orb-start), stop(100%, Colors.colors.orb-end)]}},
+  border: {color: Colors.colors.surface, width: 2px},
+  layout: {direction: .row, justify-content: .center, align-items: .center},
+  shadow: {drop-shadow: {color: #6C5CE733, offset: point(0, 4), blur-radius: 12px}},
+  children: glyph,
+
+  glyph = asset {
+    width: 16px,
+    height: 16px,
+    contents: sparkIcon,
+    fill: #FFFFFF
+  }
+}
+
+// Everything between the sidebar and the inspector. Insert content into `stage`.
+export center = frame {
+  left: 0px,
+  top: 0px,
+  width: Spacing.size.center,
+  height: 100%,
+  layout: {direction: .column},
+  fill: Colors.colors.surface,
+  children: [topBar, crumbBar, stage],
+
+  topBar = frame {
+    width: 100%,
+    height: Spacing.size.top-bar,
+    layout: {direction: .row, align-items: .center, item-gap: 4px},
+    padding: [0px, 10px],
+    children: [project, spacer, inspect, overlays, theme],
+
+    project = frame : Controls.chip {
+      height: 32px,
+      padding-left: 12px,
+      padding-right: 12px,
+      overrides: [insert(branch, after = Controls.chip.label)],
+
+      label {
+        contents: "driftwood",
+        font-size: 13,
+        font-style: "SemiBold",
+        fill[0].color: Colors.colors.heading
+      }
+
+      branch = text : Text.meta {
+        contents: "main",
+        font-size: 11
+      }
+    }
+
+    spacer = frame {}
+
+    inspect = frame : Controls.iconButtonActive {
+      glyph {
+        contents: pointerIcon
+      }
+    }
+
+    overlays = frame : Controls.iconButton {
+      glyph {
+        contents: eyeIcon
+      }
+    }
+
+    theme = frame : Controls.iconButton {
+      glyph {
+        contents: moonIcon
+      }
+    }
+  }
+
+  crumbBar = frame {
+    width: 100%,
+    height: Spacing.size.tab-bar,
+    border: {color: Colors.colors.line, width: 1px, sides: [.top, .bottom]},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    children: [nav, name, spacer, close, split],
+
+    nav = frame {
+      height: 100%,
+      border: {color: Colors.colors.line, width: 1px, sides: .right},
+      layout: {direction: .row, align-items: .center, item-gap: 10px},
+      padding: [0px, 12px],
+      children: [home, back, forward],
+
+      home = asset {
+        width: 15px,
+        height: 15px,
+        contents: homeIcon,
+        fill: Colors.colors.muted
+      }
+
+      back = asset {
+        width: 15px,
+        height: 15px,
+        contents: backIcon,
+        fill: Colors.colors.muted
+      }
+
+      forward = asset {
+        width: 15px,
+        height: 15px,
+        contents: forwardIcon,
+        fill: Colors.colors.faint
+      }
+    }
+
+    name = text : Text.label {
+      left: 0px,
+      contents: "All screens",
+      font-style: "Medium Italic",
+      fill: Colors.colors.heading
+    }
+
+    spacer = frame {}
+
+    close = asset {
+      width: 13px,
+      height: 13px,
+      contents: closeIcon,
+      fill: Colors.colors.faint
+    }
+
+    split = frame {
+      width: 40px,
+      height: 100%,
+      layout: {direction: .row, justify-content: .center, align-items: .center},
+      children: glyph,
+
+      glyph = asset {
+        width: 15px,
+        height: 15px,
+        contents: splitIcon,
+        fill: Colors.colors.muted
+      }
+    }
+  }
+
+  stage = frame {
+    width: 100%,
+    height: Spacing.size.stage-height,
+    fill: Colors.colors.stage,
+    slot: .true,
+    children: [hud, ask],
+
+    hud = frame {
+      right: 12px,
+      bottom: 12px,
+      layout: {direction: .row, item-gap: 8px},
+      children: [count, context, level],
+
+      count = frame : Controls.stageChip {}
+
+      context = frame : Controls.stageChip {
+        label {
+          contents: "Context"
+        }
+
+        key {
+          letter {
+            contents: "C"
+          }
+        }
+      }
+
+      level = frame : Controls.stageChip {
+        overrides: [remove(Controls.stageChip.key)],
+
+        label {
+          contents: "100%"
+        }
+      }
+    }
+
+    ask = frame : orb {
+      left: 12px,
+      bottom: 12px
+    }
+  }
+}

@@ -1,0 +1,78 @@
+import "screens/assets.elyx" as Assets
+import "screens/board.elyx" as Board
+import "screens/component.elyx" as Component
+import "screens/components.elyx" as Components
+import "screens/home.elyx" as Home
+import "screens/layer.elyx" as Layer
+import "screens/layer-dark.elyx" as LayerDark
+import "screens/picker.elyx" as Picker
+import "screens/scales.elyx" as Scales
+import "screens/search.elyx" as Search
+import "screens/tokens.elyx" as Tokens
+
+// The whole overview at a glance: top row is the canvas, then the library.
+file {
+  draw-connections: .true
+}
+
+home = frame : Home.home {
+  left: 0px,
+  top: 0px,
+  connections: [{target: allScreens, label: "All screens"}, {target: components, label: "Components"}]
+}
+
+allScreens = frame : Board.allScreens {
+  left: 1760px,
+  top: 0px,
+  connections: [{target: layer, label: "Click a layer"}]
+}
+
+layer = frame : Layer.layerSelected {
+  left: 3520px,
+  top: 0px,
+  connections: [{target: picker, label: "Pick a color"}]
+}
+
+picker = frame : Picker.colorPicker {
+  left: 5280px,
+  top: 0px
+}
+
+components = frame : Components.components {
+  left: 0px,
+  top: 1260px,
+  connections: [{target: componentDetail, label: "Open a component"}]
+}
+
+componentDetail = frame : Component.componentDetail {
+  left: 1760px,
+  top: 1260px,
+  connections: [{target: tokens, label: "Tokens"}]
+}
+
+tokens = frame : Tokens.tokens {
+  left: 3520px,
+  top: 1260px,
+  connections: [{target: scales, label: "Scales"}]
+}
+
+scales = frame : Scales.scales {
+  left: 5280px,
+  top: 1260px
+}
+
+assets = frame : Assets.assets {
+  left: 0px,
+  top: 2520px
+}
+
+search = frame : Search.search {
+  left: 1760px,
+  top: 2520px
+}
+
+@context(theme=dark)
+layerDark = frame : LayerDark.layerDark {
+  left: 3520px,
+  top: 2520px
+}

@@ -1,0 +1,62 @@
+import "readme/drag.elyx" as Drag
+import "readme/hero.elyx" as Hero
+import "readme/library.elyx" as Library
+import "readme/quick-edit.elyx" as Quick
+import "readme/zoom.elyx" as Zoom
+
+// The README's images, light above and dark below. Everything here is a made-up sample,
+// because these images are public.
+hero = frame : Hero.hero {
+  left: 0px,
+  top: 0px
+}
+
+quickEdit = frame : Quick.quickEdit {
+  left: 1520px,
+  top: 0px
+}
+
+library = frame : Library.library {
+  left: 3040px,
+  top: 0px
+}
+
+sharpZoom = frame : Zoom.sharpZoom {
+  left: 4560px,
+  top: 0px
+}
+
+dragScreens = frame : Drag.dragScreens {
+  left: 6080px,
+  top: 0px
+}
+
+@context(theme=dark)
+heroDark = frame : Hero.hero {
+  left: 0px,
+  top: 960px
+}
+
+@context(theme=dark)
+quickEditDark = frame : Quick.quickEdit {
+  left: 1520px,
+  top: 960px
+}
+
+@context(theme=dark)
+libraryDark = frame : Library.library {
+  left: 3040px,
+  top: 960px
+}
+
+@context(theme=dark)
+sharpZoomDark = frame : Zoom.sharpZoom {
+  left: 4560px,
+  top: 960px
+}
+
+@context(theme=dark)
+dragScreensDark = frame : Drag.dragScreens {
+  left: 6080px,
+  top: 960px
+}

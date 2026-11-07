@@ -1,0 +1,9 @@
+import "screens/layer.elyx" as Layer
+
+@with-context(theme=dark)
+file {}
+
+export layerDark = frame : Layer.layerSelected {
+  title: "Layer selected, dark",
+  caption: "The same view in dark mode. The chrome adapts, and the design under inspection stays true to its own theme."
+}

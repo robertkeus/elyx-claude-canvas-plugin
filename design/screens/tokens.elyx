@@ -1,0 +1,427 @@
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "tokens/spacing.elyx" as Spacing
+import "tokens/typography.elyx" as Type
+import "blocks/center.elyx" as Center
+import "blocks/inspector.elyx" as Inspector
+import "blocks/sidebar.elyx" as Sidebar
+import "components/canvas.elyx" as Canvas
+import "components/card.elyx" as Card
+import "components/controls.elyx" as Controls
+import "components/type.elyx" as Text
+
+export tokens = frame {
+  title: "Color tokens",
+  caption: "Every color by role, per context. Change a value once and every layer follows.",
+  left: 0px,
+  top: 0px,
+  width: Spacing.size.screen,
+  height: Spacing.size.screen-height,
+  fill: Colors.colors.surface,
+  layout: {direction: .row},
+  children: [side, main, rail],
+
+  side = frame : Sidebar.tokensSidebar {}
+
+  main = frame : Center.center {
+    stage {
+      overrides: [insert(page, after = .nil)],
+
+      hud {
+        display: .none
+      }
+    }
+
+    crumbBar {
+      name {
+        contents: "Colors"
+      }
+    }
+
+    page = frame {
+      left: 48px,
+      top: 36px,
+      width: Spacing.size.page-width,
+      layout: {direction: .column, item-gap: 16px},
+      children: [head, chips, rule, section0, section1, section2],
+
+      head = frame {
+        width: 100%,
+        layout: {direction: .column, item-gap: 3px},
+        children: [name, note],
+
+        name = text : Text.pageTitle {
+          contents: "Colors"
+        }
+
+        note = text : Text.body {
+          contents: "18 tokens across 2 contexts",
+          fill: Colors.colors.muted
+        }
+      }
+
+      chips = frame {
+        layout: {direction: .row, item-gap: 4px},
+        children: [baseChip, darkChip],
+
+        baseChip = frame : Controls.filterActive {
+          label {
+            contents: "Base"
+          }
+        }
+
+        darkChip = frame : Controls.filter {
+          label {
+            contents: "Dark"
+          }
+        }
+      }
+
+      rule = frame {
+        width: 100%,
+        height: 1px,
+        fill: Colors.colors.line-strong
+      }
+
+      section0 = frame {
+        width: 100%,
+        layout: {direction: .column, item-gap: 10px},
+        children: [title, row],
+
+        title = text : Text.heading {
+          contents: "Surfaces"
+        }
+
+        row = frame {
+          width: 100%,
+          layout: {direction: .row, item-gap: 12px},
+          children: [t00, t01, t02, t03, t04, t05],
+
+          t00 = frame : Card.swatchTile {
+            chipColor {
+              fill[0].color: #FBF7F0
+            }
+
+            caption {
+              name {
+                contents: "paper"
+              }
+
+              value {
+                contents: "#FBF7F0"
+              }
+            }
+          }
+
+          t01 = frame : Card.swatchTile {
+            chipColor {
+              fill[0].color: #F1E9DC
+            }
+
+            caption {
+              name {
+                contents: "sand"
+              }
+
+              value {
+                contents: "#F1E9DC"
+              }
+            }
+          }
+
+          t02 = frame : Card.swatchTile {
+            chipColor {
+              fill[0].color: #E6DDCF
+            }
+
+            caption {
+              name {
+                contents: "line"
+              }
+
+              value {
+                contents: "#E6DDCF"
+              }
+            }
+          }
+
+          t03 = frame : Card.swatchTile {
+            chipColor {
+              fill[0].color: #FFFFFF
+            }
+
+            caption {
+              name {
+                contents: "page"
+              }
+
+              value {
+                contents: "#FFFFFF"
+              }
+            }
+          }
+
+          t04 = frame : Card.swatchTile {
+            chipColor {
+              fill[0].color: #F7F1E6
+            }
+
+            caption {
+              name {
+                contents: "well"
+              }
+
+              value {
+                contents: "#F7F1E6"
+              }
+            }
+          }
+
+          t05 = frame : Card.swatchTile {
+            chipColor {
+              fill[0].color: #EADFCD
+            }
+
+            caption {
+              name {
+                contents: "shade"
+              }
+
+              value {
+                contents: "#EADFCD"
+              }
+            }
+          }
+        }
+      }
+
+      section1 = frame {
+        width: 100%,
+        layout: {direction: .column, item-gap: 10px},
+        children: [title, row],
+
+        title = text : Text.heading {
+          contents: "Text"
+        }
+
+        row = frame {
+          width: 100%,
+          layout: {direction: .row, item-gap: 12px},
+          children: [t10, t11, t12, t13, t14, t15],
+
+          t10 = frame : Card.swatchTile {
+            chipColor {
+              fill[0].color: #26221D
+            }
+
+            caption {
+              name {
+                contents: "ink"
+              }
+
+              value {
+                contents: "#26221D"
+              }
+            }
+          }
+
+          t11 = frame : Card.swatchTile {
+            chipColor {
+              fill[0].color: #6E675D
+            }
+
+            caption {
+              name {
+                contents: "soft"
+              }
+
+              value {
+                contents: "#6E675D"
+              }
+            }
+          }
+
+          t12 = frame : Card.swatchTile {
+            chipColor {
+              fill[0].color: #8C8478
+            }
+
+            caption {
+              name {
+                contents: "muted"
+              }
+
+              value {
+                contents: "#8C8478"
+              }
+            }
+          }
+
+          t13 = frame : Card.swatchTile {
+            chipColor {
+              fill[0].color: #B8AE9F
+            }
+
+            caption {
+              name {
+                contents: "faint"
+              }
+
+              value {
+                contents: "#B8AE9F"
+              }
+            }
+          }
+
+          t14 = frame : Card.swatchTile {
+            chipColor {
+              fill[0].color: #FFF8F1
+            }
+
+            caption {
+              name {
+                contents: "on-clay"
+              }
+
+              value {
+                contents: "#FFF8F1"
+              }
+            }
+          }
+
+          t15 = frame : Card.swatchTile {
+            chipColor {
+              fill[0].color: #FBF7F0
+            }
+
+            caption {
+              name {
+                contents: "on-ink"
+              }
+
+              value {
+                contents: "#FBF7F0"
+              }
+            }
+          }
+        }
+      }
+
+      section2 = frame {
+        width: 100%,
+        layout: {direction: .column, item-gap: 10px},
+        children: [title, row],
+
+        title = text : Text.heading {
+          contents: "Brand"
+        }
+
+        row = frame {
+          width: 100%,
+          layout: {direction: .row, item-gap: 12px},
+          children: [t20, t21, t22, t23, t24, t25],
+
+          t20 = frame : Card.swatchTile {
+            border: {color: Colors.colors.accent, width: 2px},
+
+            chipColor {
+              fill[0].color: #D4633A
+            }
+
+            caption {
+              name {
+                contents: "clay"
+              }
+
+              value {
+                contents: "#D4633A"
+              }
+            }
+          }
+
+          t21 = frame : Card.swatchTile {
+            chipColor {
+              fill[0].color: #4F7A5F
+            }
+
+            caption {
+              name {
+                contents: "moss"
+              }
+
+              value {
+                contents: "#4F7A5F"
+              }
+            }
+          }
+
+          t22 = frame : Card.swatchTile {
+            chipColor {
+              fill[0].color: #4C7FD9
+            }
+
+            caption {
+              name {
+                contents: "sky"
+              }
+
+              value {
+                contents: "#4C7FD9"
+              }
+            }
+          }
+
+          t23 = frame : Card.swatchTile {
+            chipColor {
+              fill[0].color: #E8B24A
+            }
+
+            caption {
+              name {
+                contents: "sun"
+              }
+
+              value {
+                contents: "#E8B24A"
+              }
+            }
+          }
+
+          t24 = frame : Card.swatchTile {
+            chipColor {
+              fill[0].color: #B84A26
+            }
+
+            caption {
+              name {
+                contents: "rust"
+              }
+
+              value {
+                contents: "#B84A26"
+              }
+            }
+          }
+
+          t25 = frame : Card.swatchTile {
+            chipColor {
+              fill[0].color: #2F5B44
+            }
+
+            caption {
+              name {
+                contents: "pine"
+              }
+
+              value {
+                contents: "#2F5B44"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  rail = frame : Inspector.tokenRail {}
+}

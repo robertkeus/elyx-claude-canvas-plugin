@@ -1,0 +1,32 @@
+import "./colors.elyx" as base
+
+@context(theme=dark)
+file {}
+
+export darkColors = tokens : base.colors {
+  stage: #141517,
+  surface: #1C1D20,
+  well: #232428,
+  chip: #2A2C30,
+  chip-strong: #34363B,
+  line: #2B2D31,
+  line-strong: #36383D,
+  dash: #44474D,
+  ink: #F1F2F4,
+  heading: #E4E6EA,
+  body: #BCC0C7,
+  muted: #8D929B,
+  faint: #666B74,
+  accent: #7EA2FF,
+  accent-soft: #24304F,
+  accent-line: #3A4C7A,
+  on-accent: #0F1730,
+  artboard: #CE8BFF,
+  flow-soft: #3A2C17,
+  positive: #5AD285,
+  positive-soft: #1B3325,
+  danger: #FF8D82,
+  solid: #F1F2F4,
+  on-solid: #17181A,
+  scrim: #00000066
+}

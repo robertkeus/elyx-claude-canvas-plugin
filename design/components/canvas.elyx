@@ -1,0 +1,97 @@
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "tokens/typography.elyx" as Type
+import "components/type.elyx" as Text
+
+// The purple title above a frame, with the editor's two status dots.
+export artboardTitle = frame {
+  left: 0px,
+  top: 0px,
+  height: 18px,
+  layout: {direction: .row, align-items: .center, item-gap: 5px},
+  children: [name, solid, ring],
+
+  name = text : Text.meta {
+    contents: "landing",
+    font-size: Type.fontSize.sm,
+    fill: Colors.colors.artboard
+  }
+
+  solid = frame {
+    width: 6px,
+    height: 6px,
+    corner-radius: Radius.radius.full,
+    fill: Colors.colors.artboard
+  }
+
+  ring = frame {
+    width: 6px,
+    height: 6px,
+    corner-radius: Radius.radius.full,
+    border: {color: Colors.colors.artboard, width: 1.2px}
+  }
+}
+
+// One screen on the board.
+export artboard = frame {
+  left: 0px,
+  top: 40px,
+  width: 150px,
+  overflow: .visible,
+  layout: {direction: .column, item-gap: 5px},
+  children: [title, shot],
+
+  title = frame : artboardTitle {}
+
+  shot = frame {
+    width: 100%,
+    height: 95px,
+    corner-radius: Radius.radius.xs,
+    fill: Colors.colors.surface,
+    border: {color: Colors.colors.line-strong, width: 1px}
+  }
+}
+
+// The name flag on a hovered or selected layer.
+export layerTag = frame {
+  left: 200px,
+  top: 0px,
+  height: 18px,
+  corner-radius: Radius.radius.xs,
+  fill: Colors.colors.accent,
+  layout: {direction: .row, align-items: .center},
+  padding: [0px, 6px],
+  children: label,
+
+  label = text : Text.figure {
+    contents: "label",
+    font-size: Type.fontSize.xs,
+    fill: Colors.colors.on-accent
+  }
+}
+
+// A flow label sitting on a connection line.
+export flowTag = frame {
+  left: 280px,
+  top: 0px,
+  height: 16px,
+  corner-radius: Radius.radius.full,
+  fill: Colors.colors.flow,
+  layout: {direction: .row, align-items: .center},
+  padding: [0px, 7px],
+  children: label,
+
+  label = text : Text.figure {
+    contents: "Sign in",
+    font-size: 9,
+    fill: #FFFFFF
+  }
+}
+
+export flowLine = frame {
+  left: 360px,
+  top: 8px,
+  width: 40px,
+  height: 1.5px,
+  fill: Colors.colors.flow
+}

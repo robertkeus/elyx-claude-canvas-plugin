@@ -1,0 +1,245 @@
+import "sample/product.elyx" as Sample
+import "sample/tokens.elyx" as Tokens
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "tokens/spacing.elyx" as Spacing
+import "tokens/typography.elyx" as Type
+import "blocks/center.elyx" as Center
+import "blocks/inspector.elyx" as Inspector
+import "blocks/sidebar.elyx" as Sidebar
+import "components/canvas.elyx" as Canvas
+import "components/card.elyx" as Card
+import "components/controls.elyx" as Controls
+import "components/type.elyx" as Text
+
+export components = frame {
+  title: "Components",
+  caption: "Every component, shown live, with how widely it is used.",
+  left: 0px,
+  top: 0px,
+  width: Spacing.size.screen,
+  height: Spacing.size.screen-height,
+  fill: Colors.colors.surface,
+  layout: {direction: .row},
+  children: [side, main, rail],
+
+  side = frame : Sidebar.partsSidebar {}
+
+  main = frame : Center.center {
+    stage {
+      overrides: [insert(page, after = .nil)],
+
+      hud {
+        display: .none
+      }
+    }
+
+    crumbBar {
+      name {
+        contents: "Components"
+      }
+    }
+
+    page = frame {
+      left: 48px,
+      top: 36px,
+      width: Spacing.size.page-width,
+      layout: {direction: .column, item-gap: 16px},
+      children: [head, chips, rule, grid],
+
+      head = frame {
+        width: 100%,
+        layout: {direction: .column, item-gap: 3px},
+        children: [name, note],
+
+        name = text : Text.pageTitle {
+          contents: "Components"
+        }
+
+        note = text : Text.body {
+          contents: "16 in 6 files",
+          fill: Colors.colors.muted
+        }
+      }
+
+      chips = frame {
+        layout: {direction: .row, item-gap: 4px},
+        children: [allChip, actionsChip, formsChip, contentChip],
+
+        allChip = frame : Controls.filterActive {
+          label {
+            contents: "All"
+          }
+        }
+
+        actionsChip = frame : Controls.filter {
+          label {
+            contents: "Actions"
+          }
+        }
+
+        formsChip = frame : Controls.filter {
+          label {
+            contents: "Forms"
+          }
+        }
+
+        contentChip = frame : Controls.filter {
+          label {
+            contents: "Content"
+          }
+        }
+      }
+
+      rule = frame {
+        width: 100%,
+        height: 1px,
+        fill: Colors.colors.line-strong
+      }
+
+      grid = frame {
+        width: 100%,
+        layout: {direction: .row, wrap: .true, item-gap: 21px, line-gap: 21px},
+        children: [buttonTile, inputTile, badgeTile, planTile, statTile, markTile],
+
+        buttonTile = frame : Card.tile {
+          well {
+            fill[0].color: Tokens.sample.paper,
+            overrides: [insert(art, after = .nil)]
+          }
+
+          caption {
+            line {
+              name {
+                contents: "button.elyx"
+              }
+            }
+
+            detail {
+              contents: "4 variants, 36 uses"
+            }
+          }
+
+          art = frame : Sample.button {
+          }
+        }
+
+        inputTile = frame : Card.tile {
+          well {
+            fill[0].color: Tokens.sample.paper,
+            overrides: [insert(art, after = .nil)]
+          }
+
+          caption {
+            line {
+              name {
+                contents: "input.elyx"
+              }
+            }
+
+            detail {
+              contents: "4 variants, 41 uses"
+            }
+          }
+
+          art = frame : Sample.input {
+            transform: [0.8, 0, 0, 0, 0.8, 0]
+          }
+        }
+
+        badgeTile = frame : Card.tile {
+          well {
+            fill[0].color: Tokens.sample.paper,
+            overrides: [insert(art, after = .nil)]
+          }
+
+          caption {
+            line {
+              name {
+                contents: "badge.elyx"
+              }
+            }
+
+            detail {
+              contents: "2 variants, 12 uses"
+            }
+          }
+
+          art = frame : Sample.badge {
+            transform: [1.3, 0, 0, 0, 1.3, 0]
+          }
+        }
+
+        planTile = frame : Card.tile {
+          well {
+            fill[0].color: Tokens.sample.paper,
+            overrides: [insert(art, after = .nil)]
+          }
+
+          caption {
+            line {
+              name {
+                contents: "plan.elyx"
+              }
+            }
+
+            detail {
+              contents: "3 variants, 6 uses"
+            }
+          }
+
+          art = frame : Sample.plan {
+            transform: [0.66, 0, 0, 0, 0.66, 0]
+          }
+        }
+
+        statTile = frame : Card.tile {
+          well {
+            fill[0].color: Tokens.sample.paper,
+            overrides: [insert(art, after = .nil)]
+          }
+
+          caption {
+            line {
+              name {
+                contents: "stat.elyx"
+              }
+            }
+
+            detail {
+              contents: "2 variants, 18 uses"
+            }
+          }
+
+          art = frame : Sample.stat {
+          }
+        }
+
+        markTile = frame : Card.tile {
+          well {
+            fill[0].color: Tokens.sample.paper,
+            overrides: [insert(art, after = .nil)]
+          }
+
+          caption {
+            line {
+              name {
+                contents: "mark.elyx"
+              }
+            }
+
+            detail {
+              contents: "1 variant, 24 uses"
+            }
+          }
+
+          art = frame : Sample.mark {
+            transform: [1.5, 0, 0, 0, 1.5, 0]
+          }
+        }
+      }
+    }
+  }
+
+  rail = frame : Inspector.recentRail {}
+}

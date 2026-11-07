@@ -1,0 +1,719 @@
+import "sample/images/landing.png" as landingShot
+import "sample/images/pricing.png" as pricingShot
+import "sample/images/signIn.png" as signInShot
+import "sample/images/welcome.png" as welcomeShot
+import "sample/images/today.png" as todayShot
+import "sample/images/notes.png" as notesShot
+import "sample/images/note.png" as noteShot
+import "sample/images/settings.png" as settingsShot
+import "icons/frame.svg" as frameIcon
+import "icons/component.svg" as componentIcon
+import "icons/palette.svg" as paletteIcon
+import "icons/image.svg" as imageIcon
+import "icons/search.svg" as searchIcon
+import "icons/history.svg" as historyIcon
+import "icons/grid.svg" as gridIcon
+import "icons/layers.svg" as layersIcon
+import "icons/type.svg" as typeIcon
+import "icons/corner.svg" as cornerIcon
+import "icons/gap.svg" as gapIcon
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "tokens/spacing.elyx" as Spacing
+import "components/controls.elyx" as Controls
+import "components/nav.elyx" as Nav
+import "components/type.elyx" as Text
+
+// Search, the four views of a project, and a body per view.
+export sidebar = frame {
+  left: 0px,
+  top: 0px,
+  width: Spacing.size.sidebar,
+  height: 100%,
+  fill: Colors.colors.surface,
+  border: {color: Colors.colors.line, width: 1px, sides: .right},
+  layout: {direction: .column},
+  children: [head, tabs, body],
+
+  head = frame {
+    width: 100%,
+    height: Spacing.size.top-bar,
+    layout: {direction: .row, align-items: .center, item-gap: 8px},
+    padding: [0px, 12px],
+    children: [find, recent],
+
+    find = frame : Controls.field {
+      width: 208px,
+      overrides: [insert(glyph, after = .nil), insert(spacer, after = Controls.field.value), insert(keys, after = spacer)],
+
+      value {
+        contents: "Search",
+        fill[0].color: Colors.colors.muted
+      }
+
+      glyph = asset {
+        width: 14px,
+        height: 14px,
+        contents: searchIcon,
+        fill: Colors.colors.muted
+      }
+
+      spacer = frame {}
+
+      keys = frame : Controls.keycap {}
+    }
+
+    recent = frame : Controls.iconButtonSoft {
+      glyph {
+        contents: historyIcon
+      }
+    }
+  }
+
+  tabs = frame {
+    width: 100%,
+    height: Spacing.size.tab-bar,
+    border: {color: Colors.colors.line, width: 1px, sides: [.top, .bottom]},
+    layout: {direction: .row, align-items: .center},
+    children: [screens, dividerOne, parts, dividerTwo, tokens, dividerThree, assets],
+
+    screens = frame : Nav.tab {
+      glyph {
+        contents: frameIcon
+      }
+    }
+
+    dividerOne = frame : Nav.tabDivider {}
+
+    parts = frame : Nav.tab {
+      glyph {
+        contents: componentIcon
+      }
+    }
+
+    dividerTwo = frame : Nav.tabDivider {}
+
+    tokens = frame : Nav.tab {
+      glyph {
+        contents: paletteIcon
+      }
+    }
+
+    dividerThree = frame : Nav.tabDivider {}
+
+    assets = frame : Nav.tab {
+      glyph {
+        contents: imageIcon
+      }
+    }
+  }
+
+  body = frame {
+    width: 100%,
+    layout: {direction: .column, item-gap: 2px},
+    padding: [10px, 12px],
+    slot: .true
+  }
+}
+
+// The screens view. Rows carry thumbnails, so a screen is found by sight.
+export screensSidebar = frame : sidebar {
+  left: 320px,
+  top: 0px,
+
+  body {
+    overrides: [insert(all, after = .nil), insert(siteHead, after = all), insert(landing, after = siteHead), insert(pricing, after = landing), insert(accessHead, after = pricing), insert(signIn, after = accessHead), insert(welcome, after = signIn), insert(appHead, after = welcome), insert(today, after = appHead), insert(notes, after = today), insert(note, after = notes), insert(settings, after = note)]
+  }
+
+  tabs {
+    screens {
+      glyph {
+        fill[0].color: Colors.colors.accent
+      }
+    }
+  }
+
+  all = frame : Nav.pillRow {
+    glyph {
+      contents: gridIcon
+    }
+
+    label {
+      contents: "All screens"
+    }
+
+    count {
+      contents: "8"
+    }
+  }
+
+  siteHead = frame : Nav.navHead {
+    label {
+      contents: "Site"
+    }
+
+    count {
+      contents: "2"
+    }
+  }
+
+  landing = frame : Nav.thumbRow {
+    shot {
+      fill: {image: {ref: landingShot}}
+    }
+
+    label {
+      contents: "Landing"
+    }
+  }
+
+  pricing = frame : Nav.thumbRow {
+    shot {
+      fill: {image: {ref: pricingShot}}
+    }
+
+    label {
+      contents: "Pricing"
+    }
+  }
+
+  accessHead = frame : Nav.navHead {
+    label {
+      contents: "Access"
+    }
+
+    count {
+      contents: "2"
+    }
+  }
+
+  signIn = frame : Nav.thumbRow {
+    shot {
+      fill: {image: {ref: signInShot}}
+    }
+
+    label {
+      contents: "Sign in"
+    }
+  }
+
+  welcome = frame : Nav.thumbRow {
+    shot {
+      fill: {image: {ref: welcomeShot}}
+    }
+
+    label {
+      contents: "Welcome"
+    }
+  }
+
+  appHead = frame : Nav.navHead {
+    label {
+      contents: "App"
+    }
+
+    count {
+      contents: "4"
+    }
+  }
+
+  today = frame : Nav.thumbRow {
+    shot {
+      fill: {image: {ref: todayShot}}
+    }
+
+    label {
+      contents: "Today"
+    }
+  }
+
+  notes = frame : Nav.thumbRow {
+    shot {
+      fill: {image: {ref: notesShot}}
+    }
+
+    label {
+      contents: "Notes"
+    }
+  }
+
+  note = frame : Nav.thumbRow {
+    shot {
+      fill: {image: {ref: noteShot}}
+    }
+
+    label {
+      contents: "Note"
+    }
+  }
+
+  settings = frame : Nav.thumbRow {
+    shot {
+      fill: {image: {ref: settingsShot}}
+    }
+
+    label {
+      contents: "Settings"
+    }
+  }
+}
+
+// The components view: one row per file, with its variant count.
+export partsSidebar = frame : sidebar {
+  left: 640px,
+  top: 0px,
+
+  body {
+    overrides: [insert(componentsHead, after = .nil), insert(button, after = componentsHead), insert(input, after = button), insert(badge, after = input), insert(plan, after = badge), insert(stat, after = plan), insert(mark, after = stat), insert(blocksHead, after = mark), insert(appRail, after = blocksHead), insert(noteRow, after = appRail), insert(settingRow, after = noteRow)]
+  }
+
+  tabs {
+    parts {
+      glyph {
+        fill[0].color: Colors.colors.accent
+      }
+    }
+  }
+
+  componentsHead = frame : Nav.navHead {
+    label {
+      contents: "Components"
+    }
+
+    count {
+      contents: "16"
+    }
+  }
+
+  button = frame : Nav.navRow {
+    glyph {
+      contents: componentIcon
+    }
+
+    label {
+      contents: "button"
+    }
+
+    count {
+      contents: "4"
+    }
+  }
+
+  input = frame : Nav.navRow {
+    glyph {
+      contents: componentIcon
+    }
+
+    label {
+      contents: "input"
+    }
+
+    count {
+      contents: "4"
+    }
+  }
+
+  badge = frame : Nav.navRow {
+    glyph {
+      contents: componentIcon
+    }
+
+    label {
+      contents: "badge"
+    }
+
+    count {
+      contents: "2"
+    }
+  }
+
+  plan = frame : Nav.navRow {
+    glyph {
+      contents: componentIcon
+    }
+
+    label {
+      contents: "plan"
+    }
+
+    count {
+      contents: "3"
+    }
+  }
+
+  stat = frame : Nav.navRow {
+    glyph {
+      contents: componentIcon
+    }
+
+    label {
+      contents: "stat"
+    }
+
+    count {
+      contents: "2"
+    }
+  }
+
+  mark = frame : Nav.navRow {
+    glyph {
+      contents: componentIcon
+    }
+
+    label {
+      contents: "mark"
+    }
+
+    count {
+      contents: "1"
+    }
+  }
+
+  blocksHead = frame : Nav.navHead {
+    label {
+      contents: "Blocks"
+    }
+
+    count {
+      contents: "5"
+    }
+  }
+
+  appRail = frame : Nav.navRow {
+    glyph {
+      contents: layersIcon
+    }
+
+    label {
+      contents: "app-rail"
+    }
+
+    count {
+      contents: "1"
+    }
+  }
+
+  noteRow = frame : Nav.navRow {
+    glyph {
+      contents: layersIcon
+    }
+
+    label {
+      contents: "note-row"
+    }
+
+    count {
+      contents: "2"
+    }
+  }
+
+  settingRow = frame : Nav.navRow {
+    glyph {
+      contents: layersIcon
+    }
+
+    label {
+      contents: "setting-row"
+    }
+
+    count {
+      contents: "2"
+    }
+  }
+}
+
+// The tokens view: groups previewed by their colors, then the scales and contexts.
+export tokensSidebar = frame : sidebar {
+  left: 960px,
+  top: 0px,
+
+  body {
+    overrides: [insert(colorsAll, after = .nil), insert(colorsHead, after = colorsAll), insert(surfaces, after = colorsHead), insert(words, after = surfaces), insert(status, after = words), insert(scaleHead, after = status), insert(spacing, after = scaleHead), insert(sizes, after = spacing), insert(radius, after = sizes), insert(fontSizes, after = radius), insert(tracking, after = fontSizes), insert(contextHead, after = tracking), insert(base, after = contextHead), insert(dark, after = base)]
+  }
+
+  tabs {
+    tokens {
+      glyph {
+        fill[0].color: Colors.colors.accent
+      }
+    }
+  }
+
+  colorsAll = frame : Nav.pillRow {
+    glyph {
+      contents: paletteIcon
+    }
+
+    label {
+      contents: "All tokens"
+    }
+
+    count {
+      contents: "46"
+    }
+  }
+
+  colorsHead = frame : Nav.navHead {
+    label {
+      contents: "Colors"
+    }
+
+    count {
+      contents: "18"
+    }
+  }
+
+  surfaces = frame : Nav.dotsRow {
+    label {
+      contents: "Surfaces"
+    }
+
+    one {
+      fill[0].color: #FBF7F0
+    }
+
+    two {
+      fill[0].color: #F1E9DC
+    }
+
+    three {
+      fill[0].color: #FFFFFF
+    }
+
+    four {
+      fill[0].color: #E6DDCF
+    }
+  }
+
+  words = frame : Nav.dotsRow {
+    label {
+      contents: "Text"
+    }
+
+    one {
+      fill[0].color: #26221D
+    }
+
+    two {
+      fill[0].color: #6E675D
+    }
+
+    three {
+      fill[0].color: #8C8478
+    }
+
+    four {
+      fill[0].color: #FFF8F1
+    }
+  }
+
+  status = frame : Nav.dotsRow {
+    label {
+      contents: "Brand"
+    }
+
+    one {
+      fill[0].color: #D4633A
+    }
+
+    two {
+      fill[0].color: #4F7A5F
+    }
+
+    three {
+      fill[0].color: #4C7FD9
+    }
+
+    four {
+      fill[0].color: #E8B24A
+    }
+  }
+
+  scaleHead = frame : Nav.navHead {
+    label {
+      contents: "Scales"
+    }
+
+    count {
+      contents: "28"
+    }
+  }
+
+  spacing = frame : Nav.navRow {
+    glyph {
+      contents: gapIcon
+    }
+
+    label {
+      contents: "Spacing"
+    }
+
+    count {
+      contents: "9"
+    }
+  }
+
+  sizes = frame : Nav.navRow {
+    glyph {
+      contents: frameIcon
+    }
+
+    label {
+      contents: "Sizes"
+    }
+
+    count {
+      contents: "4"
+    }
+  }
+
+  radius = frame : Nav.navRow {
+    glyph {
+      contents: cornerIcon
+    }
+
+    label {
+      contents: "Radius"
+    }
+
+    count {
+      contents: "6"
+    }
+  }
+
+  fontSizes = frame : Nav.navRow {
+    glyph {
+      contents: typeIcon
+    }
+
+    label {
+      contents: "Font size"
+    }
+
+    count {
+      contents: "7"
+    }
+  }
+
+  tracking = frame : Nav.navRow {
+    glyph {
+      contents: typeIcon
+    }
+
+    label {
+      contents: "Letter spacing"
+    }
+
+    count {
+      contents: "2"
+    }
+  }
+
+  contextHead = frame : Nav.navHead {
+    label {
+      contents: "Contexts"
+    }
+
+    count {
+      contents: "2"
+    }
+  }
+
+  base = frame : Nav.navRow {
+    glyph {
+      contents: layersIcon
+    }
+
+    label {
+      contents: "Base"
+    }
+
+    count {
+      contents: "18"
+    }
+  }
+
+  dark = frame : Nav.navRow {
+    glyph {
+      contents: layersIcon
+    }
+
+    label {
+      contents: "theme=dark"
+    }
+
+    count {
+      contents: "18"
+    }
+  }
+}
+
+// The assets view.
+export assetsSidebar = frame : sidebar {
+  left: 1280px,
+  top: 0px,
+
+  body {
+    overrides: [insert(assetsHead, after = .nil), insert(icons, after = assetsHead), insert(images, after = icons), insert(fonts, after = images)]
+  }
+
+  tabs {
+    assets {
+      glyph {
+        fill[0].color: Colors.colors.accent
+      }
+    }
+  }
+
+  assetsHead = frame : Nav.navHead {
+    label {
+      contents: "Assets"
+    }
+
+    count {
+      contents: "33"
+    }
+  }
+
+  icons = frame : Nav.navRow {
+    glyph {
+      contents: frameIcon
+    }
+
+    label {
+      contents: "Icons"
+    }
+
+    count {
+      contents: "24"
+    }
+  }
+
+  images = frame : Nav.navRow {
+    glyph {
+      contents: imageIcon
+    }
+
+    label {
+      contents: "Images"
+    }
+
+    count {
+      contents: "8"
+    }
+  }
+
+  fonts = frame : Nav.navRow {
+    glyph {
+      contents: typeIcon
+    }
+
+    label {
+      contents: "Fonts"
+    }
+
+    count {
+      contents: "1"
+    }
+  }
+}

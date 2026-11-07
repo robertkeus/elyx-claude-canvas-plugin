@@ -1,0 +1,28 @@
+import "tokens/spacing.elyx" as Spacing
+import "blocks/token-popover.elyx" as Popover
+import "screens/layer.elyx" as Layer
+
+export colorPicker = frame {
+  title: "Picking a color",
+  caption: "The color chip opens the project's tokens, grouped by role. The change saves at once, with Undo one click away.",
+  left: 0px,
+  top: 0px,
+  width: Spacing.size.screen,
+  height: Spacing.size.screen-height,
+  children: [base, popover, saved],
+
+  base = frame : Layer.layerSelected {
+    left: 0px,
+    top: 0px
+  }
+
+  popover = frame : Popover.tokenPopover {
+    left: 420px,
+    top: 404px
+  }
+
+  saved = frame : Popover.toast {
+    left: 572px,
+    top: 800px
+  }
+}

@@ -1,0 +1,13 @@
+// Driftwood, a made-up product. The mockups and the README draw it, so nothing real is shown.
+export sample = tokens {
+  paper: #FBF7F0,
+  sand: #F1E9DC,
+  line: #E6DDCF,
+  ink: #26221D,
+  soft: #6E675D,
+  clay: #D4633A,
+  on-clay: #FFF8F1,
+  moss: #4F7A5F,
+  sky: #4C7FD9,
+  sun: #E8B24A
+}

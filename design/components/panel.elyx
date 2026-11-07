@@ -1,0 +1,119 @@
+import "icons/arrow-right.svg" as arrowIcon
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "tokens/spacing.elyx" as Spacing
+import "components/controls.elyx" as Controls
+import "components/type.elyx" as Text
+
+// A key and a plain value.
+export pair = frame {
+  left: 0px,
+  top: 0px,
+  width: 248px,
+  min-height: 26px,
+  layout: {direction: .row, align-items: .center, item-gap: 8px},
+  children: [key, spacer, value],
+
+  key = text : Text.meta {
+    contents: "Key",
+    font-size: 13
+  }
+
+  spacer = frame {}
+
+  value = text : Text.figure {
+    contents: "Value",
+    font-size: 13,
+    font-style: "Regular",
+    fill: Colors.colors.heading
+  }
+}
+
+// A key and a value in a grey chip.
+export chipPair = frame {
+  left: 0px,
+  top: 40px,
+  width: 248px,
+  min-height: 28px,
+  layout: {direction: .row, align-items: .center, item-gap: 8px},
+  children: [key, spacer, value],
+
+  key = text : Text.meta {
+    contents: "Key",
+    font-size: 13
+  }
+
+  spacer = frame {}
+
+  value = frame : Controls.chip {}
+}
+
+// A file or layer that leads somewhere, as under Imported By in the editor.
+export linkPair = frame {
+  left: 0px,
+  top: 80px,
+  width: 248px,
+  height: 30px,
+  layout: {direction: .row, align-items: .center, item-gap: 8px},
+  children: [name, spacer, go],
+
+  name = text : Text.body {
+    contents: "signIn.elyx",
+    fill: Colors.colors.heading
+  }
+
+  spacer = frame {}
+
+  go = frame {
+    width: 30px,
+    height: 22px,
+    corner-radius: Radius.radius.sm,
+    fill: Colors.colors.chip,
+    layout: {direction: .row, justify-content: .center, align-items: .center},
+    children: glyph,
+
+    glyph = asset {
+      width: 13px,
+      height: 13px,
+      contents: arrowIcon,
+      fill: Colors.colors.body
+    }
+  }
+}
+
+// A label stacked over its control.
+export fieldLabel = text : Text.meta {
+  left: 0px,
+  top: 124px,
+  contents: "Label"
+}
+
+// A context and its value, with the color it resolves to.
+export swatchPair = frame {
+  left: 0px,
+  top: 160px,
+  width: 248px,
+  height: 28px,
+  layout: {direction: .row, align-items: .center, item-gap: 8px},
+  children: [swatch, key, spacer, value],
+
+  swatch = frame {
+    width: 16px,
+    height: 16px,
+    corner-radius: Radius.radius.xs,
+    fill: #D4633A,
+    border: {color: Colors.colors.line-strong, width: 1px}
+  }
+
+  key = text : Text.meta {
+    contents: "Base",
+    font-size: 13
+  }
+
+  spacer = frame {}
+
+  value = text : Text.figure {
+    contents: "#D4633A",
+    font-style: "Regular"
+  }
+}

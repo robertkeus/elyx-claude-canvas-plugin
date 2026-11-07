@@ -1,0 +1,25 @@
+export space = tokens {
+  xxs: 2px,
+  xs: 4px,
+  sm: 6px,
+  md: 8px,
+  lg: 12px,
+  xl: 16px,
+  xxl: 24px,
+  xxxl: 32px,
+  page: 48px
+}
+
+export size = tokens {
+  screen: 1440px,
+  screen-height: 900px,
+  sidebar: 272px,
+  center: 888px,
+  inspector: 280px,
+  top-bar: 52px,
+  tab-bar: 38px,
+  stage-height: 810px,
+  page-width: 792px,
+  control: 32px,
+  row: 30px
+}
