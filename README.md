@@ -98,6 +98,8 @@ Drag a screen and the new position is saved to the file. Drag empty canvas, or h
 
 ### And more
 
+- **Export** any layer or a whole board as PNG at any size (`@2x`, `@3x`), JPG, WebP, vector SVG or CSS. Files land in an `exports` folder in your project.
+- **Switch projects** from the top bar when a repository holds more than one Elyx project.
 - **Search** the whole project with ⌘K, including the text inside layers.
 - **Context** switches a design between themes and surfaces.
 - **Ask Claude** sends bigger changes to the session that opened the canvas, with the selected layer as context.

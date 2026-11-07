@@ -14,6 +14,7 @@ import path from 'node:path'
 import { promisify } from 'node:util'
 import { blockSource, importAlias, setProperty, setToken, tokenLiteral } from './edit.mjs'
 import { fileVersions, hash, indexTree, LOG_FORMAT, mergeIndexes, parseLog } from './insight.mjs'
+import { treeToSvg } from './svg.mjs'
 
 const IMAGES = { '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp' }
 const FONTS = { '.ttf': 'font/ttf', '.otf': 'font/otf', '.ttc': 'font/collection', '.woff': 'font/woff', '.woff2': 'font/woff2' }
@@ -28,6 +29,8 @@ const MEMORY_LIMIT = 2 ** 28
 const RENDER_SLOTS = 4
 const MAX_PIXELS = 4e7
 const BASE_PIXELS = 2600
+const IGNORED = /(^|\/)(\.|node_modules\/)|^exports\//
+const MIME = { '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp' }
 
 // The CLI reports `file:line:column: reason` among other lines. People only need the reason.
 const reasonFor = cause => {
@@ -52,9 +55,9 @@ const projectRoot = async file => {
 const isApp = process.argv[2] === '--app'
 const target = process.argv[isApp ? 3 : 2]
 if (!target) fail('Usage: canvas.mjs [--app] <file.elyx>')
-const opened = path.resolve(target)
+let opened = path.resolve(target)
 if (!opened.endsWith('.elyx') || !(await isFile(opened))) fail(`Not an .elyx file: ${opened}`)
-const root = await realpath(await projectRoot(opened))
+let root = await realpath(await projectRoot(opened))
 
 // The app takes a project folder: `elyx <file>` is refused, and `open -a` with a
 // file has no visible effect. Each call opens a new window.
@@ -130,7 +133,20 @@ const inTurn = (work, isLater) =>
     pump()
   })
 
-const projectFiles = async () => (await readdir(root, { recursive: true })).filter(name => !/(^|\/)(\.|node_modules\/)/.test(name)).sort()
+// Walks the project, skipping what is ignored without reading it. A folder with its own
+// elyx.json is a separate project, so it is not part of this one.
+const walk = async (dir, prefix = '') => {
+  const entries = await readdir(dir, { withFileTypes: true })
+  if (prefix && entries.some(entry => entry.name === 'elyx.json')) return []
+  const found = await Promise.all(entries.map(entry => {
+    const name = `${prefix}${entry.name}${entry.isDirectory() ? '/' : ''}`
+    if (IGNORED.test(name)) return []
+    return entry.isDirectory() ? walk(path.join(dir, entry.name), name) : [name]
+  }))
+  return found.flat()
+}
+
+const projectFiles = async () => (await walk(root)).sort()
 
 const readSnapshot = async () => {
   const names = await projectFiles()
@@ -164,6 +180,31 @@ const readTokens = async ({ sources, versions }) => {
 
 const branch = async () => (await run('git', ['-C', root, 'rev-parse', '--abbrev-ref', 'HEAD']).catch(() => ({ stdout: '' }))).stdout.trim()
 
+const projectName = dir => (path.basename(dir) === 'design' ? path.basename(path.dirname(dir)) : path.basename(dir))
+
+const repository = (await run('git', ['-C', root, 'rev-parse', '--show-toplevel']).catch(() => ({ stdout: '' }))).stdout.trim()
+
+// Every Elyx project in this repository. git lists them without walking node_modules,
+// and leaves out what is ignored.
+const projects = async () => {
+  const listed = repository ? await run('git', ['-C', repository, 'ls-files', '--cached', '--others', '--exclude-standard', '--', ':(glob)**/elyx.json']).catch(() => ({ stdout: '' })) : { stdout: '' }
+  const folders = listed.stdout.split('\n').filter(Boolean).map(file => path.dirname(path.join(repository, file)))
+  const existing = await Promise.all(folders.map(async dir => ((await isFile(path.join(dir, 'elyx.json'))) ? [dir] : [])))
+  return [...new Set([root, ...existing.flat()])].sort().map(dir => ({
+    root: dir,
+    name: projectName(dir),
+    path: (repository && path.relative(repository, dir)) || '.',
+    isCurrent: dir === root,
+  }))
+}
+
+const entryFile = async dir => {
+  const names = (await walk(dir)).filter(name => name.endsWith('.elyx')).sort()
+  const entry = names.find(name => name === 'index.elyx') ?? names.find(name => name.startsWith('screens/')) ?? names[0]
+  if (!entry) throw new Error(`${projectName(dir)} has no designs yet.`)
+  return path.join(dir, entry)
+}
+
 const project = async () => {
   const current = await snapshot()
   return remember(`project:${current.stamp}`, async () => {
@@ -183,7 +224,7 @@ const project = async () => {
       return exports.length || !/= tokens\b/.test(source) ? [{ file, exports }] : []
     })
     return {
-      name: path.basename(root) === 'design' ? path.basename(path.dirname(root)) : path.basename(root),
+      name: projectName(root),
       root,
       stamp,
       branch: onBranch,
@@ -292,7 +333,7 @@ const contextOf = source => {
   return axes.split(',').map(axis => axis.replace(/["\s]/g, '')).filter(Boolean)
 }
 
-const VIEWS = path.join(root, '.elyx-canvas')
+const viewsFolder = () => path.join(root, '.elyx-canvas')
 
 // The CLI can only render a whole layer, and a screen at 16x would be enormous. So a
 // throwaway frame clips the layer to the visible region, and the engine draws just that
@@ -308,8 +349,8 @@ const view = async ({ file, ref, kind, x, y, w, h, scale, contexts }) => {
   const own = contextOf(sources.get(relative(absolute)) ?? '').filter(context => !chosen.has(context.split('=')[0]))
   const options = ['--ref=view', ...contextArgs([...own, ...contexts])]
   return remember(`view:${await versionOf(absolute)}:${file}:${ref}:${numbers}:${options}`, () => inTurn(async () => {
-    await mkdir(VIEWS, { recursive: true })
-    const viewFile = path.join(VIEWS, `${randomBytes(8).toString('hex')}.elyx`)
+    await mkdir(viewsFolder(), { recursive: true })
+    const viewFile = path.join(viewsFolder(), `${randomBytes(8).toString('hex')}.elyx`)
     await writeFile(viewFile, `import "${relative(absolute)}" as Source
 
 view = frame {
@@ -331,6 +372,67 @@ view = frame {
       await rm(viewFile, { force: true })
     }
   }))
+}
+
+const exportsFolder = () => path.join(root, 'exports')
+
+const safeName = name => String(name).replace(/[^\w.@-]+/g, '-').replace(/^[-.]+/, '') || 'export'
+
+const scaledName = (name, scale, extension) => `${safeName(name)}${scale === 1 ? '' : `@${scale}x`}.${extension}`
+
+const saveExport = async (name, bytes) => {
+  await mkdir(exportsFolder(), { recursive: true })
+  await writeFile(path.join(exportsFolder(), name), bytes)
+  return `exports/${name}`
+}
+
+// What to export: a layer as a tree target names it, or a whole file.
+const exportSource = async ({ target, file }) => ({
+  absolute: await elyxFile(target?.filePath ?? file),
+  options: target?.sourceRef ? [`--ref=${target.sourceRef}`, ...(target.overridePath ? [`--override-path=${target.overridePath}`] : [])] : [],
+})
+
+const readAsset = async file => {
+  try {
+    const absolute = await inProject(file)
+    const extension = path.extname(absolute).toLowerCase()
+    if (extension === '.svg') return { svg: await readFile(absolute, 'utf8') }
+    return { data: `data:${MIME[extension] ?? 'application/octet-stream'};base64,${(await readFile(absolute)).toString('base64')}` }
+  } catch {
+    return null
+  }
+}
+
+const checkScale = scale => {
+  if (!(scale > 0 && scale <= 16)) throw new Error(`Scale ${scale} is out of range.`)
+}
+
+const exportLayer = async ({ target, file, name, format, scales = [1], contexts = [] }) => {
+  const { absolute, options } = await exportSource({ target, file })
+  const context = contextArgs(contexts)
+  if (format === 'svg') {
+    const { tree } = await elyxJson('tree', absolute, ...options, '--depth=full', ...context)
+    return { files: [await saveExport(`${safeName(name)}.svg`, await treeToSvg(tree, readAsset))] }
+  }
+  if (format === 'css') return { files: [await saveExport(`${safeName(name)}.css`, await elyx('css', absolute, ...options, ...context))] }
+  if (format !== 'png') throw new Error(`${format} is not an export format.`)
+  scales.forEach(checkScale)
+  return { files: await Promise.all(scales.map(scale => inTurn(async () => saveExport(scaledName(name, scale, 'png'), await renderTo(absolute, scale, [...options, ...context]))))) }
+}
+
+// A PNG for the page to convert, since the CLI only writes PNG.
+const exportImage = async (query) => {
+  const scale = Number(query.get('scale'))
+  checkScale(scale)
+  const target = { filePath: query.get('file'), sourceRef: query.get('ref'), overridePath: query.get('path') }
+  const { absolute, options } = await exportSource({ target })
+  return inTurn(() => renderTo(absolute, scale, [...options, ...contextArgs(query.getAll('context'))]))
+}
+
+const revealExports = async () => {
+  const opener = { darwin: 'open', win32: 'explorer' }[process.platform] ?? 'xdg-open'
+  await run(opener, [exportsFolder()]).catch(() => {})
+  return {}
 }
 
 const diagnose = async file => JSON.parse(await elyx('diagnostics', file).catch(cause => cause.stdout))
@@ -446,8 +548,27 @@ const readBody = async request => {
   return JSON.parse(Buffer.concat(chunks).toString('utf8'))
 }
 
+// The server holds one project at a time. Every open page reloads onto the new one.
+const switchProject = async ({ root: next }) => {
+  const known = (await projects()).find(item => item.root === next)
+  if (!known) throw new Error('That is not a project in this repository.')
+  if (known.isCurrent) return {}
+  const entry = await entryFile(next)
+  await rm(viewsFolder(), { recursive: true, force: true })
+  root = next
+  opened = entry
+  snapshotting = null
+  announced = ''
+  history.length = 0
+  watchProject()
+  for (const listener of listeners) listener.write('data: switched\n\n')
+  warmAll()
+  return {}
+}
+
 const getters = {
   project,
+  projects,
   activity,
   usage,
   board: query => {
@@ -457,7 +578,7 @@ const getters = {
   layers: query => layers(query.get('file'), query.get('ref'), query.getAll('context')),
   source: query => source(query.get('file'), query.get('ref'), query.get('path')),
 }
-const posters = { edit, token: editToken, move: moveFrame, undo, ask }
+const posters = { edit, token: editToken, move: moveFrame, undo, ask, export: exportLayer, reveal: revealExports, 'switch-project': switchProject }
 
 const server = createServer(async (request, response) => {
   const respond = (status, type, body, headers = {}) => {
@@ -492,6 +613,14 @@ const server = createServer(async (request, response) => {
       const bytes = await view({ file: query.get('file'), ref: String(query.get('ref')), kind: String(query.get('kind')), x, y, w, h, scale, contexts: query.getAll('context') })
       return respond(200, 'image/png', bytes, FOREVER)
     }
+    if (isGet && route === 'export-image') return respond(200, 'image/png', await exportImage(query))
+    if (request.method === 'POST' && route === 'export-file') {
+      const name = String(query.get('name'))
+      if (!/\.(jpg|webp)$/.test(name)) throw new Error(`${name} is not an image to save.`)
+      const chunks = []
+      for await (const chunk of request) chunks.push(chunk)
+      return respond(200, 'application/json', JSON.stringify({ file: await saveExport(safeName(name), Buffer.concat(chunks)) }))
+    }
     if (isGet && route === 'asset') {
       const { type, bytes } = await asset(query.get('path'))
       return respond(200, type, bytes, { 'content-security-policy': "default-src 'none'; style-src 'unsafe-inline'" })
@@ -507,14 +636,27 @@ const server = createServer(async (request, response) => {
 })
 
 let settle
-watch(root, { recursive: true }, (_, name) => {
-  if (!name || /(^|\/)(\.|node_modules\/)/.test(name)) return
-  clearTimeout(settle)
-  settle = setTimeout(announce, 120)
-})
+let watcher
+const watchProject = () => {
+  watcher?.close()
+  watcher = watch(root, { recursive: true }, (_, name) => {
+    if (!name || IGNORED.test(name)) return
+    clearTimeout(settle)
+    settle = setTimeout(announce, 120)
+  })
+}
+watchProject()
+
+// Reads ahead, so a page finds its data ready.
+const warmAll = () =>
+  project().then(async ({ opened: file, stamp, files }) => {
+    announced = stamp
+    await warm(file, false)
+    for (const item of files) await warm(item.file).catch(() => {})
+  }).catch(() => {})
 
 const stop = async () => {
-  await Promise.all([rm(scratch, { recursive: true, force: true }), rm(VIEWS, { recursive: true, force: true })])
+  await Promise.all([rm(scratch, { recursive: true, force: true }), rm(viewsFolder(), { recursive: true, force: true })])
   process.exit(0)
 }
 process.on('SIGTERM', stop)
@@ -522,10 +664,5 @@ process.on('SIGINT', stop)
 
 server.listen(0, '127.0.0.1', () => {
   process.stdout.write(`http://127.0.0.1:${server.address().port}/${token}/\n`)
-  // Reads ahead, so the first page finds its data ready.
-  project().then(async ({ opened: file, stamp, files }) => {
-    announced = stamp
-    await warm(file, false)
-    for (const item of files) await warm(item.file).catch(() => {})
-  }).catch(() => {})
+  warmAll()
 })

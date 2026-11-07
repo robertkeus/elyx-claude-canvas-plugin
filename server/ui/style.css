@@ -103,6 +103,14 @@ button.chip:hover { background: var(--chip-strong) }
 #toggle-side svg { transform: scaleX(-1) }
 .project { display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: var(--r-md); background: var(--chip); color: var(--heading); font-weight: 600; white-space: nowrap }
 .project small { color: var(--muted); font-size: 11px; font-weight: 400 }
+.project .faint { display: grid; place-items: center }
+button.project:not(:disabled):hover { background: var(--chip-strong) }
+button.project:disabled { cursor: default }
+.project-menu { width: 288px }
+.menu .project-row { height: 44px }
+.project-row div { min-width: 0 }
+.project-row b, .project-row small { display: block; overflow: hidden; font-weight: 500; text-overflow: ellipsis; white-space: nowrap }
+.project-row small { color: var(--muted); font-size: 11px; font-weight: 400 }
 #crumbs { display: flex; align-items: center; gap: 12px; border-block: 1px solid var(--line) }
 .crumb-nav { flex: none; display: flex; align-items: center; gap: 10px; height: 100%; padding: 0 12px; border-right: 1px solid var(--line); color: var(--muted) }
 .crumb-nav > * { transition: color var(--ease) }
@@ -324,6 +332,16 @@ body.rail-open #rail { display: flex }
 .ctx-row .inherited { color: var(--faint) }
 .ctx-row[aria-pressed="true"] .name { color: var(--accent); font-weight: 500 }
 .code { margin: 0; padding: 10px; border-radius: var(--r-md); background: var(--chip); color: var(--body); font: 11px/1.55 var(--mono); overflow-x: auto; white-space: pre }
+
+/* Export */
+.export { display: flex; flex-direction: column; gap: 8px }
+.export-row { display: flex; flex-wrap: wrap; gap: 4px }
+.export-row button { min-width: 34px; height: 26px; padding: 0 8px; border-radius: var(--r-sm); background: var(--chip); color: var(--body); font-size: 12px; font-weight: 500; transition: background var(--ease) }
+.export-row button:hover { background: var(--chip-strong) }
+.export-row button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent) }
+.export-go { height: 32px; border-radius: var(--r-md); background: var(--solid); color: var(--on-solid); font-weight: 500; transition: opacity var(--ease) }
+.export-go:disabled { opacity: .5; cursor: default }
+.export-popover { width: 256px; padding: 12px }
 
 /* Floating */
 .popover { position: fixed; z-index: 30; max-height: calc(100vh - 16px); overflow-y: auto; border: 1px solid var(--line-strong); border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--float); animation: rise .08s ease }
