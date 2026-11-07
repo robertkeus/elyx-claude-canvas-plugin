@@ -111,4 +111,8 @@ Edits change one property and leave every other line alone, so your diffs show o
 
 While it draws, the canvas keeps a short-lived file in a hidden `.elyx-canvas` folder in your project, because imports only resolve from inside it. The folder goes away with the canvas.
 
+## License
+
+MIT, see [LICENSE](LICENSE). The bundled Lucide icons keep their own license, see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
 <sub>Driftwood, the product in these images, is a made-up sample.</sub>
