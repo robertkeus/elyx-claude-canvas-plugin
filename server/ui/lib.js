@@ -3,6 +3,7 @@ import { ICONS } from './icons.js'
 
 export const state = {
   project: null,
+  projects: [],
   usage: null,
   activity: [],
   revision: 0,

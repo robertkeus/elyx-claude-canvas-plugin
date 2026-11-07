@@ -1,7 +1,7 @@
 // Routing, the bars around the stage, and live updates.
 import { openComposer } from './ask.js'
 import { bounds, fit, focusOn, loadBoard, paint, refine, select, treeOf, zoomCenter } from './board.js'
-import { $, contextAxes, el, get, icon, needUsage, plural, report, shortName, state, stored, undo } from './lib.js'
+import { $, contextAxes, el, get, icon, needUsage, plural, post, report, shortName, state, stored, undo } from './lib.js'
 import { isScreenFile, openRecent, renderNav } from './nav.js'
 import { assetsPage, colorsPage, componentPage, galleryPage, homePage, scalesPage } from './pages.js'
 import { closePopover, popover, renderQuick } from './pickers.js'
@@ -192,11 +192,25 @@ const changeContext = async () => {
 }
 
 const applyProject = () => {
-  const { project } = state
+  const { project, projects } = state
   document.title = `${project.name} · Elyx`
   document.documentElement.style.setProperty('--canvas', project.canvas ?? 'var(--stage)')
-  $('project').replaceChildren(project.name, project.branch ? el('small', { textContent: project.branch }) : '')
+  const canSwitch = projects.length > 1
+  $('project').disabled = !canSwitch
+  $('project').replaceChildren(project.name, project.branch ? el('small', { textContent: project.branch }) : '', canSwitch ? el('span', { className: 'faint' }, icon('chevron-down', 13)) : '')
 }
+
+const openProjects = () => popover($('project'), [
+  el('div', { className: 'head', textContent: 'Projects in this repository' }),
+  state.projects.map(item =>
+    el('button', {
+      className: `project-row ${item.isCurrent ? 'on' : ''}`,
+      onclick: async () => {
+        closePopover()
+        await post('switch-project', { root: item.root }).catch(report)
+      },
+    }, el('div', {}, el('b', { textContent: item.name }), el('small', { textContent: item.path, title: item.path })), item.isCurrent ? icon('check', 14) : null)),
+], { className: 'menu project-menu' })
 
 const setTheme = theme => {
   document.documentElement.dataset.theme = theme
@@ -231,6 +245,7 @@ const wireBars = () => {
 
   $('find').prepend(icon('search', 14))
   $('find').onclick = openSearch
+  $('project').onclick = openProjects
   $('recent').onclick = () => openRecent($('recent'))
   $('toggle-side').onclick = () => {
     document.body.classList.toggle('no-side')
@@ -291,12 +306,16 @@ document.body.classList.toggle('rail-open', restoreRail())
 if (innerWidth < 720) document.body.classList.add('no-side')
 wireBars()
 try {
-  state.project = await get('project')
+  ;[state.project, state.projects] = await Promise.all([get('project'), get('projects')])
   applyProject()
   if (!location.hash) history.replaceState(null, '', `#board:${state.project.opened}`)
   await route()
   state.revision = state.project.stamp
   new EventSource('events').onmessage = event => {
+    if (event.data === 'switched') {
+      history.replaceState(null, '', location.pathname)
+      return location.reload()
+    }
     if (event.data === state.revision) return
     state.revision = event.data
     refresh()

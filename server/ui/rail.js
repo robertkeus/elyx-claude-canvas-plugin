@@ -1,5 +1,6 @@
 // The inspector on the right: what you selected, or where you are.
 import { editLayer, select, trailOf } from './board.js'
+import { exportControls } from './export.js'
 import { canColor, colorOf, FIELDS, openColors, openNumbers, openWeights, renderQuick, swatch } from './pickers.js'
 import { $, contextAxes, edit, el, get, hex, icon, isBase, local, plural, post, query, report, saved, shortName, state, stored, tokenOf, tokenPath, unwrap } from './lib.js'
 
@@ -62,7 +63,8 @@ const fileBody = () => {
       modified ? pair('Last modified', new Date(modified).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })) : null),
     axes.length ? section('Context', axes) : null,
     section('Canvas', el('div', { className: 'toggle-row' }, 'Draw connections', toggle)),
-    section('Changed recently', recentFiles(4).map(recent => linkPair(`${shortName(recent)}.elyx`, boardLink(recent)))))
+    section('Changed recently', recentFiles(4).map(recent => linkPair(`${shortName(recent)}.elyx`, boardLink(recent)))),
+    section('Export', exportControls({ name: shortName(file), file })))
 }
 
 const pathTrail = trail => el('div', { className: 'path' }, trail.slice(0, -1).flatMap((step, index) => [
@@ -146,7 +148,8 @@ const layerBody = () => {
     section('Source',
       pair('Size', size),
       source ? linkPair(`${shortName(source.file)} / ${source.symbol}`, `#component:${local(source.file)}`) : null,
-      own.meta?.code ? pair('Code', own.meta.code.split('/').at(-1)) : null))
+      own.meta?.code ? pair('Code', own.meta.code.split('/').at(-1)) : null),
+    section('Export', exportControls({ name: own.name, target: own.target })))
 }
 
 const sourceBody = () => {

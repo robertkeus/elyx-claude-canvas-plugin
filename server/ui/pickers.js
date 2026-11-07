@@ -1,6 +1,7 @@
 // Popovers, the color and number pickers, and the quick-edit bar beside a selection.
 import { editLayer, select, trailOf } from './board.js'
 import { openComposer } from './ask.js'
+import { exportControls } from './export.js'
 import { $, clamp, colorTokens, edit, el, icon, isBase, local, report, ROLE_ORDER, roleOf, state, stored, tokenOf, tokenPath, tokenValue, unwrap } from './lib.js'
 
 let open = null
@@ -198,6 +199,10 @@ const moreMenu = anchor => {
     el('button', { textContent: layer.hidden ? 'Show layer' : 'Hide layer', onclick: () => {
       closePopover()
       edit(editLayer(), 'display', { raw: layer.hidden ? '.visible' : '.hidden' })
+    } }),
+    el('button', { textContent: 'Export…', onclick: () => {
+      closePopover()
+      popover(anchor, exportControls({ name: layer.name, target: layer.target }), { className: 'export-popover' })
     } }),
     el('button', { textContent: 'Ask Claude', onclick: () => {
       closePopover()

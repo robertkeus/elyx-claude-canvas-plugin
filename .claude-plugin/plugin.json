@@ -1,5 +1,5 @@
 {
   "name": "elyx-canvas",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Browse an Elyx project in the Browser pane: click any layer, see every component and token, and make small edits. Or open it in the Elyx app"
 }
