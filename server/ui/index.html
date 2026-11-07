@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Elyx overview</title>
+<link rel="stylesheet" href="ui/style.css">
+<body>
+<aside id="sidebar" aria-label="Project">
+  <div class="side-head">
+    <button id="find" class="find"><span class="find-label">Search</span><kbd>⌘K</kbd></button>
+    <button id="recent" class="icon-button soft" aria-label="Recent files"></button>
+  </div>
+  <nav id="tabs" aria-label="Views"></nav>
+  <nav id="links" aria-label="Contents"></nav>
+</aside>
+<main id="center">
+  <header id="topbar">
+    <button id="toggle-side" class="icon-button" aria-label="Toggle sidebar"></button>
+    <div id="project" class="project"></div>
+    <span class="grow"></span>
+    <button id="inspect" class="icon-button" aria-label="Inspect layers" aria-pressed="true"></button>
+    <button id="overlays" class="icon-button" aria-label="Show titles and connections" aria-pressed="true"></button>
+    <button id="theme" class="icon-button" aria-label="Switch light and dark"></button>
+  </header>
+  <div id="crumbs">
+    <div class="crumb-nav">
+      <a id="go-home" href="#home" aria-label="Home"></a>
+      <button id="go-back" aria-label="Back"></button>
+      <button id="go-forward" aria-label="Forward"></button>
+    </div>
+    <span id="crumb-title"></span>
+    <span class="grow"></span>
+    <a id="crumb-close" href="#home" aria-label="Close"></a>
+    <button id="toggle-rail" aria-label="Toggle inspector"></button>
+  </div>
+  <section id="stage">
+    <div id="board" hidden>
+      <div id="world"><div id="slots"></div><img id="base" alt=""><div id="lift"></div><div id="sharp"></div></div>
+      <div id="marks">
+        <div id="titles"></div>
+        <div id="hovered" class="box" hidden><span></span></div>
+        <div id="selected" class="box" hidden><span></span></div>
+      </div>
+      <div id="quick" role="toolbar" aria-label="Quick edit" hidden></div>
+    </div>
+    <div id="page" hidden></div>
+    <div id="hud" hidden></div>
+    <button id="orb" aria-label="Ask Claude"></button>
+  </section>
+</main>
+<aside id="rail" aria-label="Inspector"></aside>
+<div id="floating"></div>
+<div id="toast" role="status" hidden></div>
+<script type="module" src="ui/app.js"></script>
+</html>

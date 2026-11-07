@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { importAlias, setProperty, setToken, tokenLiteral } from './edit.mjs'
+import { blockSource, importAlias, setProperty, setToken, tokenLiteral } from './edit.mjs'
 
 const screen = `import "components/button.elyx" as Button
 import "./local.elyx" as Local
@@ -105,6 +105,15 @@ test('an unknown ref is refused', () => {
 test('leaves everything else byte for byte', () => {
   const out = setProperty(screen, { ref: 'signIn.form' }, 'width', '50%')
   assert.equal(out, screen.replace('width: 100%,\n    fill', 'width: 50%,\n    fill'))
+})
+
+test('finds the source of a nested declaration', () => {
+  assert.equal(blockSource(screen, { ref: 'signIn.form' }).split('\n')[0], '  form = frame {')
+  assert.ok(blockSource(screen, { ref: 'signIn.form.submit' }).includes('submit = frame : Button.primary {\n      width: 100%\n    }'))
+})
+
+test('an override not written yet shows the nearest block', () => {
+  assert.ok(blockSource(screen, { ref: 'signIn.form.submit', overridePath: '/Button.primary.label' }).includes('submit = frame'))
 })
 
 const tokens = `@variants(dark.darkColors)

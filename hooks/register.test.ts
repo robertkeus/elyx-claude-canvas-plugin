@@ -37,6 +37,33 @@ test('a request goes to Claude, even one that ends in a file name', async ($, on
   expect(sent[0]).toContain('elyx --help')
 })
 
+test('the canvas can ask Claude, even when its line arrives in two pieces', async ($, on) => {
+  const clock = mock.clock(on)
+  const sent: string[] = []
+  let env: Record<string, string> | undefined
+  on('command.register', () => ({ value: { command: 'elyx' } }))
+  on('session.start', (_, e) => ({ cwd: e.cwd }))
+  on('prompt.submit', (_, e) => {
+    sent.push(e.text)
+    return { text: e.text }
+  })
+  on('process.spawn', async function* (_, e) {
+    env = e.env
+    yield { stream: 'stdout', text: 'http://127.0.0.1:1/t/\n' }
+    yield { stream: 'stdout', text: 'ask {"text":"Make it ' }
+    yield { stream: 'stdout', text: 'bigger"}\n' }
+    return { value: { code: 0, signal: null } }
+  })
+  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
+
+  await $.command.run(run('a.elyx'))
+  await clock.advance(0)
+
+  expect(env).toEqual({ ELYX_CANVAS_BRIDGE: '1' })
+  expect(sent).toHaveLength(1)
+  expect(sent[0]).toStartWith('Do this with Elyx: Make it bigger')
+})
+
 test('open with a bare file opens it without asking Claude', async ($, on) => {
   let argv: readonly string[] = []
   on('command.register', () => ({ value: { command: 'elyx' } }))
