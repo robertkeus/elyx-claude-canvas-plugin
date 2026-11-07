@@ -1,6 +1,19 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/readme/hero-dark.png">
+    <img src="docs/readme/hero-light.png" alt="The Elyx canvas in Claude: a board of screens with a small label selected and a quick-edit bar beside it.">
+  </picture>
+</p>
+
 # Elyx for Claude Code
 
 One command, `/elyx`, for working with Elyx designs from Claude Code: design something new, browse a project, or run anything the `elyx` CLI can do.
+
+```
+/elyx design a pricing card
+```
+
+Claude writes the design, checks it, and opens it on a canvas you can click through. It's an overview for designers, not an editor: you keep sight of every screen, component and token, and change the small things yourself.
 
 ## Install
 
@@ -36,3 +49,63 @@ In the desktop app, where `/plugin` does not run: click **+** next to the prompt
 | `/elyx --app a.elyx` | Opens the project in the Elyx app, if you have it |
 
 The canvas opens in the Browser pane of the Claude desktop app. Elsewhere you get a URL to open yourself.
+
+## The canvas
+
+### Click anything, change it right there
+
+Select a layer, however small, and a quick-edit bar opens beside it for text, color and size. Colors come from your tokens, so the design system stays intact. The inspector holds the rest, and can apply a change to this screen or to the component everywhere.
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/readme/quick-edit-dark.png">
+    <img src="docs/readme/quick-edit-light.png" alt="A selected button label with the quick-edit bar below it and the token color picker open.">
+  </picture>
+</p>
+
+### See your whole design system
+
+Browse every component and token, with where each one is used. Components show their variants and are highlighted on the real screens that use them. Tokens show their value in every context.
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/readme/library-dark.png">
+    <img src="docs/readme/library-light.png" alt="A gallery of components with a panel of color tokens, one of them used by 34 layers.">
+  </picture>
+</p>
+
+### Sharp at any zoom
+
+Whatever is in view is redrawn by the Elyx engine at the exact zoom when you stop moving, so a corner stays a clean curve at 1,000% and beyond.
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/readme/zoom-dark.png">
+    <img src="docs/readme/zoom-light.png" alt="A button zoomed in to 1360 percent with crisp edges and type, next to a small map of where the view sits.">
+  </picture>
+</p>
+
+### Arrange your board
+
+Drag a screen and the new position is saved to the file. Drag empty canvas, or hold Space, to pan.
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/readme/drag-dark.png">
+    <img src="docs/readme/drag-light.png" alt="A screen being dragged across a board, leaving a dashed outline where it was, with a Saved message and Undo.">
+  </picture>
+</p>
+
+### And more
+
+- **Search** the whole project with ⌘K, including the text inside layers.
+- **Context** switches a design between themes and surfaces.
+- **Ask Claude** sends bigger changes to the session that opened the canvas, with the selected layer as context.
+
+## Your files stay yours
+
+Edits change one property and leave every other line alone, so your diffs show only what you changed. Each edit is checked with `elyx diagnostics`. A change that adds a problem is reverted, and Undo takes back the rest.
+
+While it draws, the canvas keeps a short-lived file in a hidden `.elyx-canvas` folder in your project, because imports only resolve from inside it. The folder goes away with the canvas.
+
+<sub>Driftwood, the product in these images, is a made-up sample.</sub>

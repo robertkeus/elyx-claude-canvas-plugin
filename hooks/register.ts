@@ -13,16 +13,31 @@ To show a design, and when a design is done: run \`node ${root}/server/canvas.mj
 
 let stopServer: (() => void) | undefined
 
+// A request from the canvas's Ask Claude button: `{ text }`, already naming the file and layer.
+const askClaude = ($: EngineInterface, line: string) => {
+  const { text } = JSON.parse(line) as { text: string }
+  $.clock.after(0, () => void $.prompt.submit({ text: request(text, $.plugin.root) }))
+}
+
 const startServer = ($: EngineInterface, file: string) =>
   new Promise<string>((resolve, reject) => {
-    const server = $.process.spawn({ argv: ['node', `${$.plugin.root}/server/canvas.mjs`, file] })
+    const server = $.process.spawn({ argv: ['node', `${$.plugin.root}/server/canvas.mjs`, file], env: { ELYX_CANVAS_BRIDGE: '1' } })
     stopServer = () => void server.return(undefined as never)
     void (async () => {
       let errors = ''
+      let output = ''
       for await (const { stream, text } of server) {
-        if (stream === 'stderr') errors += text
-        const url = stream === 'stdout' && text.match(/http:\S+/)?.[0]
-        if (url) resolve(url)
+        if (stream === 'stderr') {
+          errors += text
+          continue
+        }
+        // Pieces arrive as they were written, so a line can span two of them.
+        const lines = (output + text).split('\n')
+        output = lines.pop() ?? ''
+        for (const line of lines) {
+          if (line.startsWith('http:')) resolve(line.trim())
+          if (line.startsWith('ask ')) askClaude($, line.slice(4))
+        }
       }
       reject(new Error(errors.trim() || 'The canvas server stopped.'))
     })().catch(reject)

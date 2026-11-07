@@ -137,6 +137,21 @@ export const setProperty = (source, { ref, overridePath = '' }, prop, value) => 
   return existing ? splice(s, existing.value, value) : insertProperty(s, body, prop, value)
 }
 
+// The declaration a tree target names, or the nearest block above it when the
+// override has not been written yet.
+export const blockSource = (source, { ref, overridePath = '' }) => {
+  let body = [0, source.length]
+  let text = source
+  const names = [...ref.split('.'), ...overridePath.split('/').filter(Boolean).map(segment => segment.split('.').at(-1))]
+  for (const name of names) {
+    const entry = child(source, body, name)
+    if (!entry) break
+    body = entry.block
+    text = `${indentAt(source, entry.start)}${source.slice(entry.start, entry.block[1] + 1)}`
+  }
+  return text
+}
+
 const tokenGroup = (s, scope) => {
   const group = child(s, [0, s.length], scope)
   if (!group) throw new Error(`${scope} is not declared in this file.`)
