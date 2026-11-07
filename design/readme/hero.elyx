@@ -1,0 +1,84 @@
+import "icons/sparkles.svg" as sparkIcon
+import "icons/enter.svg" as enterIcon
+import "tokens/colors.elyx" as Colors
+import "components/type.elyx" as Text
+import "readme/app.elyx" as App
+
+// The banner at the top of the README, 2:1 so it holds at GitHub's width.
+export hero = frame {
+  left: 0px,
+  top: 0px,
+  width: 1280px,
+  height: 720px,
+  fill: Colors.colors.stage,
+  children: [glowLeft, glowRight, intro, window],
+
+  glowLeft = frame {
+    left: 90px,
+    top: -240px,
+    width: 620px,
+    height: 620px,
+    corner-radius: 999px,
+    fill: {radial-gradient: {stops: [stop(0%, opacity(Colors.colors.orb-start, 26%)), stop(100%, opacity(Colors.colors.orb-start, 0%))]}}
+  }
+
+  glowRight = frame {
+    left: 560px,
+    top: -260px,
+    width: 660px,
+    height: 660px,
+    corner-radius: 999px,
+    fill: {radial-gradient: {stops: [stop(0%, opacity(Colors.colors.orb-end, 24%)), stop(100%, opacity(Colors.colors.orb-end, 0%))]}}
+  }
+
+  intro = frame {
+    left: 0px,
+    top: 44px,
+    width: 100%,
+    layout: {direction: .column, align-items: .center, item-gap: 12px},
+    children: [eyebrow, headline, sub],
+
+    eyebrow = frame {
+      height: 28px,
+      corner-radius: 999px,
+      fill: Colors.colors.surface,
+      border: {color: Colors.colors.line-strong, width: 1px},
+      layout: {direction: .row, align-items: .center, item-gap: 7px},
+      padding: [0px, 12px],
+      children: [glyph, label],
+
+      glyph = asset {
+        width: 13px,
+        height: 13px,
+        contents: sparkIcon,
+        fill: Colors.colors.accent
+      }
+
+      label = text : Text.meta {
+        contents: "A plugin for Claude Code",
+        font-style: "Medium",
+        fill: Colors.colors.body
+      }
+    }
+
+    headline = text : Text.pageTitle {
+      contents: "Your Elyx designs, inside Claude",
+      font-size: 52,
+      letter-spacing: -2.5%,
+      fill: Colors.colors.ink
+    }
+
+    sub = text : Text.body {
+      contents: "Browse every screen, component and token. Click anything to change it.",
+      font-size: 20,
+      fill: Colors.colors.muted
+    }
+  }
+
+  window = frame : App.appWindow {
+    left: 92px,
+    top: 214px,
+    transform: [0.76, 0, 0, 0, 0.76, 0],
+    shadow: [{drop-shadow: {color: #0000002E, offset: point(0, 30), blur-radius: 80px}}, {drop-shadow: {color: #00000014, offset: point(0, 2), blur-radius: 6px}}]
+  }
+}

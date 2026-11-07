@@ -1,0 +1,704 @@
+import "icons/house.svg" as icon0
+import "icons/search.svg" as icon1
+import "icons/history.svg" as icon2
+import "icons/image.svg" as icon3
+import "icons/frame.svg" as icon4
+import "icons/type.svg" as icon5
+import "icons/component.svg" as icon6
+import "icons/palette.svg" as icon7
+import "icons/layers.svg" as icon8
+import "icons/grid.svg" as icon9
+import "icons/file.svg" as icon10
+import "icons/moon.svg" as icon11
+import "icons/eye.svg" as icon12
+import "icons/braces.svg" as icon13
+import "icons/pointer.svg" as icon14
+import "icons/scan.svg" as icon15
+import "icons/sparkles.svg" as icon16
+import "icons/undo.svg" as icon17
+import "icons/link.svg" as icon18
+import "icons/code.svg" as icon19
+import "icons/check.svg" as icon20
+import "icons/plus.svg" as icon21
+import "icons/x.svg" as icon22
+import "icons/arrow-right.svg" as icon23
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "tokens/spacing.elyx" as Spacing
+import "tokens/typography.elyx" as Type
+import "blocks/center.elyx" as Center
+import "blocks/inspector.elyx" as Inspector
+import "blocks/sidebar.elyx" as Sidebar
+import "components/canvas.elyx" as Canvas
+import "components/card.elyx" as Card
+import "components/controls.elyx" as Controls
+import "components/type.elyx" as Text
+
+export assets = frame {
+  title: "Assets",
+  caption: "Every icon, image and font in the project.",
+  left: 0px,
+  top: 0px,
+  width: Spacing.size.screen,
+  height: Spacing.size.screen-height,
+  fill: Colors.colors.surface,
+  layout: {direction: .row},
+  children: [side, main, rail],
+
+  side = frame : Sidebar.assetsSidebar {}
+
+  main = frame : Center.center {
+    stage {
+      overrides: [insert(page, after = .nil)],
+
+      hud {
+        display: .none
+      }
+    }
+
+    crumbBar {
+      name {
+        contents: "Assets"
+      }
+    }
+
+    page = frame {
+      left: 48px,
+      top: 36px,
+      width: Spacing.size.page-width,
+      layout: {direction: .column, item-gap: 16px},
+      children: [head, chips, rule, iconSection, fontSection],
+
+      head = frame {
+        width: 100%,
+        layout: {direction: .column, item-gap: 3px},
+        children: [name, note],
+
+        name = text : Text.pageTitle {
+          contents: "Assets"
+        }
+
+        note = text : Text.body {
+          contents: "24 icons, 8 images, 1 font",
+          fill: Colors.colors.muted
+        }
+      }
+
+      chips = frame {
+        layout: {direction: .row, item-gap: 4px},
+        children: [allChip, iconsChip, imagesChip, fontsChip],
+
+        allChip = frame : Controls.filterActive {
+          label {
+            contents: "All"
+          }
+        }
+
+        iconsChip = frame : Controls.filter {
+          label {
+            contents: "Icons"
+          }
+        }
+
+        imagesChip = frame : Controls.filter {
+          label {
+            contents: "Images"
+          }
+        }
+
+        fontsChip = frame : Controls.filter {
+          label {
+            contents: "Fonts"
+          }
+        }
+      }
+
+      rule = frame {
+        width: 100%,
+        height: 1px,
+        fill: Colors.colors.line-strong
+      }
+
+      iconSection = frame {
+        width: 100%,
+        layout: {direction: .column, item-gap: 10px},
+        children: [title, grid],
+
+        title = text : Text.heading {
+          contents: "Icons"
+        }
+
+        grid = frame {
+          width: 100%,
+          layout: {direction: .row, wrap: .true, item-gap: 12px, line-gap: 12px},
+          children: [cell0, cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10, cell11, cell12, cell13, cell14, cell15, cell16, cell17, cell18, cell19, cell20, cell21, cell22, cell23],
+
+          cell0 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon0,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "house",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell1 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon1,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "search",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell2 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon2,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "history",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell3 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon3,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "image",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell4 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon4,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "frame",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell5 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon5,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "type",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell6 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon6,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "component",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell7 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon7,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "palette",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell8 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon8,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "layers",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell9 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon9,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "grid",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell10 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon10,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "file",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell11 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon11,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "moon",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell12 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon12,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "eye",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell13 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon13,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "braces",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell14 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon14,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "pointer",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell15 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon15,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "scan",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell16 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon16,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "sparkles",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell17 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon17,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "undo",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell18 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon18,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "link",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell19 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon19,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "code",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell20 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon20,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "check",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell21 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon21,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "plus",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell22 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon22,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "x",
+              font-size: Type.fontSize.xs
+            }
+          }
+
+          cell23 = frame {
+            width: 88px,
+            height: 88px,
+            corner-radius: Radius.radius.lg,
+            fill: Colors.colors.surface,
+            layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 8px},
+            shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+            children: [glyph, name],
+
+            glyph = asset {
+              width: 22px,
+              height: 22px,
+              contents: icon23,
+              fill: Colors.colors.heading
+            }
+
+            name = text : Text.meta {
+              contents: "arrow-right",
+              font-size: Type.fontSize.xs
+            }
+          }
+        }
+      }
+
+      fontSection = frame {
+        width: 100%,
+        layout: {direction: .column, item-gap: 10px},
+        children: [title, specimen],
+
+        title = text : Text.heading {
+          contents: "Fonts"
+        }
+
+        specimen = frame : Card.sheet {
+          width: 100%,
+          layout: {direction: .row, align-items: .center, item-gap: 16px},
+          padding: [14px, 18px],
+          overrides: [insert(sample, after = .nil), insert(about, after = sample)],
+
+          sample = text : Text.pageTitle {
+            contents: "Aa",
+            font-family: "Inter"
+          }
+
+          about = frame {
+            layout: {direction: .column, item-gap: 1px},
+            children: [name, detail],
+
+            name = text : Text.label {
+              contents: "Inter"
+            }
+
+            detail = text : Text.meta {
+              contents: "fonts/Inter-Variable.ttf"
+            }
+          }
+        }
+      }
+    }
+  }
+
+  rail = frame : Inspector.recentRail {}
+}

@@ -1,0 +1,202 @@
+import "icons/search.svg" as searchIcon
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "components/controls.elyx" as Controls
+import "components/type.elyx" as Text
+
+export swatchButton = frame {
+  left: 300px,
+  top: 0px,
+  width: 24px,
+  height: 24px,
+  corner-radius: Radius.radius.sm,
+  fill: #D4633A,
+  border: {color: Colors.colors.line-strong, width: 1px}
+}
+
+// Picking a color means picking a token, so the design system stays intact.
+export tokenPopover = frame {
+  left: 0px,
+  top: 0px,
+  width: 256px,
+  corner-radius: Radius.radius.lg,
+  fill: Colors.colors.surface,
+  border: {color: Colors.colors.line-strong, width: 1px},
+  layout: {direction: .column, item-gap: 10px},
+  padding: 12px,
+  shadow: [{drop-shadow: {color: #0000001F, offset: point(0, 12), blur-radius: 32px}}, {drop-shadow: {color: #0000000F, offset: point(0, 1), blur-radius: 3px}}],
+  children: [find, recentHead, recent, textHead, words, statusHead, status, surfaceHead, surfaces, custom],
+
+  find = frame : Controls.field {
+    width: 100%,
+    overrides: [insert(glyph, after = .nil)],
+
+    value {
+      contents: "Search tokens",
+      fill[0].color: Colors.colors.muted
+    }
+
+    glyph = asset {
+      width: 14px,
+      height: 14px,
+      contents: searchIcon,
+      fill: Colors.colors.muted
+    }
+  }
+
+  recentHead = text : Text.meta {
+    contents: "Recent"
+  }
+
+  recent = frame {
+    layout: {direction: .row, item-gap: 5px},
+    children: [one, two, three],
+
+    one = frame : swatchButton {
+      fill[0].color: #FFF8F1,
+      border: {color: Colors.colors.accent, width: 2px}
+    }
+
+    two = frame : swatchButton {
+      fill[0].color: #26221D
+    }
+
+    three = frame : swatchButton {
+      fill[0].color: #D4633A
+    }
+  }
+
+  textHead = text : Text.meta {
+    contents: "Text"
+  }
+
+  words = frame {
+    layout: {direction: .row, item-gap: 5px},
+    children: [one, two, three, four, five, six],
+
+    one = frame : swatchButton {
+      fill[0].color: #26221D
+    }
+
+    two = frame : swatchButton {
+      fill[0].color: #6E675D
+    }
+
+    three = frame : swatchButton {
+      fill[0].color: #3D3A35
+    }
+
+    four = frame : swatchButton {
+      fill[0].color: #8C8478
+    }
+
+    five = frame : swatchButton {
+      fill[0].color: #B8AE9F
+    }
+
+    six = frame : swatchButton {
+      fill[0].color: #FFF8F1
+    }
+  }
+
+  statusHead = text : Text.meta {
+    contents: "Brand and status"
+  }
+
+  status = frame {
+    layout: {direction: .row, item-gap: 5px},
+    children: [one, two, three, four, five, six],
+
+    one = frame : swatchButton {
+      fill[0].color: #D4633A
+    }
+
+    two = frame : swatchButton {
+      fill[0].color: #4F7A5F
+    }
+
+    three = frame : swatchButton {
+      fill[0].color: #4C7FD9
+    }
+
+    four = frame : swatchButton {
+      fill[0].color: #E8B24A
+    }
+
+    five = frame : swatchButton {
+      fill[0].color: #B84A26
+    }
+
+    six = frame : swatchButton {
+      fill[0].color: #2F5B44
+    }
+  }
+
+  surfaceHead = text : Text.meta {
+    contents: "Surfaces"
+  }
+
+  surfaces = frame {
+    layout: {direction: .row, item-gap: 5px},
+    children: [one, two, three, four, five, six],
+
+    one = frame : swatchButton {
+      fill[0].color: #FBF7F0
+    }
+
+    two = frame : swatchButton {
+      fill[0].color: #F1E9DC
+    }
+
+    three = frame : swatchButton {
+      fill[0].color: #E6DDCF
+    }
+
+    four = frame : swatchButton {
+      fill[0].color: #FFFFFF
+    }
+
+    five = frame : swatchButton {
+      fill[0].color: #F7F1E6
+    }
+
+    six = frame : swatchButton {
+      fill[0].color: #EADFCD
+    }
+  }
+
+  custom = frame {
+    width: 100%,
+    height: 30px,
+    border: {color: Colors.colors.line, width: 1px, sides: .top},
+    layout: {direction: .row, align-items: .end},
+    children: [hint],
+
+    hint = text : Text.hint {
+      contents: "Custom hex, when no token fits"
+    }
+  }
+}
+
+// Confirms a write, and offers the way back.
+export toast = frame {
+  left: 300px,
+  top: 60px,
+  height: 38px,
+  corner-radius: Radius.radius.md,
+  fill: Colors.colors.solid,
+  layout: {direction: .row, align-items: .center, item-gap: 14px},
+  padding: [0px, 14px],
+  shadow: {drop-shadow: {color: #00000033, offset: point(0, 8), blur-radius: 24px}},
+  children: [message, action],
+
+  message = text : Text.body {
+    contents: "Saved to screens/landing.elyx",
+    fill: Colors.colors.on-solid
+  }
+
+  action = text : Text.label {
+    contents: "Undo",
+    fill: Colors.colors.on-solid
+  }
+}

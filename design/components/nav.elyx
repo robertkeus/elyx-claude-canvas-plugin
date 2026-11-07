@@ -1,0 +1,256 @@
+import "icons/frame.svg" as frameIcon
+import "icons/ellipsis.svg" as ellipsisIcon
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "tokens/spacing.elyx" as Spacing
+import "tokens/typography.elyx" as Type
+import "components/type.elyx" as Text
+
+// Section title in the sidebar, with a count or a menu on the right.
+export navHead = frame {
+  left: 0px,
+  top: 0px,
+  width: 248px,
+  height: 28px,
+  layout: {direction: .row, align-items: .center, item-gap: 6px},
+  padding: [0px, 8px],
+  children: [label, spacer, count],
+
+  label = text : Text.label {
+    contents: "Section"
+  }
+
+  spacer = frame {}
+
+  count = text : Text.figure {
+    contents: "12",
+    font-style: "Regular",
+    fill: Colors.colors.faint
+  }
+}
+
+export navRow = frame {
+  left: 0px,
+  top: 40px,
+  width: 248px,
+  height: Spacing.size.row,
+  corner-radius: Radius.radius.sm,
+  layout: {direction: .row, align-items: .center, item-gap: 9px},
+  padding: [0px, 8px],
+  children: [glyph, label, spacer, count],
+
+  glyph = asset {
+    width: 15px,
+    height: 15px,
+    contents: frameIcon,
+    fill: Colors.colors.muted
+  }
+
+  label = text : Text.body {
+    contents: "Row"
+  }
+
+  spacer = frame {}
+
+  count = text : Text.figure {
+    contents: "",
+    font-style: "Regular",
+    fill: Colors.colors.faint
+  }
+}
+
+@variant
+export navRowActive = frame : navRow {
+  left: 280px,
+  top: 40px,
+  fill: Colors.colors.accent-soft,
+
+  glyph {
+    fill[0].color: Colors.colors.accent
+  }
+
+  label {
+    font-style: "Medium",
+    fill[0].color: Colors.colors.accent
+  }
+
+  count {
+    fill[0].color: Colors.colors.accent
+  }
+}
+
+// A sidebar row with a live thumbnail, so screens are recognised by sight.
+export thumbRow = frame {
+  left: 0px,
+  top: 88px,
+  width: 248px,
+  height: 34px,
+  corner-radius: Radius.radius.sm,
+  layout: {direction: .row, align-items: .center, item-gap: 10px},
+  padding: [0px, 6px],
+  children: [shot, label],
+
+  shot = frame {
+    width: 38px,
+    height: 24px,
+    corner-radius: Radius.radius.xs,
+    fill: Colors.colors.well,
+    border: {color: Colors.colors.line, width: 1px}
+  }
+
+  label = text : Text.body {
+    contents: "Screen"
+  }
+}
+
+@variant
+export thumbRowActive = frame : thumbRow {
+  left: 280px,
+  top: 88px,
+  fill: Colors.colors.accent-soft,
+
+  shot {
+    border[0].color: Colors.colors.accent-line
+  }
+
+  label {
+    font-style: "Medium",
+    fill[0].color: Colors.colors.accent
+  }
+}
+
+// The outlined blue row the editor uses for its Elyx actions.
+export pillRow = frame {
+  left: 0px,
+  top: 136px,
+  width: 248px,
+  height: Spacing.size.row,
+  corner-radius: Radius.radius.md,
+  border: {color: Colors.colors.line-strong, width: 1px},
+  fill: Colors.colors.surface,
+  layout: {direction: .row, align-items: .center, item-gap: 9px},
+  padding: [0px, 9px],
+  shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 2px}},
+  children: [glyph, label, spacer, count],
+
+  glyph = asset {
+    width: 15px,
+    height: 15px,
+    contents: frameIcon,
+    fill: Colors.colors.accent
+  }
+
+  label = text : Text.body {
+    contents: "Action",
+    font-style: "Medium",
+    fill: Colors.colors.accent
+  }
+
+  spacer = frame {}
+
+  count = text : Text.figure {
+    contents: "",
+    font-style: "Regular",
+    fill: Colors.colors.accent
+  }
+}
+
+export tab = frame {
+  left: 0px,
+  top: 184px,
+  width: 67px,
+  height: 37px,
+  layout: {direction: .row, justify-content: .center, align-items: .center},
+  children: glyph,
+
+  glyph = asset {
+    width: 17px,
+    height: 17px,
+    contents: frameIcon,
+    fill: Colors.colors.faint
+  }
+}
+
+@variant
+export tabActive = frame : tab {
+  left: 80px,
+  top: 184px,
+
+  glyph {
+    fill[0].color: Colors.colors.accent
+  }
+}
+
+export tabDivider = frame {
+  left: 160px,
+  top: 194px,
+  width: 1px,
+  height: 16px,
+  fill: Colors.colors.line
+}
+
+export menuButton = frame {
+  left: 200px,
+  top: 188px,
+  width: 22px,
+  height: 22px,
+  layout: {direction: .row, justify-content: .center, align-items: .center},
+  children: glyph,
+
+  glyph = asset {
+    width: 15px,
+    height: 15px,
+    contents: ellipsisIcon,
+    fill: Colors.colors.muted
+  }
+}
+
+// A token group in the sidebar, previewed by its first colors.
+export dotsRow = frame {
+  left: 0px,
+  top: 232px,
+  width: 248px,
+  height: Spacing.size.row,
+  corner-radius: Radius.radius.sm,
+  layout: {direction: .row, align-items: .center, item-gap: 3px},
+  padding: [0px, 8px],
+  children: [label, spacer, one, two, three, four],
+
+  label = text : Text.body {
+    contents: "Surfaces"
+  }
+
+  spacer = frame {}
+
+  one = frame {
+    width: 13px,
+    height: 13px,
+    corner-radius: Radius.radius.full,
+    fill: #FBF7F0,
+    border: {color: #0000001A, width: 1px}
+  }
+
+  two = frame {
+    width: 13px,
+    height: 13px,
+    corner-radius: Radius.radius.full,
+    fill: #F1E9DC,
+    border: {color: #0000001A, width: 1px}
+  }
+
+  three = frame {
+    width: 13px,
+    height: 13px,
+    corner-radius: Radius.radius.full,
+    fill: #FFFFFF,
+    border: {color: #0000001A, width: 1px}
+  }
+
+  four = frame {
+    width: 13px,
+    height: 13px,
+    corner-radius: Radius.radius.full,
+    fill: #E6DDCF,
+    border: {color: #0000001A, width: 1px}
+  }
+}

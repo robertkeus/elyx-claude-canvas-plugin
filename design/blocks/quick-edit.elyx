@@ -1,0 +1,122 @@
+import "icons/type.svg" as typeIcon
+import "icons/chevron-down.svg" as chevronIcon
+import "icons/ellipsis.svg" as moreIcon
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "components/type.elyx" as Text
+
+// The bar that opens beside whatever you click. The three edits people make most,
+// without leaving the design. Everything else lives in the rail.
+export quickEdit = frame {
+  left: 0px,
+  top: 0px,
+  height: 44px,
+  corner-radius: Radius.radius.lg,
+  fill: Colors.colors.surface,
+  border: {color: Colors.colors.line-strong, width: 1px},
+  layout: {direction: .row, align-items: .center, item-gap: 2px},
+  padding: [0px, 6px],
+  shadow: [{drop-shadow: {color: #00000014, offset: point(0, 8), blur-radius: 24px}}, {drop-shadow: {color: #0000000F, offset: point(0, 1), blur-radius: 3px}}],
+  children: [words, ruleOne, color, ruleTwo, size, ruleThree, more],
+
+  words = frame {
+    height: 32px,
+    width: 132px,
+    corner-radius: Radius.radius.md,
+    fill: Colors.colors.chip,
+    layout: {direction: .row, align-items: .center, item-gap: 7px},
+    padding: [0px, 9px],
+    children: [glyph, value],
+
+    glyph = asset {
+      width: 13px,
+      height: 13px,
+      contents: typeIcon,
+      fill: Colors.colors.muted
+    }
+
+    value = text : Text.body {
+      contents: "Start free trial",
+      fill: Colors.colors.ink
+    }
+  }
+
+  ruleOne = frame {
+    width: 1px,
+    height: 20px,
+    fill: Colors.colors.line
+  }
+
+  color = frame {
+    height: 32px,
+    corner-radius: Radius.radius.md,
+    layout: {direction: .row, align-items: .center, item-gap: 7px},
+    padding: [0px, 8px],
+    children: [swatch, name, chevron],
+
+    swatch = frame {
+      width: 16px,
+      height: 16px,
+      corner-radius: Radius.radius.xs,
+      fill: #FFF8F1,
+      border: {color: Colors.colors.line-strong, width: 1px}
+    }
+
+    name = text : Text.figure {
+      contents: "on-clay"
+    }
+
+    chevron = asset {
+      width: 12px,
+      height: 12px,
+      contents: chevronIcon,
+      fill: Colors.colors.faint
+    }
+  }
+
+  ruleTwo = frame {
+    width: 1px,
+    height: 20px,
+    fill: Colors.colors.line
+  }
+
+  size = frame {
+    height: 32px,
+    corner-radius: Radius.radius.md,
+    layout: {direction: .row, align-items: .center, item-gap: 6px},
+    padding: [0px, 8px],
+    children: [value, chevron],
+
+    value = text : Text.figure {
+      contents: "13"
+    }
+
+    chevron = asset {
+      width: 12px,
+      height: 12px,
+      contents: chevronIcon,
+      fill: Colors.colors.faint
+    }
+  }
+
+  ruleThree = frame {
+    width: 1px,
+    height: 20px,
+    fill: Colors.colors.line
+  }
+
+  more = frame {
+    width: 32px,
+    height: 32px,
+    corner-radius: Radius.radius.md,
+    layout: {direction: .row, justify-content: .center, align-items: .center},
+    children: glyph,
+
+    glyph = asset {
+      width: 15px,
+      height: 15px,
+      contents: moreIcon,
+      fill: Colors.colors.muted
+    }
+  }
+}

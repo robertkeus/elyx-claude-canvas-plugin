@@ -1,0 +1,181 @@
+import "tokens/colors.elyx" as Colors
+import "blocks/quick-edit.elyx" as Quick
+import "blocks/token-popover.elyx" as Popover
+import "components/canvas.elyx" as Canvas
+import "sample/product.elyx" as Sample
+import "sample/tokens.elyx" as Tokens
+
+// Click a small element, and change it right there.
+export quickEdit = frame {
+  left: 0px,
+  top: 0px,
+  width: 1280px,
+  height: 640px,
+  fill: Colors.colors.stage,
+  children: [title, page, hoverBox, selection, tag, picker, bar],
+
+  title = frame : Canvas.artboardTitle {
+    left: 241px,
+    top: 50px,
+
+    name {
+      contents: "landing"
+    }
+  }
+
+  page = frame : Sample.landing {
+    left: 241px,
+    top: 74px,
+    transform: [1.9, 0, 0, 0, 1.9, 0],
+    corner-radius: 6px
+  }
+
+  hoverBox = frame {
+    left: 282.8px,
+    top: 433.1px,
+    width: 226.1px,
+    height: 64.6px,
+    border: {color: Colors.colors.accent-line, width: 1.5px}
+  }
+
+  selection = frame {
+    left: 310.2px,
+    top: 447.2px,
+    width: 171.3px,
+    height: 36.4px,
+    border: {color: Colors.colors.accent, width: 2.5px}
+  }
+
+  tag = frame : Canvas.layerTag {
+    left: 310.2px,
+    top: 424.2px
+  }
+
+  picker = frame : Popover.tokenPopover {
+    left: 560px,
+    top: 134px,
+    transform: [1.08, 0, 0, 0, 1.08, 0],
+
+    recent {
+    one {
+      fill[0].color: Tokens.sample.on-clay
+    }
+
+    two {
+      fill[0].color: Tokens.sample.ink
+    }
+
+    three {
+      fill[0].color: Tokens.sample.clay
+    }
+    }
+
+    words {
+    one {
+      fill[0].color: Tokens.sample.ink
+    }
+
+    two {
+      fill[0].color: Tokens.sample.soft
+    }
+
+    three {
+      fill[0].color: #3D3A35
+    }
+
+    four {
+      fill[0].color: #8C8478
+    }
+
+    five {
+      fill[0].color: #B8AE9F
+    }
+
+    six {
+      fill[0].color: Tokens.sample.on-clay
+    }
+    }
+
+    status {
+    one {
+      fill[0].color: Tokens.sample.clay
+    }
+
+    two {
+      fill[0].color: Tokens.sample.moss
+    }
+
+    three {
+      fill[0].color: Tokens.sample.sky
+    }
+
+    four {
+      fill[0].color: Tokens.sample.sun
+    }
+
+    five {
+      fill[0].color: #B84A26
+    }
+
+    six {
+      fill[0].color: #2F5B44
+    }
+    }
+
+    surfaces {
+    one {
+      fill[0].color: Tokens.sample.paper
+    }
+
+    two {
+      fill[0].color: Tokens.sample.sand
+    }
+
+    three {
+      fill[0].color: Tokens.sample.line
+    }
+
+    four {
+      fill[0].color: #FFFFFF
+    }
+
+    five {
+      fill[0].color: #F7F1E6
+    }
+
+    six {
+      fill[0].color: #EADFCD
+    }
+    }
+  }
+
+  bar = frame : Quick.quickEdit {
+    left: 282.8px,
+    top: 509.7px,
+    transform: [1.2, 0, 0, 0, 1.2, 0],
+
+    words {
+      value {
+        contents: "Start free trial"
+      }
+    }
+
+    color {
+      fill: Colors.colors.chip,
+
+      swatch {
+        fill[0].color: Tokens.sample.on-clay
+      }
+
+      name {
+        contents: "on-clay"
+      }
+    }
+
+    size {
+      value {
+        contents: "13"
+      }
+    }
+  }
+}

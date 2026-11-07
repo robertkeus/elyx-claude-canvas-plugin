@@ -1,0 +1,726 @@
+import "sample/tokens.elyx" as Tokens
+
+export button = frame {
+  left: 0px,
+  top: 620px,
+  height: 34px,
+  corner-radius: 9px,
+  fill: Tokens.sample.clay,
+  layout: {direction: .row, justify-content: .center, align-items: .center},
+  padding: [0px, 16px],
+  children: label,
+
+  label = text {
+    contents: "Start free trial",
+    font-size: 13,
+    font-style: "SemiBold",
+    fill: Tokens.sample.on-clay
+  }
+}
+
+@variant
+export buttonQuiet = frame : button {
+  left: 160px,
+  top: 620px,
+  fill[0].color: Tokens.sample.sand,
+
+  label {
+    contents: "See plans",
+    fill[0].color: Tokens.sample.ink
+  }
+}
+
+@variant
+export buttonOutline = frame : button {
+  left: 0px,
+  top: 860px,
+  fill[0].color: Tokens.sample.paper,
+  border: {color: Tokens.sample.line, width: 1px},
+
+  label {
+    contents: "Learn more",
+    fill[0].color: Tokens.sample.ink
+  }
+}
+
+@variant
+export buttonDanger = frame : button {
+  left: 160px,
+  top: 860px,
+  fill[0].color: #B84A26,
+
+  label {
+    contents: "Delete note"
+  }
+}
+
+export badge = frame {
+  left: 300px,
+  top: 620px,
+  height: 22px,
+  corner-radius: 99px,
+  fill: Tokens.sample.sand,
+  layout: {direction: .row, align-items: .center},
+  padding: [0px, 9px],
+  children: label,
+
+  label = text {
+    contents: "New",
+    font-size: 11,
+    font-style: "Medium",
+    fill: Tokens.sample.soft
+  }
+}
+
+export input = frame {
+  left: 400px,
+  top: 620px,
+  width: 240px,
+  height: 34px,
+  corner-radius: 9px,
+  fill: #FFFFFF,
+  border: {color: Tokens.sample.line, width: 1px},
+  layout: {direction: .row, align-items: .center},
+  padding: [0px, 11px],
+  children: hint,
+
+  hint = text {
+    contents: "you@driftwood.app",
+    font-size: 12,
+    fill: Tokens.sample.soft
+  }
+}
+
+export mark = frame {
+  left: 680px,
+  top: 620px,
+  layout: {direction: .row, align-items: .center, item-gap: 7px},
+  children: [dot, word],
+
+  dot = frame {
+    width: 16px,
+    height: 16px,
+    corner-radius: 5px,
+    fill: {linear-gradient: {angle: 135deg, stops: [stop(0%, Tokens.sample.sun), stop(100%, Tokens.sample.clay)]}}
+  }
+
+  word = text {
+    contents: "Driftwood",
+    font-size: 13,
+    font-style: "SemiBold",
+    fill: Tokens.sample.ink
+  }
+}
+
+export landing = frame {
+  title: "Landing",
+  left: 0px,
+  top: 0px,
+  width: 420px,
+  height: 270px,
+  fill: Tokens.sample.paper,
+  layout: {direction: .column, item-gap: 0px},
+  children: [bar, hero],
+
+  bar = frame {
+    width: 100%,
+    height: 48px,
+    layout: {direction: .row, align-items: .center, item-gap: 16px},
+    padding: [0px, 22px],
+    children: [brand, spacer, one, two],
+
+    brand = frame : mark {}
+
+    spacer = frame {}
+
+    one = text {
+      contents: "Pricing",
+      font-size: 11,
+      fill: Tokens.sample.soft
+    }
+
+    two = text {
+      contents: "Sign in",
+      font-size: 11,
+      fill: Tokens.sample.soft
+    }
+  }
+
+  hero = frame {
+    width: 100%,
+    layout: {direction: .row, align-items: .center, item-gap: 18px},
+    padding: [20px, 22px],
+    children: [copy, picture],
+
+    copy = frame {
+      width: 216px,
+      layout: {direction: .column, align-items: .start, item-gap: 10px},
+      children: [headline, body, cta],
+
+      headline = text {
+        width: 100%,
+        contents: "Notes that find you again.",
+        font-size: 26,
+        font-style: "SemiBold",
+        letter-spacing: -2%,
+        line-height: 1.12,
+        fill: Tokens.sample.ink
+      }
+
+      body = text {
+        width: 100%,
+        contents: "Write it down once. Driftwood brings it back when it matters.",
+        font-size: 12,
+        line-height: 1.4,
+        fill: Tokens.sample.soft
+      }
+
+      cta = frame : button {}
+    }
+
+    picture = frame {
+      width: 142px,
+      height: 164px,
+      corner-radius: 14px,
+      fill: {linear-gradient: {angle: 150deg, stops: [stop(0%, Tokens.sample.sun), stop(55%, Tokens.sample.clay), stop(100%, Tokens.sample.moss)]}}
+    }
+  }
+}
+
+export pricing = frame {
+  title: "Pricing",
+  left: 470px,
+  top: 0px,
+  width: 420px,
+  height: 270px,
+  fill: Tokens.sample.paper,
+  layout: {direction: .column, align-items: .center, item-gap: 14px},
+  padding: [22px, 22px],
+  children: [headline, plans],
+
+  headline = text {
+    contents: "Simple plans",
+    font-size: 20,
+    font-style: "SemiBold",
+    letter-spacing: -1.5%,
+    fill: Tokens.sample.ink
+  }
+
+  plans = frame {
+    width: 100%,
+    layout: {direction: .row, item-gap: 10px},
+    children: [free, pro, team],
+
+    free = frame : plan {}
+
+    pro = frame : plan {
+      fill[0].color: Tokens.sample.ink,
+
+      name {
+        contents: "Pro",
+        fill[0].color: Tokens.sample.sand
+      }
+
+      price {
+        contents: "$8",
+        fill[0].color: Tokens.sample.paper
+      }
+
+      cta {
+        fill[0].color: Tokens.sample.clay,
+
+        label {
+          contents: "Go Pro",
+          fill[0].color: Tokens.sample.on-clay
+        }
+      }
+    }
+
+    team = frame : plan {
+      name {
+        contents: "Team"
+      }
+
+      price {
+        contents: "$24"
+      }
+    }
+  }
+}
+
+export plan = frame {
+  left: 0px,
+  top: 680px,
+  width: 118px,
+  height: 170px,
+  corner-radius: 12px,
+  fill: Tokens.sample.sand,
+  layout: {direction: .column, item-gap: 6px},
+  padding: 12px,
+  children: [name, price, spacer, cta],
+
+  name = text {
+    contents: "Free",
+    font-size: 11,
+    font-style: "Medium",
+    fill: Tokens.sample.soft
+  }
+
+  price = text {
+    contents: "$0",
+    font-size: 26,
+    font-style: "SemiBold",
+    fill: Tokens.sample.ink
+  }
+
+  spacer = frame {}
+
+  cta = frame : buttonQuiet {
+    width: 100%,
+    height: 30px,
+    fill[0].color: Tokens.sample.paper,
+
+    label {
+      contents: "Choose",
+      font-size: 11
+    }
+  }
+}
+
+export signIn = frame {
+  title: "Sign in",
+  left: 0px,
+  top: 310px,
+  width: 420px,
+  height: 270px,
+  fill: Tokens.sample.sand,
+  layout: {direction: .column, justify-content: .center, align-items: .center},
+  children: card,
+
+  card = frame {
+    width: 240px,
+    corner-radius: 14px,
+    fill: Tokens.sample.paper,
+    layout: {direction: .column, item-gap: 10px},
+    padding: 18px,
+    children: [brand, headline, email, go],
+
+    brand = frame : mark {}
+
+    headline = text {
+      contents: "Welcome back",
+      font-size: 17,
+      font-style: "SemiBold",
+      fill: Tokens.sample.ink
+    }
+
+    email = frame : input {
+      width: 100%
+    }
+
+    go = frame : button {
+      width: 100%,
+
+      label {
+        contents: "Continue"
+      }
+    }
+  }
+}
+
+export today = frame {
+  title: "Today",
+  left: 470px,
+  top: 310px,
+  width: 420px,
+  height: 270px,
+  fill: Tokens.sample.paper,
+  layout: {direction: .row},
+  children: [rail, content],
+
+  rail = frame : appRail {}
+
+  content = frame {
+    width: 324px,
+    layout: {direction: .column, item-gap: 12px},
+    padding: 18px,
+    children: [headline, stats, chart],
+
+    headline = text {
+      contents: "Today",
+      font-size: 20,
+      font-style: "SemiBold",
+      fill: Tokens.sample.ink
+    }
+
+    stats = frame {
+      width: 100%,
+      layout: {direction: .row, item-gap: 10px},
+      children: [notes, links],
+
+      notes = frame : stat {}
+
+      links = frame : stat {
+        value {
+          contents: "128"
+        }
+
+        name {
+          contents: "Links"
+        }
+      }
+    }
+
+    chart = frame {
+      width: 100%,
+      height: 74px,
+      corner-radius: 10px,
+      fill: {linear-gradient: {angle: 180deg, stops: [stop(0%, opacity(Tokens.sample.moss, 28%)), stop(100%, opacity(Tokens.sample.moss, 4%))]}}
+    }
+  }
+}
+
+export stat = frame {
+  left: 160px,
+  top: 680px,
+  width: 138px,
+  height: 62px,
+  corner-radius: 10px,
+  fill: Tokens.sample.sand,
+  layout: {direction: .column, justify-content: .center, item-gap: 1px},
+  padding: [0px, 12px],
+  children: [value, name],
+
+  value = text {
+    contents: "42",
+    font-size: 20,
+    font-style: "SemiBold",
+    fill: Tokens.sample.ink
+  }
+
+  name = text {
+    contents: "Notes",
+    font-size: 11,
+    fill: Tokens.sample.soft
+  }
+}
+
+// A note in a list.
+export noteRow = frame {
+  left: 320px,
+  top: 680px,
+  width: 280px,
+  height: 44px,
+  corner-radius: 10px,
+  fill: Tokens.sample.sand,
+  layout: {direction: .row, align-items: .center, item-gap: 10px},
+  padding: [0px, 12px],
+  children: [dot, words, spacer, tag],
+
+  dot = frame {
+    width: 8px,
+    height: 8px,
+    corner-radius: 99px,
+    fill: Tokens.sample.clay
+  }
+
+  words = text {
+    contents: "Harbour trip ideas",
+    font-size: 12,
+    font-style: "Medium",
+    fill: Tokens.sample.ink
+  }
+
+  spacer = frame {}
+
+  tag = text {
+    contents: "Today",
+    font-size: 11,
+    fill: Tokens.sample.soft
+  }
+}
+
+// A setting with its switch.
+export settingRow = frame {
+  left: 620px,
+  top: 680px,
+  width: 280px,
+  height: 40px,
+  layout: {direction: .row, align-items: .center},
+  children: [words, spacer, track],
+
+  words = text {
+    contents: "Daily digest",
+    font-size: 12,
+    font-style: "Medium",
+    fill: Tokens.sample.ink
+  }
+
+  spacer = frame {}
+
+  track = frame {
+    width: 30px,
+    height: 18px,
+    corner-radius: 99px,
+    fill: Tokens.sample.moss,
+    children: knob,
+
+    knob = frame {
+      right: 2px,
+      top: 2px,
+      width: 14px,
+      height: 14px,
+      corner-radius: 99px,
+      fill: #FFFFFF
+    }
+  }
+}
+
+// The left rail of the signed-in app.
+export appRail = frame {
+  left: 920px,
+  top: 680px,
+  width: 96px,
+  height: 270px,
+  fill: Tokens.sample.sand,
+  layout: {direction: .column, item-gap: 12px},
+  padding: 14px,
+  children: [brand, one, two, three],
+
+  brand = frame {
+    width: 18px,
+    height: 18px,
+    corner-radius: 6px,
+    fill: Tokens.sample.clay
+  }
+
+  one = frame {
+    width: 62px,
+    height: 8px,
+    corner-radius: 4px,
+    fill: Tokens.sample.line
+  }
+
+  two = frame {
+    width: 48px,
+    height: 8px,
+    corner-radius: 4px,
+    fill: Tokens.sample.line
+  }
+
+  three = frame {
+    width: 56px,
+    height: 8px,
+    corner-radius: 4px,
+    fill: Tokens.sample.line
+  }
+}
+
+export welcome = frame {
+  title: "Welcome",
+  left: 0px,
+  top: 980px,
+  width: 420px,
+  height: 270px,
+  fill: Tokens.sample.sand,
+  layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 10px},
+  padding: 24px,
+  children: [brand, headline, body, go],
+
+  brand = frame : mark {}
+
+  headline = text {
+    contents: "Nice to meet you",
+    font-size: 22,
+    font-style: "SemiBold",
+    letter-spacing: -1.5%,
+    fill: Tokens.sample.ink
+  }
+
+  body = text {
+    contents: "Let's save your first note.",
+    font-size: 12,
+    fill: Tokens.sample.soft
+  }
+
+  go = frame : button {
+    label {
+      contents: "Get started"
+    }
+  }
+}
+
+export notes = frame {
+  title: "Notes",
+  left: 470px,
+  top: 980px,
+  width: 420px,
+  height: 270px,
+  fill: Tokens.sample.paper,
+  layout: {direction: .row},
+  children: [rail, content],
+
+  rail = frame : appRail {}
+
+  content = frame {
+    width: 324px,
+    layout: {direction: .column, item-gap: 8px},
+    padding: 18px,
+    children: [headline, one, two, three, four],
+
+    headline = text {
+      contents: "Notes",
+      font-size: 20,
+      font-style: "SemiBold",
+      fill: Tokens.sample.ink
+    }
+
+    one = frame : noteRow {
+      width: 100%
+    }
+
+    two = frame : noteRow {
+      width: 100%,
+
+      dot {
+        fill[0].color: Tokens.sample.moss
+      }
+
+      words {
+        contents: "Books to read"
+      }
+
+      tag {
+        contents: "Mon"
+      }
+    }
+
+    three = frame : noteRow {
+      width: 100%,
+
+      dot {
+        fill[0].color: Tokens.sample.sky
+      }
+
+      words {
+        contents: "Kitchen shelf sizes"
+      }
+
+      tag {
+        contents: "Sun"
+      }
+    }
+
+    four = frame : noteRow {
+      width: 100%,
+
+      dot {
+        fill[0].color: Tokens.sample.sun
+      }
+
+      words {
+        contents: "Gift list"
+      }
+
+      tag {
+        contents: "Fri"
+      }
+    }
+  }
+}
+
+export note = frame {
+  title: "Note",
+  left: 0px,
+  top: 1290px,
+  width: 420px,
+  height: 270px,
+  fill: Tokens.sample.paper,
+  layout: {direction: .column, item-gap: 10px},
+  padding: 26px,
+  children: [tag, headline, body, keep],
+
+  tag = frame : badge {
+    label {
+      contents: "Today"
+    }
+  }
+
+  headline = text {
+    contents: "Harbour trip ideas",
+    font-size: 24,
+    font-style: "SemiBold",
+    letter-spacing: -1.5%,
+    fill: Tokens.sample.ink
+  }
+
+  body = text {
+    width: 100%,
+    contents: "Morning ferry, then the walk along the old sea wall. Book the small place by the slipway before the weekend.",
+    font-size: 13,
+    line-height: 1.5,
+    fill: Tokens.sample.soft
+  }
+
+  keep = frame : buttonQuiet {
+    label {
+      contents: "Remind me"
+    }
+  }
+}
+
+export settings = frame {
+  title: "Settings",
+  left: 470px,
+  top: 1290px,
+  width: 420px,
+  height: 270px,
+  fill: Tokens.sample.paper,
+  layout: {direction: .row},
+  children: [rail, content],
+
+  rail = frame : appRail {}
+
+  content = frame {
+    width: 324px,
+    layout: {direction: .column, item-gap: 4px},
+    padding: 18px,
+    children: [headline, digest, sync, sounds],
+
+    headline = text {
+      contents: "Settings",
+      font-size: 20,
+      font-style: "SemiBold",
+      fill: Tokens.sample.ink
+    }
+
+    digest = frame : settingRow {
+      width: 100%
+    }
+
+    sync = frame : settingRow {
+      width: 100%,
+
+      words {
+        contents: "Sync across devices"
+      }
+    }
+
+    sounds = frame : settingRow {
+      width: 100%,
+
+      words {
+        contents: "Sounds"
+      }
+
+      track {
+        fill[0].color: Tokens.sample.line,
+
+        knob {
+          left: 2px,
+          right: .auto
+        }
+      }
+    }
+  }
+}

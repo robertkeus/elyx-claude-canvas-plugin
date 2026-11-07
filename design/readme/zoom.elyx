@@ -1,0 +1,56 @@
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "components/controls.elyx" as Controls
+import "components/type.elyx" as Text
+import "sample/product.elyx" as Sample
+
+// Redrawn at the exact zoom, so even a corner stays sharp.
+export sharpZoom = frame {
+  left: 0px,
+  top: 0px,
+  width: 1280px,
+  height: 640px,
+  fill: Colors.colors.stage,
+  children: [huge, map, level],
+
+  huge = frame : Sample.button {
+    left: 120px,
+    top: 96px,
+    transform: [13.6, 0, 0, 0, 13.6, 0]
+  }
+
+  map = frame {
+    left: 28px,
+    top: 28px,
+    width: 196px,
+    height: 112px,
+    corner-radius: Radius.radius.lg,
+    fill: Colors.colors.surface,
+    border: {color: Colors.colors.line-strong, width: 1px},
+    shadow: {drop-shadow: {color: #00000024, offset: point(0, 10), blur-radius: 28px}},
+    children: [small, view],
+
+    small = frame : Sample.button {
+      left: 38.5px,
+      top: 39px
+    }
+
+    view = frame {
+      left: 32px,
+      top: 32px,
+      width: 56px,
+      height: 48px,
+      border: {color: Colors.colors.accent, width: 1.5px}
+    }
+  }
+
+  level = frame : Controls.stageChip {
+    right: 28px,
+    bottom: 28px,
+    overrides: [remove(Controls.stageChip.key)],
+
+    label {
+      contents: "1360%"
+    }
+  }
+}

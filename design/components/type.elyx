@@ -1,0 +1,84 @@
+import "tokens/colors.elyx" as Colors
+import "tokens/typography.elyx" as Type
+
+export pageTitle = text {
+  left: 0px,
+  top: 0px,
+  contents: "Page title",
+  font-size: Type.fontSize.display,
+  font-style: "SemiBold",
+  letter-spacing: Type.letterSpacing.tight,
+  fill: Colors.colors.heading
+}
+
+export sectionTitle = text {
+  left: 0px,
+  top: 48px,
+  contents: "Section title",
+  font-size: Type.fontSize.xxl,
+  font-style: "SemiBold",
+  letter-spacing: Type.letterSpacing.snug,
+  fill: Colors.colors.heading
+}
+
+export heading = text {
+  left: 0px,
+  top: 84px,
+  contents: "Heading",
+  font-size: Type.fontSize.lg,
+  font-style: "SemiBold",
+  fill: Colors.colors.heading
+}
+
+export label = text {
+  left: 0px,
+  top: 112px,
+  contents: "Label",
+  font-size: Type.fontSize.md,
+  font-style: "SemiBold",
+  fill: Colors.colors.heading
+}
+
+export body = text {
+  left: 0px,
+  top: 136px,
+  contents: "Body",
+  font-size: Type.fontSize.md,
+  fill: Colors.colors.body
+}
+
+export meta = text {
+  left: 0px,
+  top: 160px,
+  contents: "Meta",
+  font-size: Type.fontSize.sm,
+  fill: Colors.colors.muted
+}
+
+export hint = text {
+  left: 0px,
+  top: 184px,
+  contents: "Hint",
+  font-size: Type.fontSize.sm,
+  fill: Colors.colors.faint
+}
+
+// Numbers, file paths and token names. Slashed zeros, as in the editor.
+export figure = text {
+  left: 0px,
+  top: 208px,
+  contents: "1,360 × 860",
+  font-size: Type.fontSize.sm,
+  font-style: "Medium",
+  font-features: {tnum: 1, zero: 1},
+  fill: Colors.colors.body
+}
+
+export link = text {
+  left: 0px,
+  top: 232px,
+  contents: "Link",
+  font-size: Type.fontSize.md,
+  font-style: "Medium",
+  fill: Colors.colors.accent
+}

@@ -1,0 +1,222 @@
+import "icons/search.svg" as searchIcon
+import "icons/component.svg" as componentIcon
+import "icons/palette.svg" as paletteIcon
+import "icons/enter.svg" as enterIcon
+import "sample/images/signIn.png" as signInShot
+import "sample/images/welcome.png" as setupShot
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "tokens/spacing.elyx" as Spacing
+import "tokens/typography.elyx" as Type
+import "screens/board.elyx" as Board
+import "components/controls.elyx" as Controls
+import "components/nav.elyx" as Nav
+import "components/type.elyx" as Text
+
+export search = frame {
+  title: "Search",
+  caption: "One box for the whole project: screens, components, tokens and layers. Press ⌘K from anywhere.",
+  left: 0px,
+  top: 0px,
+  width: Spacing.size.screen,
+  height: Spacing.size.screen-height,
+  children: [base, scrim, palette],
+
+  base = frame : Board.allScreens {
+    left: 0px,
+    top: 0px
+  }
+
+  scrim = frame {
+    left: 0px,
+    top: 0px,
+    width: 100%,
+    height: 100%,
+    fill: {color: Colors.colors.scrim, blur-radius: 6px}
+  }
+
+  palette = frame {
+    left: 420px,
+    top: 104px,
+    width: 600px,
+    corner-radius: Radius.radius.xl,
+    fill: Colors.colors.surface,
+    border: {color: Colors.colors.line-strong, width: 1px},
+    layout: {direction: .column},
+    shadow: [{drop-shadow: {color: #00000029, offset: point(0, 24), blur-radius: 64px}}, {drop-shadow: {color: #0000000F, offset: point(0, 1), blur-radius: 3px}}],
+    children: [entry, results, foot],
+
+    entry = frame {
+      width: 100%,
+      height: 56px,
+      border: {color: Colors.colors.line, width: 1px, sides: .bottom},
+      layout: {direction: .row, align-items: .center, item-gap: 10px},
+      padding: [0px, 16px],
+      children: [glyph, typed, caret, spacer, esc],
+
+      glyph = asset {
+        width: 17px,
+        height: 17px,
+        contents: searchIcon,
+        fill: Colors.colors.accent
+      }
+
+      typed = text : Text.body {
+        contents: "sign",
+        font-size: Type.fontSize.xl,
+        fill: Colors.colors.ink
+      }
+
+      caret = frame {
+        width: 1.5px,
+        height: 20px,
+        fill: Colors.colors.accent
+      }
+
+      spacer = frame {}
+
+      esc = frame : Controls.keycap {
+        label {
+          contents: "esc"
+        }
+      }
+    }
+
+    results = frame {
+      width: 100%,
+      layout: {direction: .column, item-gap: 2px},
+      padding: 8px,
+      children: [screensHead, signIn, setup, partsHead, centerScreen, tokensHead, onBrand],
+
+      screensHead = frame : Nav.navHead {
+        width: 100%,
+
+        label {
+          contents: "Screens"
+        }
+
+        count {
+          contents: "2"
+        }
+      }
+
+      signIn = frame : Nav.thumbRowActive {
+        width: 100%,
+        overrides: [insert(spacer, after = Nav.thumbRow.label), insert(place, after = spacer), insert(open, after = place)],
+
+        shot {
+          fill: {image: {ref: signInShot}}
+        }
+
+        label {
+          contents: "Sign in"
+        }
+
+        spacer = frame {}
+
+        place = text : Text.meta {
+          contents: "screens/sign-in.elyx"
+        }
+
+        open = asset {
+          width: 14px,
+          height: 14px,
+          contents: enterIcon,
+          fill: Colors.colors.accent
+        }
+      }
+
+      setup = frame : Nav.thumbRow {
+        width: 100%,
+        overrides: [insert(spacer, after = Nav.thumbRow.label), insert(place, after = spacer)],
+
+        shot {
+          fill: {image: {ref: setupShot}}
+        }
+
+        label {
+          contents: "Sign up"
+        }
+
+        spacer = frame {}
+
+        place = text : Text.meta {
+          contents: "screens/welcome.elyx"
+        }
+      }
+
+      partsHead = frame : Nav.navHead {
+        width: 100%,
+
+        label {
+          contents: "Components"
+        }
+
+        count {
+          contents: "1"
+        }
+      }
+
+      centerScreen = frame : Nav.navRow {
+        width: 100%,
+
+        glyph {
+          contents: componentIcon
+        }
+
+        label {
+          contents: "auth / signInCard"
+        }
+
+        count {
+          contents: "5 uses"
+        }
+      }
+
+      tokensHead = frame : Nav.navHead {
+        width: 100%,
+
+        label {
+          contents: "Layers"
+        }
+
+        count {
+          contents: "3"
+        }
+      }
+
+      onBrand = frame : Nav.navRow {
+        width: 100%,
+
+        glyph {
+          contents: paletteIcon
+        }
+
+        label {
+          contents: "nav › link “Sign in”"
+        }
+
+        count {
+          contents: "landing"
+        }
+      }
+    }
+
+    foot = frame {
+      width: 100%,
+      height: 38px,
+      border: {color: Colors.colors.line, width: 1px, sides: .top},
+      layout: {direction: .row, align-items: .center, item-gap: 14px},
+      padding: [0px, 16px],
+      children: [move, open],
+
+      move = text : Text.hint {
+        contents: "↑ ↓  Move"
+      }
+
+      open = text : Text.hint {
+        contents: "↵  Open"
+      }
+    }
+  }
+}

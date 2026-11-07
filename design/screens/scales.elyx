@@ -1,0 +1,699 @@
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "tokens/spacing.elyx" as Spacing
+import "tokens/typography.elyx" as Type
+import "blocks/center.elyx" as Center
+import "blocks/inspector.elyx" as Inspector
+import "blocks/sidebar.elyx" as Sidebar
+import "components/canvas.elyx" as Canvas
+import "components/card.elyx" as Card
+import "components/controls.elyx" as Controls
+import "components/type.elyx" as Text
+
+export scales = frame {
+  title: "Type, spacing and radius",
+  caption: "The scales drawn at true size, so a designer can read them without opening a file.",
+  left: 0px,
+  top: 0px,
+  width: Spacing.size.screen,
+  height: Spacing.size.screen-height,
+  fill: Colors.colors.surface,
+  layout: {direction: .row},
+  children: [side, main, rail],
+
+  side = frame : Sidebar.tokensSidebar {}
+
+  main = frame : Center.center {
+    stage {
+      overrides: [insert(page, after = .nil)],
+
+      hud {
+        display: .none
+      }
+    }
+
+    crumbBar {
+      name {
+        contents: "Scales"
+      }
+    }
+
+    page = frame {
+      left: 48px,
+      top: 36px,
+      width: Spacing.size.page-width,
+      layout: {direction: .column, item-gap: 16px},
+      children: [head, chips, rule, typeHead, specimens, lower],
+
+      head = frame {
+        width: 100%,
+        layout: {direction: .column, item-gap: 3px},
+        children: [name, note],
+
+        name = text : Text.pageTitle {
+          contents: "Scales"
+        }
+
+        note = text : Text.body {
+          contents: "Type, spacing and radius at true size",
+          fill: Colors.colors.muted
+        }
+      }
+
+      chips = frame {
+        layout: {direction: .row, item-gap: 4px},
+        children: [allChip, typesChip, spaceChip, radiusChip],
+
+        allChip = frame : Controls.filterActive {
+          label {
+            contents: "All"
+          }
+        }
+
+        typesChip = frame : Controls.filter {
+          label {
+            contents: "Type"
+          }
+        }
+
+        spaceChip = frame : Controls.filter {
+          label {
+            contents: "Spacing"
+          }
+        }
+
+        radiusChip = frame : Controls.filter {
+          label {
+            contents: "Radius"
+          }
+        }
+      }
+
+      rule = frame {
+        width: 100%,
+        height: 1px,
+        fill: Colors.colors.line-strong
+      }
+
+      typeHead = text : Text.heading {
+        contents: "Type"
+      }
+
+      specimens = frame : Card.sheet {
+        width: 100%,
+        padding: [10px, 18px],
+        overrides: [insert(typehero, after = .nil), insert(typedisplay, after = typehero), insert(typexxl, after = typedisplay), insert(typexl, after = typexxl), insert(typemd, after = typexl), insert(typesm, after = typemd), insert(typexs, after = typesm)],
+
+          typehero = frame {
+            width: 100%,
+            layout: {direction: .row, align-items: .center, item-gap: 12px},
+            padding: [5px, 0px],
+            children: [name, sample, spacer, value],
+
+            name = text : Text.figure {
+              width: 64px,
+              contents: "hero",
+              fill: Colors.colors.muted
+            }
+
+            sample = text : Text.body {
+              contents: "Notes that find you again",
+              font-size: 48,
+              font-style: "SemiBold",
+              letter-spacing: Type.letterSpacing.tight,
+              fill: Colors.colors.heading
+            }
+
+            spacer = frame {}
+
+            value = text : Text.figure {
+              contents: "48",
+              fill: Colors.colors.faint
+            }
+          }
+
+          typedisplay = frame {
+            width: 100%,
+            layout: {direction: .row, align-items: .center, item-gap: 12px},
+            padding: [5px, 0px],
+            children: [name, sample, spacer, value],
+
+            name = text : Text.figure {
+              width: 64px,
+              contents: "display",
+              fill: Colors.colors.muted
+            }
+
+            sample = text : Text.body {
+              contents: "Notes that find you again",
+              font-size: 36,
+              font-style: "SemiBold",
+              letter-spacing: Type.letterSpacing.tight,
+              fill: Colors.colors.heading
+            }
+
+            spacer = frame {}
+
+            value = text : Text.figure {
+              contents: "36",
+              fill: Colors.colors.faint
+            }
+          }
+
+          typexxl = frame {
+            width: 100%,
+            layout: {direction: .row, align-items: .center, item-gap: 12px},
+            padding: [5px, 0px],
+            children: [name, sample, spacer, value],
+
+            name = text : Text.figure {
+              width: 64px,
+              contents: "xxl",
+              fill: Colors.colors.muted
+            }
+
+            sample = text : Text.body {
+              contents: "Notes that find you again",
+              font-size: 24,
+              font-style: "SemiBold",
+              letter-spacing: Type.letterSpacing.tight,
+              fill: Colors.colors.heading
+            }
+
+            spacer = frame {}
+
+            value = text : Text.figure {
+              contents: "24",
+              fill: Colors.colors.faint
+            }
+          }
+
+          typexl = frame {
+            width: 100%,
+            layout: {direction: .row, align-items: .center, item-gap: 12px},
+            padding: [5px, 0px],
+            children: [name, sample, spacer, value],
+
+            name = text : Text.figure {
+              width: 64px,
+              contents: "xl",
+              fill: Colors.colors.muted
+            }
+
+            sample = text : Text.body {
+              contents: "Notes that find you again",
+              font-size: 20,
+              font-style: "SemiBold",
+              letter-spacing: Type.letterSpacing.tight,
+              fill: Colors.colors.heading
+            }
+
+            spacer = frame {}
+
+            value = text : Text.figure {
+              contents: "20",
+              fill: Colors.colors.faint
+            }
+          }
+
+          typemd = frame {
+            width: 100%,
+            layout: {direction: .row, align-items: .center, item-gap: 12px},
+            padding: [5px, 0px],
+            children: [name, sample, spacer, value],
+
+            name = text : Text.figure {
+              width: 64px,
+              contents: "md",
+              fill: Colors.colors.muted
+            }
+
+            sample = text : Text.body {
+              contents: "Notes that find you again",
+              font-size: 16,
+              font-style: "SemiBold",
+              letter-spacing: Type.letterSpacing.tight,
+              fill: Colors.colors.heading
+            }
+
+            spacer = frame {}
+
+            value = text : Text.figure {
+              contents: "16",
+              fill: Colors.colors.faint
+            }
+          }
+
+          typesm = frame {
+            width: 100%,
+            layout: {direction: .row, align-items: .center, item-gap: 12px},
+            padding: [5px, 0px],
+            children: [name, sample, spacer, value],
+
+            name = text : Text.figure {
+              width: 64px,
+              contents: "sm",
+              fill: Colors.colors.muted
+            }
+
+            sample = text : Text.body {
+              contents: "Notes that find you again",
+              font-size: 14,
+              font-style: "SemiBold",
+              letter-spacing: Type.letterSpacing.tight,
+              fill: Colors.colors.heading
+            }
+
+            spacer = frame {}
+
+            value = text : Text.figure {
+              contents: "14",
+              fill: Colors.colors.faint
+            }
+          }
+
+          typexs = frame {
+            width: 100%,
+            layout: {direction: .row, align-items: .center, item-gap: 12px},
+            padding: [5px, 0px],
+            children: [name, sample, spacer, value],
+
+            name = text : Text.figure {
+              width: 64px,
+              contents: "xs",
+              fill: Colors.colors.muted
+            }
+
+            sample = text : Text.body {
+              contents: "Notes that find you again",
+              font-size: 12,
+              font-style: "SemiBold",
+              letter-spacing: Type.letterSpacing.tight,
+              fill: Colors.colors.heading
+            }
+
+            spacer = frame {}
+
+            value = text : Text.figure {
+              contents: "12",
+              fill: Colors.colors.faint
+            }
+          }
+      }
+
+      lower = frame {
+        width: 100%,
+        layout: {direction: .row, item-gap: 12px},
+        children: [spaceColumn, radiusColumn],
+
+        spaceColumn = frame {
+          width: 390px,
+          layout: {direction: .column, item-gap: 10px},
+          children: [title, spaceSheet],
+
+          title = text : Text.heading {
+            contents: "Spacing"
+          }
+
+        spaceSheet = frame : Card.sheet {
+          width: 100%,
+          padding: [12px, 18px],
+          overrides: [insert(spacexxs, after = .nil), insert(spacexs, after = spacexxs), insert(spacesm, after = spacexs), insert(spacemd, after = spacesm), insert(spacelg, after = spacemd), insert(spacexl, after = spacelg), insert(spacexxl, after = spacexl), insert(spacexxxl, after = spacexxl), insert(spacecontrol, after = spacexxxl)],
+
+          spacexxs = frame {
+            width: 100%,
+            height: 22px,
+            layout: {direction: .row, align-items: .center, item-gap: 10px},
+            children: [name, bar, spacer, value],
+
+            name = text : Text.figure {
+              width: 56px,
+              contents: "xxs",
+              fill: Colors.colors.muted
+            }
+
+            bar = frame {
+              width: 6px,
+              height: 10px,
+              corner-radius: 2px,
+              fill: Colors.colors.accent
+            }
+
+            spacer = frame {}
+
+            value = text : Text.figure {
+              contents: "2",
+              fill: Colors.colors.faint
+            }
+          }
+
+          spacexs = frame {
+            width: 100%,
+            height: 22px,
+            layout: {direction: .row, align-items: .center, item-gap: 10px},
+            children: [name, bar, spacer, value],
+
+            name = text : Text.figure {
+              width: 56px,
+              contents: "xs",
+              fill: Colors.colors.muted
+            }
+
+            bar = frame {
+              width: 12px,
+              height: 10px,
+              corner-radius: 2px,
+              fill: Colors.colors.accent
+            }
+
+            spacer = frame {}
+
+            value = text : Text.figure {
+              contents: "4",
+              fill: Colors.colors.faint
+            }
+          }
+
+          spacesm = frame {
+            width: 100%,
+            height: 22px,
+            layout: {direction: .row, align-items: .center, item-gap: 10px},
+            children: [name, bar, spacer, value],
+
+            name = text : Text.figure {
+              width: 56px,
+              contents: "sm",
+              fill: Colors.colors.muted
+            }
+
+            bar = frame {
+              width: 24px,
+              height: 10px,
+              corner-radius: 2px,
+              fill: Colors.colors.accent
+            }
+
+            spacer = frame {}
+
+            value = text : Text.figure {
+              contents: "8",
+              fill: Colors.colors.faint
+            }
+          }
+
+          spacemd = frame {
+            width: 100%,
+            height: 22px,
+            layout: {direction: .row, align-items: .center, item-gap: 10px},
+            children: [name, bar, spacer, value],
+
+            name = text : Text.figure {
+              width: 56px,
+              contents: "md",
+              fill: Colors.colors.muted
+            }
+
+            bar = frame {
+              width: 36px,
+              height: 10px,
+              corner-radius: 2px,
+              fill: Colors.colors.accent
+            }
+
+            spacer = frame {}
+
+            value = text : Text.figure {
+              contents: "12",
+              fill: Colors.colors.faint
+            }
+          }
+
+          spacelg = frame {
+            width: 100%,
+            height: 22px,
+            layout: {direction: .row, align-items: .center, item-gap: 10px},
+            children: [name, bar, spacer, value],
+
+            name = text : Text.figure {
+              width: 56px,
+              contents: "lg",
+              fill: Colors.colors.muted
+            }
+
+            bar = frame {
+              width: 48px,
+              height: 10px,
+              corner-radius: 2px,
+              fill: Colors.colors.accent
+            }
+
+            spacer = frame {}
+
+            value = text : Text.figure {
+              contents: "16",
+              fill: Colors.colors.faint
+            }
+          }
+
+          spacexl = frame {
+            width: 100%,
+            height: 22px,
+            layout: {direction: .row, align-items: .center, item-gap: 10px},
+            children: [name, bar, spacer, value],
+
+            name = text : Text.figure {
+              width: 56px,
+              contents: "xl",
+              fill: Colors.colors.muted
+            }
+
+            bar = frame {
+              width: 60px,
+              height: 10px,
+              corner-radius: 2px,
+              fill: Colors.colors.accent
+            }
+
+            spacer = frame {}
+
+            value = text : Text.figure {
+              contents: "20",
+              fill: Colors.colors.faint
+            }
+          }
+
+          spacexxl = frame {
+            width: 100%,
+            height: 22px,
+            layout: {direction: .row, align-items: .center, item-gap: 10px},
+            children: [name, bar, spacer, value],
+
+            name = text : Text.figure {
+              width: 56px,
+              contents: "xxl",
+              fill: Colors.colors.muted
+            }
+
+            bar = frame {
+              width: 72px,
+              height: 10px,
+              corner-radius: 2px,
+              fill: Colors.colors.accent
+            }
+
+            spacer = frame {}
+
+            value = text : Text.figure {
+              contents: "24",
+              fill: Colors.colors.faint
+            }
+          }
+
+          spacexxxl = frame {
+            width: 100%,
+            height: 22px,
+            layout: {direction: .row, align-items: .center, item-gap: 10px},
+            children: [name, bar, spacer, value],
+
+            name = text : Text.figure {
+              width: 56px,
+              contents: "xxxl",
+              fill: Colors.colors.muted
+            }
+
+            bar = frame {
+              width: 96px,
+              height: 10px,
+              corner-radius: 2px,
+              fill: Colors.colors.accent
+            }
+
+            spacer = frame {}
+
+            value = text : Text.figure {
+              contents: "32",
+              fill: Colors.colors.faint
+            }
+          }
+
+          spacecontrol = frame {
+            width: 100%,
+            height: 22px,
+            layout: {direction: .row, align-items: .center, item-gap: 10px},
+            children: [name, bar, spacer, value],
+
+            name = text : Text.figure {
+              width: 56px,
+              contents: "control",
+              fill: Colors.colors.muted
+            }
+
+            bar = frame {
+              width: 132px,
+              height: 10px,
+              corner-radius: 2px,
+              fill: Colors.colors.accent
+            }
+
+            spacer = frame {}
+
+            value = text : Text.figure {
+              contents: "44",
+              fill: Colors.colors.faint
+            }
+          }
+        }
+
+        }
+
+        radiusColumn = frame {
+          width: 390px,
+          layout: {direction: .column, item-gap: 10px},
+          children: [title, radiusSheet],
+
+          title = text : Text.heading {
+            contents: "Radius"
+          }
+
+        radiusSheet = frame : Card.sheet {
+          width: 100%,
+          min-height: 222px,
+          layout: {direction: .row, wrap: .true, justify-content: .center, item-gap: 32px, line-gap: 22px},
+          padding: [24px, 18px],
+          overrides: [insert(radiustick, after = .nil), insert(radiusrow, after = radiustick), insert(radiuscontrol, after = radiusrow), insert(radiusstat, after = radiuscontrol), insert(radiuscard, after = radiusstat), insert(radiusfull, after = radiuscard)],
+
+          radiustick = frame {
+            layout: {direction: .column, align-items: .center, item-gap: 6px},
+            children: [corner, name],
+
+            corner = frame {
+              width: 56px,
+              height: 56px,
+              corner-radius: 1px,
+              fill: Colors.colors.accent-soft,
+              border: {color: Colors.colors.accent, width: 1.5px}
+            }
+
+            name = text : Text.figure {
+              contents: "tick",
+              fill: Colors.colors.muted
+            }
+          }
+
+          radiusrow = frame {
+            layout: {direction: .column, align-items: .center, item-gap: 6px},
+            children: [corner, name],
+
+            corner = frame {
+              width: 56px,
+              height: 56px,
+              corner-radius: 8px,
+              fill: Colors.colors.accent-soft,
+              border: {color: Colors.colors.accent, width: 1.5px}
+            }
+
+            name = text : Text.figure {
+              contents: "row",
+              fill: Colors.colors.muted
+            }
+          }
+
+          radiuscontrol = frame {
+            layout: {direction: .column, align-items: .center, item-gap: 6px},
+            children: [corner, name],
+
+            corner = frame {
+              width: 56px,
+              height: 56px,
+              corner-radius: 11px,
+              fill: Colors.colors.accent-soft,
+              border: {color: Colors.colors.accent, width: 1.5px}
+            }
+
+            name = text : Text.figure {
+              contents: "control",
+              fill: Colors.colors.muted
+            }
+          }
+
+          radiusstat = frame {
+            layout: {direction: .column, align-items: .center, item-gap: 6px},
+            children: [corner, name],
+
+            corner = frame {
+              width: 56px,
+              height: 56px,
+              corner-radius: 12px,
+              fill: Colors.colors.accent-soft,
+              border: {color: Colors.colors.accent, width: 1.5px}
+            }
+
+            name = text : Text.figure {
+              contents: "stat",
+              fill: Colors.colors.muted
+            }
+          }
+
+          radiuscard = frame {
+            layout: {direction: .column, align-items: .center, item-gap: 6px},
+            children: [corner, name],
+
+            corner = frame {
+              width: 56px,
+              height: 56px,
+              corner-radius: 16px,
+              fill: Colors.colors.accent-soft,
+              border: {color: Colors.colors.accent, width: 1.5px}
+            }
+
+            name = text : Text.figure {
+              contents: "card",
+              fill: Colors.colors.muted
+            }
+          }
+
+          radiusfull = frame {
+            layout: {direction: .column, align-items: .center, item-gap: 6px},
+            children: [corner, name],
+
+            corner = frame {
+              width: 56px,
+              height: 56px,
+              corner-radius: 28px,
+              fill: Colors.colors.accent-soft,
+              border: {color: Colors.colors.accent, width: 1.5px}
+            }
+
+            name = text : Text.figure {
+              contents: "full",
+              fill: Colors.colors.muted
+            }
+          }
+        }
+        }
+      }
+    }
+  }
+
+  rail = frame : Inspector.recentRail {}
+}

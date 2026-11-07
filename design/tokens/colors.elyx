@@ -1,0 +1,34 @@
+import "./colors.dark.elyx" as dark
+
+// Sampled from the Elyx editor, so the overview reads as part of the same product.
+@variants(dark.darkColors)
+export colors = tokens {
+  stage: #F6F6F6,
+  surface: #FFFFFF,
+  well: #F8F8F8,
+  chip: #EDEFF1,
+  chip-strong: #E3E6E9,
+  line: #EEEEEE,
+  line-strong: #E2E3E6,
+  dash: #D3D6DB,
+  ink: #1E2126,
+  heading: #3C434E,
+  body: #4C525C,
+  muted: #7A808A,
+  faint: #A9AEB6,
+  accent: #3B6CE0,
+  accent-soft: #E5EBFF,
+  accent-line: #C5D3FF,
+  on-accent: #FFFFFF,
+  artboard: #A01DE8,
+  flow: #F0A23C,
+  flow-soft: #FFF3E0,
+  positive: #1F9D47,
+  positive-soft: #E3F6E9,
+  danger: #D0453C,
+  solid: #2F3136,
+  on-solid: #FFFFFF,
+  orb-start: #7080FC,
+  orb-end: #C377FE,
+  scrim: #1E212614
+}

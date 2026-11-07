@@ -1,0 +1,254 @@
+import "sample/images/landing.png" as landingShot
+import "sample/images/pricing.png" as pricingShot
+import "sample/images/signIn.png" as signInShot
+import "sample/images/welcome.png" as welcomeShot
+import "sample/images/today.png" as todayShot
+import "sample/images/notes.png" as notesShot
+import "sample/images/note.png" as noteShot
+import "sample/images/settings.png" as settingsShot
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "tokens/spacing.elyx" as Spacing
+import "tokens/typography.elyx" as Type
+import "blocks/center.elyx" as Center
+import "blocks/inspector.elyx" as Inspector
+import "blocks/sidebar.elyx" as Sidebar
+import "components/canvas.elyx" as Canvas
+import "components/card.elyx" as Card
+import "components/controls.elyx" as Controls
+import "components/type.elyx" as Text
+
+export allScreens = frame {
+  title: "All screens",
+  caption: "The whole design at one glance, with the flow between screens. Every frame is clickable.",
+  left: 0px,
+  top: 0px,
+  width: Spacing.size.screen,
+  height: Spacing.size.screen-height,
+  fill: Colors.colors.surface,
+  layout: {direction: .row},
+  children: [side, main, rail],
+
+  side = frame : Sidebar.screensSidebar {
+    body {
+      all {
+        fill: Colors.colors.accent-soft,
+        border[0].color: Colors.colors.accent-line
+      }
+    }
+  }
+
+  main = frame : Center.center {
+    stage {
+      overrides: [insert(world, after = .nil)],
+
+      hud {
+        level {
+          label {
+            contents: "45%"
+          }
+        }
+      }
+    }
+
+    world = frame {
+      left: 0px,
+      top: 0px,
+      width: 100%,
+      height: 100%,
+      children: [landing, pricing, signIn, welcome, today, notes, note, settings, plansFlowLine, plansFlowTag, joinFlowLine, joinFlowTag, openFlowLine, openFlowTag, hoverBox],
+
+      landing = frame : Canvas.artboard {
+        left: 30px,
+        top: 60px,
+        width: 190px,
+
+        title {
+          name {
+            contents: "landing"
+          }
+        }
+
+        shot {
+          height: 122px,
+          fill: {image: {ref: landingShot}}
+        }
+      }
+
+      pricing = frame : Canvas.artboard {
+        left: 242px,
+        top: 60px,
+        width: 190px,
+
+        title {
+          name {
+            contents: "pricing"
+          }
+        }
+
+        shot {
+          height: 122px,
+          fill: {image: {ref: pricingShot}}
+        }
+      }
+
+      signIn = frame : Canvas.artboard {
+        left: 454px,
+        top: 60px,
+        width: 190px,
+
+        title {
+          name {
+            contents: "signIn"
+          }
+        }
+
+        shot {
+          height: 122px,
+          fill: {image: {ref: signInShot}}
+        }
+      }
+
+      welcome = frame : Canvas.artboard {
+        left: 666px,
+        top: 60px,
+        width: 190px,
+
+        title {
+          name {
+            contents: "welcome"
+          }
+        }
+
+        shot {
+          height: 122px,
+          fill: {image: {ref: welcomeShot}}
+        }
+      }
+
+      today = frame : Canvas.artboard {
+        left: 30px,
+        top: 250px,
+        width: 190px,
+
+        title {
+          name {
+            contents: "today"
+          }
+        }
+
+        shot {
+          height: 122px,
+          fill: {image: {ref: todayShot}}
+        }
+      }
+
+      notes = frame : Canvas.artboard {
+        left: 242px,
+        top: 250px,
+        width: 190px,
+
+        title {
+          name {
+            contents: "notes"
+          }
+        }
+
+        shot {
+          height: 122px,
+          fill: {image: {ref: notesShot}}
+        }
+      }
+
+      note = frame : Canvas.artboard {
+        left: 454px,
+        top: 250px,
+        width: 190px,
+
+        title {
+          name {
+            contents: "note"
+          }
+        }
+
+        shot {
+          height: 122px,
+          fill: {image: {ref: noteShot}}
+        }
+      }
+
+      settings = frame : Canvas.artboard {
+        left: 666px,
+        top: 250px,
+        width: 190px,
+
+        title {
+          name {
+            contents: "settings"
+          }
+        }
+
+        shot {
+          height: 122px,
+          fill: {image: {ref: settingsShot}}
+        }
+      }
+
+      plansFlowLine = frame : Canvas.flowLine {
+        left: 212px,
+        top: 144px,
+        width: 38px
+      }
+
+      plansFlowTag = frame : Canvas.flowTag {
+        left: 200px,
+        top: 137px,
+
+        label {
+          contents: "See plans"
+        }
+      }
+
+      joinFlowLine = frame : Canvas.flowLine {
+        left: 636px,
+        top: 144px,
+        width: 38px
+      }
+
+      joinFlowTag = frame : Canvas.flowTag {
+        left: 624px,
+        top: 137px,
+
+        label {
+          contents: "Sign up"
+        }
+      }
+
+      openFlowLine = frame : Canvas.flowLine {
+        left: 424px,
+        top: 334px,
+        width: 38px
+      }
+
+      openFlowTag = frame : Canvas.flowTag {
+        left: 412px,
+        top: 327px,
+
+        label {
+          contents: "Open"
+        }
+      }
+
+      hoverBox = frame {
+        left: 241px,
+        top: 272px,
+        width: 192px,
+        height: 124px,
+        corner-radius: Radius.radius.xs,
+        border: {color: Colors.colors.accent, width: 1.5px}
+      }
+    }
+  }
+
+  rail = frame : Inspector.fileRail {}
+}

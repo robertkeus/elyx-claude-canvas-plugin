@@ -1,0 +1,135 @@
+import "icons/pointer.svg" as pointerIcon
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "blocks/token-popover.elyx" as Popover
+import "components/canvas.elyx" as Canvas
+import "components/controls.elyx" as Controls
+import "sample/product.elyx" as Sample
+
+// Drag a screen, and the file remembers where it went.
+export dragScreens = frame {
+  left: 0px,
+  top: 0px,
+  width: 1280px,
+  height: 640px,
+  fill: Colors.colors.stage,
+  children: [landingTitle, landing, signInTitle, signIn, todayTitle, today, slot, firstLine, firstTag, secondLine, secondTag, pricingTitle, pricing, cursor, saved],
+
+  landingTitle = frame : Canvas.artboardTitle {
+    left: 120px,
+    top: 80px,
+
+    name {
+      contents: "landing"
+    }
+  }
+
+  landing = frame : Sample.landing {
+    left: 120px,
+    top: 104px,
+    transform: [0.7, 0, 0, 0, 0.7, 0]
+  }
+
+  signInTitle = frame : Canvas.artboardTitle {
+    left: 120px,
+    top: 348px,
+
+    name {
+      contents: "signIn"
+    }
+  }
+
+  signIn = frame : Sample.signIn {
+    left: 120px,
+    top: 372px,
+    transform: [0.7, 0, 0, 0, 0.7, 0]
+  }
+
+  todayTitle = frame : Canvas.artboardTitle {
+    left: 504px,
+    top: 348px,
+
+    name {
+      contents: "today"
+    }
+  }
+
+  today = frame : Sample.today {
+    left: 504px,
+    top: 372px,
+    transform: [0.7, 0, 0, 0, 0.7, 0]
+  }
+
+  slot = frame {
+    left: 504px,
+    top: 104px,
+    width: 294px,
+    height: 189px,
+    corner-radius: Radius.radius.xs,
+    border: {color: Colors.colors.dash, width: 1.5px, dash: [6px, 5px]}
+  }
+
+  firstLine = frame : Canvas.flowLine {
+    left: 414px,
+    top: 198px,
+    width: 90px
+  }
+
+  firstTag = frame : Canvas.flowTag {
+    left: 428px,
+    top: 190px,
+
+    label {
+      contents: "See plans"
+    }
+  }
+
+  secondLine = frame : Canvas.flowLine {
+    left: 414px,
+    top: 466px,
+    width: 90px
+  }
+
+  secondTag = frame : Canvas.flowTag {
+    left: 430px,
+    top: 458px,
+
+    label {
+      contents: "Continue"
+    }
+  }
+
+  pricingTitle = frame : Canvas.artboardTitle {
+    left: 846px,
+    top: 126px,
+
+    name {
+      contents: "pricing"
+    }
+  }
+
+  pricing = frame : Sample.pricing {
+    left: 846px,
+    top: 150px,
+    transform: [0.7, 0, 0, 0, 0.7, 0],
+    shadow: [{drop-shadow: {color: #00000038, offset: point(0, 28), blur-radius: 72px}}, {drop-shadow: {color: #00000014, offset: point(0, 2), blur-radius: 6px}}]
+  }
+
+  cursor = asset {
+    left: 1088px,
+    top: 315px,
+    width: 30px,
+    height: 30px,
+    contents: pointerIcon,
+    fill: Colors.colors.ink
+  }
+
+  saved = frame : Popover.toast {
+    left: 502px,
+    top: 578px,
+
+    message {
+      contents: "Saved to index.elyx"
+    }
+  }
+}

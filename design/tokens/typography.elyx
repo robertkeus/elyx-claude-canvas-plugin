@@ -1,0 +1,14 @@
+export fontSize = tokens {
+  xs: 11,
+  sm: 12,
+  md: 13,
+  lg: 14,
+  xl: 16,
+  xxl: 20,
+  display: 28
+}
+
+export letterSpacing = tokens {
+  tight: -1.5%,
+  snug: -0.6%
+}

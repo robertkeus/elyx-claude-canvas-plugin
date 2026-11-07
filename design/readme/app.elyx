@@ -1,0 +1,339 @@
+import "sample/images/landing.png" as landingShot
+import "sample/images/pricing.png" as pricingShot
+import "sample/images/signIn.png" as signInShot
+import "sample/images/today.png" as todayShot
+import "icons/grid.svg" as gridIcon
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "tokens/spacing.elyx" as Spacing
+import "blocks/center.elyx" as Center
+import "blocks/inspector.elyx" as Inspector
+import "blocks/quick-edit.elyx" as Quick
+import "blocks/sidebar.elyx" as Sidebar
+import "components/canvas.elyx" as Canvas
+import "components/nav.elyx" as Nav
+import "sample/product.elyx" as Sample
+import "sample/tokens.elyx" as Tokens
+
+// The sidebar for the sample project. Nothing here comes from a real one.
+export side = frame : Sidebar.sidebar {
+  left: 0px,
+  top: 1000px,
+
+  body {
+    overrides: [insert(all, after = .nil), insert(head, after = all), insert(home, after = head), insert(plans, after = home), insert(login, after = plans), insert(dash, after = login)]
+  }
+
+  tabs {
+    screens {
+      glyph {
+        fill[0].color: Colors.colors.accent
+      }
+    }
+  }
+
+  all = frame : Nav.pillRow {
+    glyph {
+      contents: gridIcon
+    }
+
+    label {
+      contents: "All screens"
+    }
+
+    count {
+      contents: "4"
+    }
+  }
+
+  head = frame : Nav.navHead {
+    label {
+      contents: "Screens"
+    }
+
+    count {
+      contents: "4"
+    }
+  }
+
+  home = frame : Nav.thumbRowActive {
+    shot {
+      fill: {image: {ref: landingShot}}
+    }
+
+    label {
+      contents: "Landing"
+    }
+  }
+
+  plans = frame : Nav.thumbRow {
+    shot {
+      fill: {image: {ref: pricingShot}}
+    }
+
+    label {
+      contents: "Pricing"
+    }
+  }
+
+  login = frame : Nav.thumbRow {
+    shot {
+      fill: {image: {ref: signInShot}}
+    }
+
+    label {
+      contents: "Sign in"
+    }
+  }
+
+  dash = frame : Nav.thumbRow {
+    shot {
+      fill: {image: {ref: todayShot}}
+    }
+
+    label {
+      contents: "Today"
+    }
+  }
+}
+
+// The whole app, on the sample project, with a small label selected.
+export appWindow = frame {
+  left: 0px,
+  top: 0px,
+  width: Spacing.size.screen,
+  height: Spacing.size.screen-height,
+  corner-radius: 16px,
+  fill: Colors.colors.surface,
+  border: {color: Colors.colors.line-strong, width: 1px},
+  layout: {direction: .row},
+  children: [nav, main, rail],
+
+  nav = frame : side {}
+
+  main = frame : Center.center {
+    topBar {
+      project {
+        label {
+          contents: "driftwood"
+        }
+      }
+    }
+
+    crumbBar {
+      name {
+        contents: "landing"
+      }
+    }
+
+    stage {
+      overrides: [insert(world, after = .nil)],
+
+      hud {
+        count {
+          label {
+            contents: "4 Screens"
+          }
+        }
+
+        level {
+          label {
+            contents: "86%"
+          }
+        }
+      }
+    }
+
+    world = frame {
+      left: 0px,
+      top: 0px,
+      width: 100%,
+      height: 100%,
+      children: [landingTitle, landing, pricingTitle, pricing, signInTitle, signIn, todayTitle, today, hoverBox, selection, tag, bar],
+
+      landingTitle = frame : Canvas.artboardTitle {
+        left: 40px,
+        top: 32px,
+
+        name {
+          contents: "landing"
+        }
+      }
+
+      landing = frame : Sample.landing {
+        left: 40px,
+        top: 56px,
+        transform: [0.86, 0, 0, 0, 0.86, 0]
+      }
+
+      pricingTitle = frame : Canvas.artboardTitle {
+        left: 445px,
+        top: 32px,
+
+        name {
+          contents: "pricing"
+        }
+      }
+
+      pricing = frame : Sample.pricing {
+        left: 445px,
+        top: 56px,
+        transform: [0.86, 0, 0, 0, 0.86, 0]
+      }
+
+      signInTitle = frame : Canvas.artboardTitle {
+        left: 40px,
+        top: 322px,
+
+        name {
+          contents: "signIn"
+        }
+      }
+
+      signIn = frame : Sample.signIn {
+        left: 40px,
+        top: 346px,
+        transform: [0.86, 0, 0, 0, 0.86, 0]
+      }
+
+      todayTitle = frame : Canvas.artboardTitle {
+        left: 445px,
+        top: 322px,
+
+        name {
+          contents: "today"
+        }
+      }
+
+      today = frame : Sample.today {
+        left: 445px,
+        top: 346px,
+        transform: [0.86, 0, 0, 0, 0.86, 0]
+      }
+
+      hoverBox = frame {
+        left: 58.92px,
+        top: 218.54px,
+        width: 102.34px,
+        height: 29.24px,
+        border: {color: Colors.colors.accent-line, width: 1px}
+      }
+
+      selection = frame {
+        left: 70.68px,
+        top: 224.28px,
+        width: 78.82px,
+        height: 17.759999999999998px,
+        border: {color: Colors.colors.accent, width: 2px}
+      }
+
+      tag = frame : Canvas.layerTag {
+        left: 70.68px,
+        top: 201.28px
+      }
+
+      bar = frame : Quick.quickEdit {
+        left: 19px,
+        top: 262px,
+
+        words {
+          value {
+            contents: "Start free trial"
+          }
+        }
+
+        color {
+          swatch {
+            fill[0].color: Tokens.sample.on-clay
+          }
+
+          name {
+            contents: "on-clay"
+          }
+        }
+
+        size {
+          value {
+            contents: "13"
+          }
+        }
+      }
+    }
+  }
+
+  rail = frame : Inspector.layerRail {
+    body {
+      identity {
+        path {
+          one {
+            contents: "landing"
+          }
+
+          two {
+            contents: "hero"
+          }
+
+          three {
+            contents: "copy"
+          }
+
+          four {
+            contents: "cta"
+          }
+        }
+      }
+
+      scope {
+        note {
+          contents: "Writes to screens/landing.elyx"
+        }
+      }
+
+      content {
+        words {
+          value {
+            contents: "Start free trial"
+          }
+        }
+      }
+
+      style {
+        colorRow {
+          swatch {
+            fill[0].color: Tokens.sample.on-clay
+          }
+
+          name {
+            contents: "sample.on-clay"
+          }
+        }
+
+        sizeRow {
+          value {
+            contents: "13"
+          }
+        }
+
+        weightRow {
+          name {
+            contents: "SemiBold"
+          }
+        }
+
+        boxRow {
+          value {
+            contents: "87 × 16"
+          }
+        }
+      }
+
+      source {
+        code {
+          name {
+            contents: "ui/button.tsx"
+          }
+        }
+      }
+    }
+  }
+}
