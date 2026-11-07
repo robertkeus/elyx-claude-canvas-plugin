@@ -43,6 +43,7 @@ In the desktop app, where `/plugin` does not run: click **+** next to the prompt
 
 | You type | What happens |
 | --- | --- |
+| `/elyx` | Claude asks what you want to design |
 | `/elyx design a pricing card` | Claude writes the design, checks it and opens it on the canvas |
 | `/elyx export the tokens of a.elyx` | Claude picks the right `elyx` command and runs it |
 | `/elyx a.elyx` | Opens the file on the canvas right away |
