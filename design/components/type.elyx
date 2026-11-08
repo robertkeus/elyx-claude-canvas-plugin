@@ -60,7 +60,7 @@ export hint = text {
   top: 184px,
   contents: "Hint",
   font-size: Type.fontSize.sm,
-  fill: Colors.colors.faint
+  fill: Colors.colors.muted
 }
 
 // Numbers, file paths and token names. Slashed zeros, as in the editor.

@@ -3,7 +3,7 @@
   color-scheme: light;
   --stage: #f6f6f6; --surface: #fff; --well: #f8f8f8; --chip: #edeff1; --chip-strong: #e3e6e9;
   --line: #eee; --line-strong: #e2e3e6; --dash: #d3d6db;
-  --ink: #1e2126; --heading: #3c434e; --body: #4c525c; --muted: #7a808a; --faint: #a9aeb6;
+  --ink: #1e2126; --heading: #3c434e; --body: #4c525c; --muted: #676d77; --faint: #858b94;
   --accent: #3b6ce0; --accent-soft: #e5ebff; --accent-line: #c5d3ff; --on-accent: #fff;
   --artboard: #a01de8; --positive: #1f9d47; --danger: #d0453c; --solid: #2f3136; --on-solid: #fff;
   --canvas: var(--stage); --scrim: #1e212614;
@@ -16,7 +16,7 @@
   color-scheme: dark;
   --stage: #141517; --surface: #1c1d20; --well: #232428; --chip: #2a2c30; --chip-strong: #34363b;
   --line: #2b2d31; --line-strong: #36383d; --dash: #44474d;
-  --ink: #f1f2f4; --heading: #e4e6ea; --body: #bcc0c7; --muted: #8d929b; --faint: #666b74;
+  --ink: #f1f2f4; --heading: #e4e6ea; --body: #bcc0c7; --muted: #9aa0a9; --faint: #80858e;
   --accent: #7ea2ff; --accent-soft: #24304f; --accent-line: #3a4c7a; --on-accent: #0f1730;
   --artboard: #ce8bff; --positive: #5ad285; --danger: #ff8d82; --solid: #f1f2f4; --on-solid: #17181a;
   --scrim: #00000066; --soft-shadow: 0 1px 3px #0000004d; --float: 0 8px 24px #00000066, 0 1px 3px #0000004d; --deep: 0 24px 64px #00000080, 0 1px 3px #0000004d;
@@ -265,7 +265,7 @@ a.card:hover .card-shot { border-color: var(--accent); box-shadow: 0 0 0 1px var
 .swatch-tile div { padding: 7px 4px 4px }
 .swatch-tile strong { display: block; overflow: hidden; color: var(--heading); font-size: 12px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap }
 .swatch-tile span { display: block; overflow: hidden; color: var(--muted); font-size: 11px; font-feature-settings: "tnum", "zero"; text-overflow: ellipsis; white-space: nowrap }
-.swatch-tile .inherited { color: var(--faint) }
+.swatch-tile .inherited { color: var(--muted) }
 
 .scale-sheet { padding: 8px 18px; overflow: hidden }
 .scale-row { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 26px; padding: 4px 0; border-radius: 4px; text-align: left }
@@ -273,7 +273,7 @@ a.card:hover .card-shot { border-color: var(--accent); box-shadow: 0 0 0 1px var
 .scale-row[aria-pressed="true"] .scale-name { color: var(--accent); font-weight: 600 }
 .scale-name { flex: none; width: 76px; overflow: hidden; color: var(--muted); font-size: 12px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap }
 .scale-sample { flex: 1; min-width: 0; overflow: hidden; color: var(--heading); font-weight: 600; letter-spacing: -.015em; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap }
-.scale-value { flex: none; color: var(--faint); font-size: 12px }
+.scale-value { flex: none; color: var(--muted); font-size: 12px }
 .scale-bar { height: 10px; min-width: 1px; border-radius: 2px; background: var(--accent) }
 .scale-track { flex: 1; min-width: 0 }
 .scale-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px }
@@ -325,7 +325,7 @@ body.rail-open #rail { display: flex }
 .segments button:hover:not(:disabled) { color: var(--ink) }
 .segments button:disabled { color: var(--faint); cursor: default }
 .segments .on { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px #0000001a }
-.note { color: var(--faint); font-size: 12px; word-break: break-word }
+.note { color: var(--muted); font-size: 12px; word-break: break-word }
 .field-input, .field-area {
   width: 100%; padding: 0 10px; border: 1px solid transparent; border-radius: var(--r-md); background: var(--chip); color: var(--ink); outline: 0; transition: border-color var(--ease);
 }
@@ -346,7 +346,7 @@ body.rail-open #rail { display: flex }
 .ctx-row { display: flex; align-items: center; gap: 8px; width: 100%; height: 28px; border-radius: 4px; text-align: left }
 .ctx-row .name { flex: 1; min-width: 0; overflow: hidden; color: var(--muted); text-overflow: ellipsis; white-space: nowrap }
 .ctx-row .value { color: var(--body); font-size: 12px; font-feature-settings: "tnum", "zero" }
-.ctx-row .inherited { color: var(--faint) }
+.ctx-row .inherited { color: var(--muted) }
 .ctx-row[aria-pressed="true"] .name { color: var(--accent); font-weight: 500 }
 .code { margin: 0; padding: 10px; border-radius: var(--r-md); background: var(--chip); color: var(--body); font: 11px/1.55 var(--mono); overflow-x: auto; white-space: pre }
 
@@ -391,7 +391,7 @@ body.rail-open #rail { display: flex }
 .palette-row .where { flex: none; max-width: 45%; overflow: hidden; color: var(--muted); font-size: 12px; text-overflow: ellipsis; white-space: nowrap }
 .palette-row[aria-selected="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 500 }
 .palette-row[aria-selected="true"] .glyph { color: var(--accent) }
-.palette-foot { flex: none; display: flex; gap: 14px; align-items: center; height: 38px; padding: 0 16px; border-top: 1px solid var(--line); color: var(--faint); font-size: 12px }
+.palette-foot { flex: none; display: flex; gap: 14px; align-items: center; height: 38px; padding: 0 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px }
 .rail-body.claude { flex: 1; justify-content: flex-end; gap: 10px; padding: 12px }
 .composer-card { display: flex; flex-direction: column; gap: 8px; padding: 12px 12px 10px; border: 1px solid var(--line-strong); border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--soft-shadow); transition: border-color var(--ease) }
 .composer-card:focus-within { border-color: var(--accent) }
@@ -415,7 +415,7 @@ body.rail-open #rail { display: flex }
 .revision[aria-pressed="true"] i { border-color: var(--accent); background: var(--accent) }
 .revision strong { display: block; overflow: hidden; color: var(--ink); font-weight: 500; text-overflow: ellipsis; white-space: nowrap }
 .revision span { display: block; color: var(--muted); font-size: 12px }
-.revision .hash { padding-top: 1px; color: var(--faint); font: 11px var(--mono) }
+.revision .hash { padding-top: 1px; color: var(--muted); font: 11px var(--mono) }
 
 #toast {
   position: fixed; z-index: 40; left: 50%; bottom: 84px; translate: -50% 0; display: flex; align-items: center; gap: 14px; max-width: min(520px, calc(100vw - 32px));
