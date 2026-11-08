@@ -1,0 +1,24 @@
+// Editorial page: the Marlow site composed from its seven sections, read top to bottom like an issue, each opening on a folio rule.
+// Motion: sections reveal once in view (rules draw first, then type), 500–700ms heavy ease-out; nothing loops.
+import "editorial/tokens.elyx" as T
+import "editorial/nav.elyx" as Nav
+import "editorial/hero.elyx" as Hero
+import "editorial/features.elyx" as Features
+import "editorial/testimonials.elyx" as Testimonials
+import "editorial/pricing.elyx" as Pricing
+import "editorial/cta.elyx" as Cta
+import "editorial/footer.elyx" as Footer
+
+page = frame {
+  left: 0px, top: 0px, width: 1440px,
+  layout: {direction: .column},
+  fill: T.colors.bg,
+  children: [nav, hero, features, testimonials, pricing, cta, footer]
+  nav = frame : Nav.nav {}
+  hero = frame : Hero.hero {}
+  features = frame : Features.features {}
+  testimonials = frame : Testimonials.testimonials {}
+  pricing = frame : Pricing.pricing {}
+  cta = frame : Cta.cta {}
+  footer = frame : Footer.footer {}
+}

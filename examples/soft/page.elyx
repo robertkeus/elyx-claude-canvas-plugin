@@ -1,0 +1,20 @@
+// Page: the Kitebook landing page, composing all seven Soft sections in order on one cream canvas.
+// Motion: each section animates on entering the viewport (see its own Motion line); nothing auto-plays after load.
+import "soft/tokens.elyx" as T
+import "soft/nav.elyx" as Nav
+import "soft/hero.elyx" as Hero
+import "soft/features.elyx" as Features
+import "soft/testimonials.elyx" as Testimonials
+import "soft/pricing.elyx" as Pricing
+import "soft/cta.elyx" as Cta
+import "soft/footer.elyx" as Footer
+
+page = frame {left: 0px, top: 0px, width: 1440px, layout: {direction: .column}, fill: T.colors.bg, children: [nav, hero, features, testimonials, pricing, cta, footer]
+  nav = frame : Nav.nav {}
+  hero = frame : Hero.hero {}
+  features = frame : Features.features {}
+  testimonials = frame : Testimonials.testimonials {}
+  pricing = frame : Pricing.pricing {}
+  cta = frame : Cta.cta {}
+  footer = frame : Footer.footer {}
+}

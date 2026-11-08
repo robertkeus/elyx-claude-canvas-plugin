@@ -1,0 +1,146 @@
+// Pricing: three tiers as one hairline table with an enterprise row beneath; the middle tier earns a gradient edge, a top glow and the only accent button. Borrow the table-not-cards layout.
+// Motion: the table fades up 32px over 600ms ease-out; switching Monthly/Yearly slides the segment thumb in 200ms and rolls prices vertically at 60ms stagger.
+import "midnight/tokens.elyx" as T
+import "midnight/parts.elyx" as P
+import "icons/check.svg" as checkIcon
+
+export pricing = frame {
+  left: 0px, top: 0px, width: 1440px, padding: [T.space.section, T.space.gutter],
+  fill: T.colors.bg,
+  layout: {direction: .column, item-gap: T.space.block},
+  children: [header, table, note]
+
+  header = frame {
+    width: 100%, layout: {direction: .row, align-items: .end, justify-content: .space-between},
+    children: [lead, toggle]
+    lead = frame {layout: {direction: .column, item-gap: 20px}, children: [eyebrow, h2, sub]
+      eyebrow = frame : P.eyebrow {index {contents: "03"}, label {contents: "PRICING"}}
+      h2 = text {contents: "Priced per seat, not per query.", font-family: T.fonts.display, font-style: T.weights.heading, font-size: T.size.h2,
+        letter-spacing: T.tracking.h2, line-height: T.leading.h2, fill: T.colors.ink,
+        subrange: [{range: [25, 30], font-family: T.fonts.serif, font-style: T.weights.serif, letter-spacing: T.tracking.mono}]}
+      sub = text {contents: "Ask as many questions as you like. Viewers are always free.", font-family: T.fonts.body, font-size: T.size.body,
+        letter-spacing: T.tracking.body, line-height: T.leading.body, fill: T.colors.muted}}
+
+    // Segmented control: Yearly selected, saving called out in words.
+    toggle = frame {
+      padding: 4px, corner-radius: T.radius.button, fill: T.colors.tint, border: {color: T.colors.line, width: 1px},
+      layout: {direction: .row, align-items: .center, item-gap: 4px},
+      children: [monthly, yearly]
+      monthly = frame {height: 36px, padding: [0px, 16px], corner-radius: 7px, layout: {direction: .row, align-items: .center}, children: [t]
+        t = text : P.uiText {contents: "Monthly", font-size: T.size.small, fill: T.colors.muted}}
+      yearly = frame {height: 36px, padding: [0px, 8px, 0px, 16px], corner-radius: 7px, fill: T.colors.tint-2,
+        shadow: [{inner-shadow: {color: T.colors.glass, offset: point(0, 1), blur-radius: 0px}}, {drop-shadow: {color: #00000080, offset: point(0, 2), blur-radius: 6px}}],
+        layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [t, save]
+        t = text : P.uiText {contents: "Yearly", font-size: T.size.small, fill: T.colors.ink}
+        save = frame : P.chip {height: 24px, padding: [0px, 8px], fill[0].color: opacity(T.colors.success, 12%), border: {color: opacity(T.colors.success, 30%), width: 1px},
+          label {contents: "Save 20%", font-size: T.size.micro, fill: T.colors.success}}}
+    }
+  }
+
+  // ── One table: 1px gaps over 8% white are the column rules ───
+  table = frame {
+    width: 100%, padding: 1px, corner-radius: T.radius.panel, fill: T.colors.line,
+    layout: {direction: .column, item-gap: 1px}, overflow: .visible,
+    children: [tiers, enterprise]
+
+    tiers = frame {width: 100%, layout: {direction: .row, align-items: .stretch, item-gap: 1px}, overflow: .visible, children: [starter, team, business]
+
+      starter = frame {
+        width: 399px, padding: 32px, corner-radius: [19px, 0px, 0px, 0px], fill: T.colors.bg,
+        layout: {direction: .column, item-gap: 28px},
+        children: [head, price, cta, rule, list]
+        head = frame {width: 100%, height: 82px, layout: {direction: .column, item-gap: 8px}, children: [n, d]
+          n = text {contents: "Starter", font-family: T.fonts.display, font-style: T.weights.heading, font-size: T.size.h3, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+          d = text {contents: "For a small team getting its first answers.", width: 100%, font-family: T.fonts.body, font-size: T.size.body, letter-spacing: T.tracking.body, line-height: T.leading.body, fill: T.colors.muted}}
+        price = frame {layout: {direction: .column, item-gap: 8px}, children: [row, seats]
+          row = frame {layout: {direction: .row, align-items: .end, item-gap: 8px}, children: [v, u]
+            v = text {contents: "$0", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.price, letter-spacing: T.tracking.h2, line-height: T.leading.display, fill: T.colors.ink}
+            u = frame {padding-bottom: 8px, layout: {}, children: [x]  x = text : P.monoText {contents: "/ SEAT / MO", letter-spacing: T.tracking.mono}}}
+          seats = text : P.monoText {contents: "Up to 3 seats, free forever", letter-spacing: T.tracking.mono, fill: T.colors.muted}}
+        cta = frame : P.ghostButton {width: 100%, label {contents: "Start free"}}
+        rule = frame {width: 100%, height: 1px, fill: T.colors.line}
+        list = frame {layout: {direction: .column, item-gap: 12px}, children: [k, f1, f2, f3, f4, f5]
+          k = text : P.uiText {contents: "Includes", font-size: T.size.small, fill: T.colors.muted}
+          f1 = frame : P.checkItem {label {contents: "50 questions a month"}}
+          f2 = frame : P.checkItem {label {contents: "2 data sources"}}
+          f3 = frame : P.checkItem {label {contents: "Charts, tables and SQL view"}}
+          f4 = frame : P.checkItem {label {contents: "Share links that expire"}}
+          f5 = frame : P.checkItem {label {contents: "Community support"}}}
+      }
+
+      // The highlight: gradient edge, glow from the top, accent button.
+      team = frame {
+        width: 398px, padding: 32px,
+        fill: [T.colors.bg, {radial-gradient: {at: point(50%, 0%), radius: [90%, 55%], stops: [stop(0%, opacity(T.colors.accent, 22%)), stop(100%, opacity(T.colors.accent, 0%))]}}],
+        border: {linear-gradient: {angle: 180deg, stops: [stop(0%, T.colors.accent), stop(50%, opacity(T.colors.accent, 25%)), stop(100%, opacity(T.colors.accent-2, 50%))]}, width: 1px},
+        shadow: [{inner-shadow: {color: T.colors.glass, offset: point(0, 1), blur-radius: 0px}}, {drop-shadow: {color: opacity(T.colors.accent, 22%), offset: point(0, 0), blur-radius: 60px}}],
+        layout: {direction: .column, item-gap: 28px}, overflow: .visible,
+        children: [head, price, cta, rule, list]
+        head = frame {width: 100%, height: 82px, layout: {direction: .column, item-gap: 8px}, children: [r, d]
+          r = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [n, badge]
+            n = text {contents: "Team", font-family: T.fonts.display, font-style: T.weights.heading, font-size: T.size.h3, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+            badge = frame : P.dotChip {height: 24px, fill[0].color: T.colors.accent-soft, border: {color: opacity(T.colors.accent, 40%), width: 1px}, label {contents: "Most teams pick this", font-size: T.size.micro, fill: T.colors.accent-text}}}
+          d = text {contents: "For product squads who ask every day.", width: 100%, font-family: T.fonts.body, font-size: T.size.body, letter-spacing: T.tracking.body, line-height: T.leading.body, fill: T.colors.muted}}
+        price = frame {layout: {direction: .column, item-gap: 8px}, children: [row, seats]
+          row = frame {layout: {direction: .row, align-items: .end, item-gap: 8px}, children: [v, was, u]
+            v = text {contents: "$32", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.price, letter-spacing: T.tracking.h2, line-height: T.leading.display, fill: T.colors.ink}
+            was = frame {padding-bottom: 8px, layout: {}, children: [x]  x = text : P.codeText {contents: "$40", strikethrough: .single, fill: T.colors.muted}}
+            u = frame {padding-bottom: 8px, layout: {}, children: [x]  x = text : P.monoText {contents: "/ SEAT / MO", letter-spacing: T.tracking.mono}}}
+          seats = text : P.monoText {contents: "Billed yearly, $384 per seat", letter-spacing: T.tracking.mono, fill: T.colors.muted}}
+        cta = frame : P.accentButton {width: 100%, label {contents: "Start a 14-day trial"}}
+        rule = frame {width: 100%, height: 1px, fill: T.colors.line}
+        list = frame {layout: {direction: .column, item-gap: 12px}, children: [k, f1, f2, f3, f4, f5]
+          k = text : P.uiText {contents: "Everything in Starter, plus", font-size: T.size.small, fill: T.colors.muted}
+          f1 = frame : P.checkItem {tick {fill: T.colors.accent-text}, label {contents: "Unlimited questions"}}
+          f2 = frame : P.checkItem {tick {fill: T.colors.accent-text}, label {contents: "10 data sources, synced hourly"}}
+          f3 = frame : P.checkItem {tick {fill: T.colors.accent-text}, label {contents: "Semantic layer with versioning"}}
+          f4 = frame : P.checkItem {tick {fill: T.colors.accent-text}, label {contents: "Anomaly alerts in Slack and email"}}
+          f5 = frame : P.checkItem {tick {fill: T.colors.accent-text}, label {contents: "Priority support, 4-hour reply"}}}
+      }
+
+      business = frame {
+        width: 399px, padding: 32px, corner-radius: [0px, 19px, 0px, 0px], fill: T.colors.bg,
+        layout: {direction: .column, item-gap: 28px},
+        children: [head, price, cta, rule, list]
+        head = frame {width: 100%, height: 82px, layout: {direction: .column, item-gap: 8px}, children: [n, d]
+          n = text {contents: "Business", font-family: T.fonts.display, font-style: T.weights.heading, font-size: T.size.h3, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+          d = text {contents: "For data teams who govern access and metrics.", width: 100%, font-family: T.fonts.body, font-size: T.size.body, letter-spacing: T.tracking.body, line-height: T.leading.body, fill: T.colors.muted}}
+        price = frame {layout: {direction: .column, item-gap: 8px}, children: [row, seats]
+          row = frame {layout: {direction: .row, align-items: .end, item-gap: 8px}, children: [v, was, u]
+            v = text {contents: "$64", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.price, letter-spacing: T.tracking.h2, line-height: T.leading.display, fill: T.colors.ink}
+            was = frame {padding-bottom: 8px, layout: {}, children: [x]  x = text : P.codeText {contents: "$80", strikethrough: .single, fill: T.colors.muted}}
+            u = frame {padding-bottom: 8px, layout: {}, children: [x]  x = text : P.monoText {contents: "/ SEAT / MO", letter-spacing: T.tracking.mono}}}
+          seats = text : P.monoText {contents: "Billed yearly, 10-seat minimum", letter-spacing: T.tracking.mono, fill: T.colors.muted}}
+        cta = frame : P.ghostButton {width: 100%, label {contents: "Choose Business"}}
+        rule = frame {width: 100%, height: 1px, fill: T.colors.line}
+        list = frame {layout: {direction: .column, item-gap: 12px}, children: [k, f1, f2, f3, f4, f5]
+          k = text : P.uiText {contents: "Everything in Team, plus", font-size: T.size.small, fill: T.colors.muted}
+          f1 = frame : P.checkItem {label {contents: "Unlimited sources"}}
+          f2 = frame : P.checkItem {label {contents: "Row-level permissions"}}
+          f3 = frame : P.checkItem {label {contents: "SAML SSO and SCIM"}}
+          f4 = frame : P.checkItem {label {contents: "Audit log, 1-year retention"}}
+          f5 = frame : P.checkItem {label {contents: "99.9% uptime SLA"}}}
+      }
+    }
+
+    // Enterprise: the full-width last row of the same table.
+    enterprise = frame {
+      width: 100%, padding: [28px, 32px], corner-radius: [0px, 0px, 19px, 19px], fill: T.colors.bg,
+      layout: {direction: .row, align-items: .center, justify-content: .space-between},
+      children: [who, what, cta]
+      who = frame {width: 400px, layout: {direction: .column, item-gap: 12px}, children: [n, chips]
+        n = text {contents: "Enterprise", font-family: T.fonts.display, font-style: T.weights.heading, font-size: T.size.h3, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+        chips = frame {layout: {direction: .row, item-gap: 8px}, children: [a, b, c, d]
+          a = frame : P.chip {height: 24px, label {contents: "VPC deploy", font-size: T.size.micro}}
+          b = frame : P.chip {height: 24px, label {contents: "SOC 2 Type II", font-size: T.size.micro}}
+          c = frame : P.chip {height: 24px, label {contents: "HIPAA", font-size: T.size.micro}}
+          d = frame : P.chip {height: 24px, label {contents: "99.99% SLA", font-size: T.size.micro}}}}
+      what = text {contents: "Private deployment in your cloud, custom contracts and a named analyst who sets up your semantic layer with you.",
+        width: 440px, font-family: T.fonts.body, font-size: T.size.body, letter-spacing: T.tracking.body, line-height: T.leading.body, fill: T.colors.muted}
+      cta = frame : P.ghostButton {label {contents: "Talk to sales"}}
+    }
+  }
+
+  note = frame {width: 100%, layout: {direction: .row, justify-content: .center}, children: [t]
+    t = text : P.monoText {contents: "PRICES IN USD  ·  VIEWERS FREE ON EVERY PLAN  ·  50% OFF FOR NONPROFITS"}}
+}

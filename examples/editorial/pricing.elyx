@@ -1,0 +1,139 @@
+// Editorial pricing: three membership tiers as open columns split by vertical hairlines, serif names and prices, one ink "Editor's pick" marker and one filled action.
+// Motion: columns fade up 16px, 100ms apart, over 500ms ease-out; the billing underline slides between options in 200ms when toggled.
+import "editorial/tokens.elyx" as T
+import "editorial/parts.elyx" as P
+
+export pricing = frame {
+  left: 0px, top: 0px, width: 1440px,
+  fill: T.colors.bg,
+  padding: [T.space.block, T.space.gutter],
+  layout: {direction: .column, item-gap: T.space.block},
+  children: [folio, header, tiers, fine]
+
+  folio = frame : P.folio {section {contents: "MEMBERSHIP"}, page {contents: "MARLOW · NO. 48 · P. 04"}}
+
+  header = frame {
+    width: 100%,
+    layout: {direction: .row, align-items: .end, justify-content: .space-between},
+    children: [title, aside]
+    title = text {
+      contents: "Pay as the magazine grows, not before.",
+      width: 640px,
+      font-family: T.fonts.display, font-size: T.size.h2, line-height: T.leading.h2, letter-spacing: T.tracking.h2, fill: T.colors.ink,
+      subrange: [{range: [27, 38], font-style: T.weights.italic}]
+    }
+    aside = frame {
+      width: 400px,
+      layout: {direction: .column, item-gap: T.space.group},
+      children: [blurb, billing]
+      blurb = text {
+        contents: "Every plan includes a custom domain, imports from your old list and print-ready PDFs. Prices in pounds, VAT included.",
+        width: 100%,
+        font-family: T.fonts.body, font-size: T.size.body, line-height: T.leading.body, letter-spacing: T.tracking.body, fill: T.colors.muted
+      }
+      // Billing switch: the active option is ink and underlined, never color alone.
+      billing = frame {
+        layout: {direction: .row, align-items: .start, item-gap: 20px},
+        children: [monthly, slash, annual]
+        monthly = frame {
+          padding-bottom: 8px, border: {color: T.colors.rule, width: 2px, sides: [.bottom]},
+          layout: {}, children: [m]
+          m = text : P.label {contents: "MONTHLY", fill: T.colors.ink}
+        }
+        slash = text : P.label {contents: "/"}
+        annual = frame {
+          layout: {direction: .row, item-gap: 8px}, children: [a, save]
+          a = text : P.label {contents: "ANNUALLY"}
+          save = text : P.label {contents: "2 MONTHS FREE", fill: T.colors.ink}
+        }
+      }
+    }
+  }
+
+  tiers = frame {
+    width: 100%,
+    border: {color: T.colors.rule, width: 1px, sides: [.top, .bottom]},
+    layout: {direction: .row, align-items: .stretch},
+    children: [pamphlet, quarterly, press]
+
+    pamphlet = frame {
+      width: 416px, padding: [40px, 40px, 48px, 0px],
+      layout: {direction: .column, item-gap: T.space.group},
+      children: [top, list, act]
+      top = frame {width: 100%, layout: {direction: .column, item-gap: 16px}, children: [mark, name, price, note]
+        mark = text : P.label {contents: "01", fill: T.colors.ink}
+        name = text {contents: "Pamphlet", font-family: T.fonts.display, font-size: T.size.h3, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+        price = frame {layout: {direction: .row, align-items: .end, item-gap: 8px}, children: [amount, per]
+          amount = text {contents: "£0", font-family: T.fonts.display, font-size: T.size.stat, line-height: 0.9, letter-spacing: T.tracking.h2, fill: T.colors.ink}
+          per = text : P.label {contents: "UNTIL 500 READERS"}}
+        note = text {contents: "For a first issue and its first readers.", width: 100%, font-family: T.fonts.display, font-style: T.weights.italic, font-size: T.size.lead, fill: T.colors.muted}
+      }
+      list = frame {width: 100%, border: {color: T.colors.line, width: 1px, sides: [.top]}, layout: {direction: .column}, children: [f1, f2, f3, f4]
+        f1 = frame : P.listItem {width: 100%, item {contents: "Up to 500 readers"}}
+        f2 = frame : P.listItem {width: 100%, item {contents: "Posts and letters, unlimited"}}
+        f3 = frame : P.listItem {width: 100%, item {contents: "One publication, one editor"}}
+        f4 = frame : P.listItem {width: 100%, item {contents: "8% on paid memberships"}}
+      }
+      act = frame : P.buttonGhost {width: 100%, label {contents: "Start for free"}}
+    }
+
+    quarterly = frame {
+      width: 416px, padding: [40px, 40px, 48px, 40px],
+      border: {color: T.colors.line, width: 1px, sides: [.left]},
+      layout: {direction: .column, item-gap: T.space.group},
+      children: [top, list, act]
+      top = frame {width: 100%, layout: {direction: .column, item-gap: 16px}, children: [mark, pick, name, price, note]
+        mark = text : P.label {contents: "02", fill: T.colors.ink}
+        // Out of flow so the three columns keep identical rhythm.
+        pick = frame {
+          ignore-stack: .true, right: 0px, top: -4px,
+          padding: [4px, 8px], corner-radius: T.radius.chip, fill: T.colors.deep,
+          layout: {}, children: [pickLabel]
+          pickLabel = text : P.label {contents: "EDITOR'S PICK", fill: T.colors.on-deep}
+        }
+        name = text {contents: "Quarterly", font-family: T.fonts.display, font-size: T.size.h3, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+        price = frame {layout: {direction: .row, align-items: .end, item-gap: 8px}, children: [amount, per]
+          amount = text {contents: "£24", font-family: T.fonts.display, font-size: T.size.stat, line-height: 0.9, letter-spacing: T.tracking.h2, fill: T.colors.ink}
+          per = text : P.label {contents: "PER MONTH"}}
+        note = text {contents: "For a magazine with a schedule.", width: 100%, font-family: T.fonts.display, font-style: T.weights.italic, font-size: T.size.lead, fill: T.colors.muted}
+      }
+      list = frame {width: 100%, border: {color: T.colors.line, width: 1px, sides: [.top]}, layout: {direction: .column}, children: [f1, f2, f3, f4]
+        f1 = frame : P.listItem {width: 100%, item {contents: "Up to 10,000 readers"}}
+        f2 = frame : P.listItem {width: 100%, item {contents: "Numbered issues, spreads and print PDFs"}}
+        f3 = frame : P.listItem {width: 100%, item {contents: "Custom domain and house style"}}
+        f4 = frame : P.listItem {width: 100%, item {contents: "4% on paid memberships"}}
+      }
+      act = frame : P.buttonPrimary {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .center, item-gap: 8px}, label {contents: "Start with Quarterly"}}
+    }
+
+    press = frame {
+      width: 416px, padding: [40px, 0px, 48px, 40px],
+      border: {color: T.colors.line, width: 1px, sides: [.left]},
+      layout: {direction: .column, item-gap: T.space.group},
+      children: [top, list, act]
+      top = frame {width: 100%, layout: {direction: .column, item-gap: 16px}, children: [mark, name, price, note]
+        mark = text : P.label {contents: "03", fill: T.colors.ink}
+        name = text {contents: "Press", font-family: T.fonts.display, font-size: T.size.h3, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+        price = frame {layout: {direction: .row, align-items: .end, item-gap: 8px}, children: [amount, per]
+          amount = text {contents: "£79", font-family: T.fonts.display, font-size: T.size.stat, line-height: 0.9, letter-spacing: T.tracking.h2, fill: T.colors.ink}
+          per = text : P.label {contents: "PER MONTH"}}
+        note = text {contents: "For houses running several titles.", width: 100%, font-family: T.fonts.display, font-style: T.weights.italic, font-size: T.size.lead, fill: T.colors.muted}
+      }
+      list = frame {width: 100%, border: {color: T.colors.line, width: 1px, sides: [.top]}, layout: {direction: .column}, children: [f1, f2, f3, f4]
+        f1 = frame : P.listItem {width: 100%, item {contents: "Unlimited readers"}}
+        f2 = frame : P.listItem {width: 100%, item {contents: "Up to five publications"}}
+        f3 = frame : P.listItem {width: 100%, item {contents: "A shared desk for twelve editors"}}
+        f4 = frame : P.listItem {width: 100%, item {contents: "2% on paid memberships"}}
+      }
+      act = frame : P.buttonGhost {width: 100%, label {contents: "Talk to the desk"}}
+    }
+  }
+
+  fine = frame {
+    width: 100%,
+    layout: {direction: .row, align-items: .center, justify-content: .space-between},
+    children: [terms, compare]
+    terms = text : P.label {contents: "CANCEL ANY TIME · YOUR LIST AND ARCHIVE LEAVE WITH YOU"}
+    compare = frame : P.textLink {label {contents: "Compare every feature"}}
+  }
+}

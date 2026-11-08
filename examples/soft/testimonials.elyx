@@ -1,0 +1,84 @@
+// Testimonials: a three-column masonry of pastel speech bubbles from students and parents, anchored by an app-store-style rating card.
+// Motion: columns rise 40px and fade in 600ms ease-out, staggered 100ms by column; rating bars grow from 0 over 500ms; bubbles tilt 1° on 150ms hover.
+import "soft/tokens.elyx" as T
+import "soft/parts.elyx" as P
+
+export testimonials = frame {
+  left: 0px, top: 0px, width: 1440px,
+  padding: [T.space.half, T.space.gutter], fill: T.colors.bg,
+  layout: {direction: .column, align-items: .center, item-gap: T.space.block},
+  children: [header, wall]
+
+  header = frame {layout: {direction: .column, align-items: .center, item-gap: 20px}, children: [badge, title]
+    badge = frame : P.eyebrow {dot {fill[0].color: T.colors.pink}, label {contents: "Loved at home"}}
+    title = text : P.h2Text {contents: "Kids use it. Parents breathe.", align: .center}}
+
+  wall = frame {width: 100%, overflow: .visible, layout: {direction: .row, item-gap: 28px}, children: [colOne, colTwo, colThree]
+
+    colOne = frame {width: 408px, overflow: .visible, layout: {direction: .column, item-gap: 40px}, children: [ratingCard, tomQuote]
+      ratingCard = frame {width: 100%, padding: 32px, corner-radius: T.radius.panel, fill: T.colors.surface, shadow: T.shadow.card, layout: {direction: .column, item-gap: 24px}, children: [score, spread, divider, ratingFoot]
+        score = frame {layout: {direction: .row, align-items: .center, item-gap: 16px}, children: [scoreValue, scoreMeta]
+          scoreValue = text : P.displayText {contents: "4.9", font-size: T.size.h2, letter-spacing: T.tracking.h2}
+          scoreMeta = frame {layout: {direction: .column, item-gap: 4px}, children: [scoreStars, scoreCount]
+            scoreStars = frame : P.stars {}
+            scoreCount = text : P.smallText {contents: "out of 5 · 2,400 reviews"}}}
+        // Distribution rows: star count, track with fill, share.
+        spread = frame {width: 100%, layout: {direction: .column, item-gap: 8px}, children: [r5, r4, r3, r2, r1]
+          r5 = frame {width: 100%, layout: {direction: .row, align-items: .center, item-gap: 12px}, children: [r5Label, r5Track, r5Share]
+            r5Label = text : P.uiText {width: 12px, contents: "5"}
+            r5Track = frame {width: 100%, height: 8px, corner-radius: T.radius.pill, fill: T.colors.line, layout: {direction: .row}, children: [r5Fill]
+              r5Fill = frame {width: 88%, height: 100%, corner-radius: T.radius.pill, fill: T.colors.star}}
+            r5Share = text : P.uiText {width: 36px, align: .right, font-style: T.weights.medium, fill: T.colors.muted, contents: "88%"}}
+          r4 = frame {width: 100%, layout: {direction: .row, align-items: .center, item-gap: 12px}, children: [r4Label, r4Track, r4Share]
+            r4Label = text : P.uiText {width: 12px, contents: "4"}
+            r4Track = frame {width: 100%, height: 8px, corner-radius: T.radius.pill, fill: T.colors.line, layout: {direction: .row}, children: [r4Fill]
+              r4Fill = frame {width: 9%, height: 100%, corner-radius: T.radius.pill, fill: T.colors.star}}
+            r4Share = text : P.uiText {width: 36px, align: .right, font-style: T.weights.medium, fill: T.colors.muted, contents: "9%"}}
+          r3 = frame {width: 100%, layout: {direction: .row, align-items: .center, item-gap: 12px}, children: [r3Label, r3Track, r3Share]
+            r3Label = text : P.uiText {width: 12px, contents: "3"}
+            r3Track = frame {width: 100%, height: 8px, corner-radius: T.radius.pill, fill: T.colors.line, layout: {direction: .row}, children: [r3Fill]
+              r3Fill = frame {width: 2%, height: 100%, corner-radius: T.radius.pill, fill: T.colors.star}}
+            r3Share = text : P.uiText {width: 36px, align: .right, font-style: T.weights.medium, fill: T.colors.muted, contents: "2%"}}
+          r2 = frame {width: 100%, layout: {direction: .row, align-items: .center, item-gap: 12px}, children: [r2Label, r2Track, r2Share]
+            r2Label = text : P.uiText {width: 12px, contents: "2"}
+            r2Track = frame {width: 100%, height: 8px, corner-radius: T.radius.pill, fill: T.colors.line, layout: {direction: .row}, children: [r2Fill]
+              r2Fill = frame {width: 1%, height: 100%, corner-radius: T.radius.pill, fill: T.colors.star}}
+            r2Share = text : P.uiText {width: 36px, align: .right, font-style: T.weights.medium, fill: T.colors.muted, contents: "<1%"}}
+          r1 = frame {width: 100%, layout: {direction: .row, align-items: .center, item-gap: 12px}, children: [r1Label, r1Track, r1Share]
+            r1Label = text : P.uiText {width: 12px, contents: "1"}
+            r1Track = frame {width: 100%, height: 8px, corner-radius: T.radius.pill, fill: T.colors.line, layout: {direction: .row}, children: [r1Fill]
+              r1Fill = frame {width: 1%, height: 100%, corner-radius: T.radius.pill, fill: T.colors.star}}
+            r1Share = text : P.uiText {width: 36px, align: .right, font-style: T.weights.medium, fill: T.colors.muted, contents: "<1%"}}}
+        divider = frame {width: 100%, height: 1.5px, fill: T.colors.line}
+        ratingFoot = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [footFamilies, footPlatforms]
+          footFamilies = frame {layout: {direction: .column, item-gap: 2px}, children: [familiesValue, familiesLabel]
+            familiesValue = text : P.h3Text {contents: "18,000"}
+            familiesLabel = text : P.smallText {contents: "families on Kitebook"}}
+          footPlatforms = frame {layout: {direction: .column, item-gap: 2px}, children: [platformsValue, platformsLabel]
+            platformsValue = text : P.h3Text {contents: "92%"}
+            platformsLabel = text : P.smallText {contents: "still planning in week 8"}}}}
+      // The section's one sticker: Tom's streak.
+      tomQuote = frame : P.quoteCard {
+        bubble {fill[0].color: T.colors.pink, tail {fill[0].color: T.colors.pink}
+          overrides: [insert(streak, after = P.quoteCard.bubble.tail)]
+          quote {contents: "My streak is 41 days. My big sister is very annoyed about it."}
+          streak = frame : P.sticker {ignore-stack: .true, right: 18px, bottom: -34px, fill[0].color: T.colors.butter,
+            transform: [0.9945, 0.1045, 0, -0.1045, 0.9945, 0],
+            label {contents: "41 days"}}}
+        person {face {fill[0].color: T.colors.pink, initials {contents: "TW"}}, who {name {contents: "Tom W."}, role {contents: "Age 11 · Year 7"}}}}}
+
+    colTwo = frame {width: 408px, overflow: .visible, layout: {direction: .column, item-gap: 40px}, children: [mayaQuote, danielQuote]
+      mayaQuote = frame : P.quoteCard {}
+      danielQuote = frame : P.quoteCard {
+        bubble {fill[0].color: T.colors.sky, quote {contents: "Dinner stopped being a homework interrogation. Now I just read the Sunday summary."}, tail {fill[0].color: T.colors.sky}}
+        person {face {fill[0].color: T.colors.sky, initials {contents: "DR"}}, who {name {contents: "Daniel R."}, role {contents: "Dad of two · Leeds"}}}}}
+
+    colThree = frame {width: 408px, overflow: .visible, layout: {direction: .column, item-gap: 40px}, children: [inesQuote, priyaQuote]
+      inesQuote = frame : P.quoteCard {
+        bubble {fill[0].color: T.colors.peach, quote {contents: "The 25-minute timer is honestly the only reason my chemistry notes exist."}, tail {fill[0].color: T.colors.peach}}
+        person {face {fill[0].color: T.colors.peach, initials {contents: "IA"}}, who {name {contents: "Inés A."}, role {contents: "Age 15 · Year 10"}}}}
+      priyaQuote = frame : P.quoteCard {
+        bubble {fill[0].color: T.colors.butter, quote {contents: "He plans his own week now. I hear about big projects a week early, not the night before."}, tail {fill[0].color: T.colors.butter}}
+        person {face {fill[0].color: T.colors.butter, initials {contents: "PK"}}, who {name {contents: "Priya K."}, role {contents: "Mum of Arjun, 12"}}}}}
+  }
+}

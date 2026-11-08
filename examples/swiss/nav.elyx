@@ -1,0 +1,33 @@
+// Nav: six 2-column cells on the 12-column grid — logo, four links set as a numbered index, one black button — closed by a full-bleed black rule.
+// Motion: the bar fades in 400ms ease-out; on hover a link's index turns ink and its label underlines in 150ms; the rule draws left to right in 600ms.
+import "swiss/tokens.elyx" as T
+import "swiss/parts.elyx" as P
+
+export nav = frame {
+  left: 0px, top: 0px, width: 1440px, fill: T.colors.bg,
+  layout: {direction: .column}, children: [bar, rule]
+
+  bar = frame {
+    width: 100%, height: 72px, padding: [0px, T.space.gutter],
+    layout: {direction: .row, align-items: .center, item-gap: T.space.column-gap},
+    children: [brand, product, engineering, pricing, journal, actions]
+
+    // Local source: one index link, two columns wide.
+    link = frame {width: T.grid.c2, layout: {direction: .row, item-gap: 10px}, children: [index, label]
+      index = text : P.monoMuted {font-size: T.size.small, contents: "01"}
+      label = text : P.mono {font-size: T.size.small, contents: "Product"}
+    }
+
+    brand = frame {width: T.grid.c2, layout: {direction: .row}, children: [logo]
+      logo = frame : P.logo {}
+    }
+    product = frame : link {}
+    engineering = frame : link {index {contents: "02"} label {contents: "Engineering"}}
+    pricing = frame : link {index {contents: "03"} label {contents: "Pricing"}}
+    journal = frame : link {index {contents: "04"} label {contents: "Journal"}}
+    actions = frame {width: T.grid.c2, layout: {direction: .row, justify-content: .end}, children: [trial]
+      trial = frame : P.buttonSmall {label {contents: "Start free trial"}}
+    }
+  }
+  rule = frame : P.rule {width: 100%}
+}

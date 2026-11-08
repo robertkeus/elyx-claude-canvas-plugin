@@ -1,0 +1,139 @@
+// Midnight parts: the shared controls, chips, avatars and marks every Lumora section instances.
+// Motion: hovers 150ms ease-out; buttons lift 1px and their glass highlight brightens, chips tint to 12% white.
+import "midnight/tokens.elyx" as T
+import "icons/arrow-right.svg" as arrowRight
+import "icons/check.svg" as checkIcon
+
+// Lumora mark: a violet-to-cyan tile holding a lens ring and its glint.
+export logoMark = frame {
+  left: 0px, top: 0px, width: 24px, height: 24px, corner-radius: 7px,
+  fill: {linear-gradient: {angle: 135deg, stops: [stop(0%, T.colors.accent), stop(100%, T.colors.accent-2)]}},
+  shadow: [{inner-shadow: {color: T.colors.glass, offset: point(0, 1), blur-radius: 0px}}, {drop-shadow: {color: T.colors.glow, offset: point(0, 2), blur-radius: 10px}}],
+  overflow: .visible,
+  children: [ring, glint]
+  ring = shape {type: .ellipse, left: 5px, top: 5px, width: 14px, height: 14px, border: {color: T.colors.on-accent, width: 2px}}
+  glint = shape {type: .ellipse, left: 14px, top: 4px, width: 6px, height: 6px, fill: T.colors.on-accent}
+}
+
+// Mark + wordmark, used in nav and footer.
+export logo = frame {
+  left: 0px, top: 60px, layout: {direction: .row, align-items: .center, item-gap: 8px}, overflow: .visible,
+  children: [mark, word]
+  mark = frame : logoMark {}
+  word = text {contents: "Lumora", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.h3, letter-spacing: T.tracking.logo, fill: T.colors.ink}
+}
+
+// Primary: white fill, near-black label, glass top highlight. One per section.
+export button = frame {
+  left: 0px, top: 120px, height: 44px, padding: [0px, 20px], corner-radius: T.radius.button,
+  fill: T.colors.ink,
+  shadow: [{inner-shadow: {color: #FFFFFF, offset: point(0, 1), blur-radius: 0px}}, {drop-shadow: {color: #00000066, offset: point(0, 1), blur-radius: 2px}}, {drop-shadow: {color: #FFFFFF1A, offset: point(0, 8), blur-radius: 24px}}],
+  layout: {direction: .row, align-items: .center, justify-content: .center, item-gap: 8px},
+  overflow: .visible,
+  children: [label]
+  label = text {contents: "Start free", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui, letter-spacing: T.tracking.ui, fill: T.colors.bg}
+}
+
+// Ghost: 6% white glass, hairline ring, white label.
+@variant
+export ghostButton = frame : button {
+  top: 180px,
+  fill[0].color: T.colors.tint,
+  border: {color: T.colors.line-strong, width: 1px},
+  shadow: [{inner-shadow: {color: T.colors.glass, offset: point(0, 1), blur-radius: 0px}}],
+  label {contents: "Book a demo", font-style: T.weights.medium, fill: T.colors.ink}
+}
+
+// Accent: deep violet fill (white label passes 4.5:1), reserved for the highlighted pricing tier.
+@variant
+export accentButton = frame : button {
+  top: 240px,
+  fill[0].color: T.colors.accent-deep,
+  shadow: [{inner-shadow: {color: T.colors.glass, offset: point(0, 1), blur-radius: 0px}}, {drop-shadow: {color: T.colors.glow, offset: point(0, 8), blur-radius: 24px}}],
+  label {fill: T.colors.on-accent}
+}
+
+// Trailing arrow, for the hero and CTA primaries.
+@variant
+export arrowButton = frame : button {
+  top: 300px, padding: [0px, 16px, 0px, 20px],
+  overrides: [insert(arrow, after = button.label)]
+  arrow = asset {width: 16px, height: 16px, contents: arrowRight, fill: T.colors.bg}
+}
+
+// Mono chip: hairline pill for metadata, versions and filters.
+export chip = frame {
+  left: 0px, top: 360px, height: 26px, padding: [0px, 12px], corner-radius: T.radius.pill,
+  fill: T.colors.tint, border: {color: T.colors.line, width: 1px},
+  layout: {direction: .row, align-items: .center, item-gap: 8px},
+  children: [label]
+  label = text {contents: "Changelog", font-family: T.fonts.mono, font-style: T.weights.regular, font-size: T.size.label, letter-spacing: T.tracking.mono, fill: T.colors.muted}
+}
+
+// Chip led by a status dot.
+@variant
+export dotChip = frame : chip {
+  top: 400px, padding: [0px, 12px, 0px, 8px],
+  overrides: [insert(dot, after = .nil)]
+  dot = frame {width: 6px, height: 6px, corner-radius: 3px, fill: T.colors.accent-2, shadow: {drop-shadow: {color: T.colors.glow-2, offset: point(0, 0), blur-radius: 6px}}}
+}
+
+// Section eyebrow: mono index at 60%, uppercase label at 80%.
+export eyebrow = frame {
+  left: 0px, top: 440px, layout: {direction: .row, align-items: .center, item-gap: 8px},
+  children: [index, label]
+  index = text {contents: "01", font-family: T.fonts.mono, font-size: T.size.label, letter-spacing: T.tracking.label, fill: T.colors.muted}
+  label = text {contents: "FEATURES", font-family: T.fonts.mono, font-size: T.size.label, letter-spacing: T.tracking.label, fill: T.colors.ink-2}
+}
+
+// Initials on a violet-to-cyan disc.
+export avatar = frame {
+  left: 0px, top: 480px, width: 36px, height: 36px, corner-radius: T.radius.pill,
+  fill: {linear-gradient: {angle: 135deg, stops: [stop(0%, T.colors.accent), stop(100%, T.colors.accent-2)]}},
+  shadow: {inner-shadow: {color: T.colors.glass, offset: point(0, 1), blur-radius: 0px}},
+  layout: {direction: .row, align-items: .center, justify-content: .center},
+  children: [initials]
+  initials = text {contents: "MO", font-family: T.fonts.display, font-style: T.weights.strong, font-size: T.size.xs, letter-spacing: T.tracking.ui, fill: T.colors.on-accent}
+}
+
+// Feature list row: check glyph + 14px line.
+export checkItem = frame {
+  left: 0px, top: 530px, layout: {direction: .row, align-items: .center, item-gap: 8px},
+  children: [tick, label]
+  tick = asset {width: 16px, height: 16px, contents: checkIcon, fill: T.colors.faint}
+  label = text {contents: "Unlimited questions", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.body, fill: T.colors.ink-2}
+}
+
+// Keycap: mono glyph on a raised surface.
+export keycap = frame {
+  left: 0px, top: 570px, height: 28px, min-width: 28px, padding: [0px, 8px], corner-radius: T.radius.chip,
+  fill: T.colors.surface-2, border: {color: T.colors.line-strong, width: 1px},
+  shadow: [{inner-shadow: {color: #00000080, offset: point(0, -2), blur-radius: 0px}}, {inner-shadow: {color: T.colors.tint-2, offset: point(0, 1), blur-radius: 0px}}],
+  layout: {direction: .row, align-items: .center, justify-content: .center},
+  children: [glyph]
+  glyph = text {contents: "⌘", font-family: T.fonts.mono, font-style: T.weights.medium, font-size: T.size.label, fill: T.colors.ink-2}
+}
+
+// Text styles for drawn product UI: instance them and override `contents`.
+export uiText = text {left: 0px, top: 620px, contents: "Activation by plan", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.xs, letter-spacing: T.tracking.ui, fill: T.colors.ink-2}
+export monoText = text {left: 0px, top: 650px, contents: "PINNED", font-family: T.fonts.mono, font-size: T.size.micro, letter-spacing: T.tracking.label, fill: T.colors.muted}
+export codeText = text {left: 0px, top: 680px, contents: "SELECT step", font-family: T.fonts.mono, font-size: T.size.label, line-height: 1.6, fill: T.colors.ink-2}
+
+// Testimonial card: avatar, name, mono role, short quote on a 4% glass tile.
+export quoteCard = frame {
+  left: 0px, top: 720px, width: 384px, padding: 24px, corner-radius: T.radius.card,
+  fill: T.colors.tint, border: {color: T.colors.line, width: 1px},
+  shadow: {inner-shadow: {color: T.colors.tint-2, offset: point(0, 1), blur-radius: 0px}},
+  layout: {direction: .column, item-gap: 16px},
+  children: [person, quote]
+  person = frame {
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    children: [face, who]
+    face = frame : avatar {}
+    who = frame {layout: {direction: .column, item-gap: 4px}, children: [name, role]
+      name = text {contents: "Maya Okafor", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.ui, letter-spacing: T.tracking.ui, fill: T.colors.ink}
+      role = text : monoText {contents: "HEAD OF PRODUCT · FERNWAY"}}
+  }
+  quote = text {contents: "I ask in standup and the chart is on screen before we reach the next item.", width: 100%,
+    font-family: T.fonts.body, font-size: T.size.body, letter-spacing: T.tracking.body, line-height: T.leading.body, fill: T.colors.ink-2}
+}

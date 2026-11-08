@@ -1,0 +1,23 @@
+// Page: the seven Midnight sections stacked into one Lumora landing page on a single near-black canvas.
+// Motion: each section enters once in view (fade + 24–72px rise, 600ms ease-out); the nav turns to 80% glass with 12px blur after 40px of scroll.
+import "midnight/tokens.elyx" as T
+import "midnight/nav.elyx" as Nav
+import "midnight/hero.elyx" as Hero
+import "midnight/features.elyx" as Features
+import "midnight/testimonials.elyx" as Testimonials
+import "midnight/pricing.elyx" as Pricing
+import "midnight/cta.elyx" as Cta
+import "midnight/footer.elyx" as Footer
+
+page = frame {
+  left: 0px, top: 0px, width: 1440px, layout: {direction: .column}, fill: T.colors.bg,
+  children: [nav, hero, features, testimonials, pricing, cta, footer]
+  // Sections pad 136px both ways when shown alone; stacked, the top pad drops to 64px so every seam is 200px, not 272px.
+  nav = frame : Nav.nav {}
+  hero = frame : Hero.hero {}
+  features = frame : Features.features {padding-top: T.space.block}
+  testimonials = frame : Testimonials.testimonials {padding-top: T.space.block}
+  pricing = frame : Pricing.pricing {padding-top: T.space.block}
+  cta = frame : Cta.cta {padding-top: T.space.block}
+  footer = frame : Footer.footer {}
+}

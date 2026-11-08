@@ -1,0 +1,164 @@
+// Hero: split layout, a heavy headline with one word on a butter marker, store buttons and proof, two overlapping phones with real screens and two rotated stickers.
+// Motion: headline rises 24px and fades in 600ms ease-out; marker wipes left-to-right 400ms after; phones rise 60px staggered 120ms; stickers pop from 0.8 scale with 150ms stagger; buttons lift 2px on 150ms hover.
+import "soft/tokens.elyx" as T
+import "soft/parts.elyx" as P
+import "icons/check.svg" as checkIcon
+import "icons/plus.svg" as plusIcon
+import "icons/chevron-left.svg" as backIcon
+
+export hero = frame {
+  left: 0px, top: 0px, width: 1440px,
+  padding: [48px, T.space.gutter, T.space.half, T.space.gutter], fill: T.colors.bg,
+  layout: {direction: .row, justify-content: .space-between, align-items: .center},
+  children: [copy, art]
+
+  copy = frame {
+    width: 560px, overflow: .visible, layout: {direction: .column, item-gap: T.space.block},
+    children: [intro, actions]
+
+    intro = frame {width: 100%, overflow: .visible, layout: {direction: .column, item-gap: T.space.group}, children: [badge, headline, subhead]
+      badge = frame : P.eyebrow {label {contents: "Homework planner for ages 11–16"}}
+      // H1. The marked word is its own frame so the marker can sit behind it.
+      headline = frame {layout: {direction: .column}, children: [lineOne, lineTwo, lineThree]
+        lineOne = text : P.displayText {contents: "Homework"}
+        lineTwo = frame {overflow: .visible, layout: {direction: .row, align-items: .center, item-gap: 24px}, children: [markedWord, wordBefore]
+          markedWord = frame {overflow: .visible, layout: {direction: .row}, children: [marker, wordDone]
+            marker = frame {ignore-stack: .true, left: -10px, top: 36px, width: 226px, height: 56px, corner-radius: 20px, fill: T.colors.butter,
+              transform: [0.9994, 0.0349, 0, -0.0349, 0.9994, 0]}
+            wordDone = text : P.displayText {contents: "done"}}
+          wordBefore = text : P.displayText {contents: "before"}}
+        lineThree = text : P.displayText {contents: "dinner."}}
+      subhead = text : P.bodyText {width: 520px, font-size: T.size.lead, contents: "Kitebook turns a messy week of assignments into small, timed steps, and gives parents a calm Sunday summary instead of nightly check-ins."}}
+
+    actions = frame {overflow: .visible, layout: {direction: .column, item-gap: T.space.group}, children: [stores, rating]
+      stores = frame {overflow: .visible, layout: {direction: .row, item-gap: T.space.item}, children: [iphone, android]
+        iphone = frame : P.storeButton {}
+        android = frame : P.storeButtonLight {}}
+      rating = frame {layout: {direction: .row, align-items: .center, item-gap: 16px}, children: [faces, ratingText]
+        faces = frame {layout: {direction: .row, item-gap: -10px}, children: [faceA, faceB, faceC]
+          faceA = frame : P.avatar {width: 36px, height: 36px, fill[0].color: T.colors.mint, initials {contents: "MA", font-size: T.size.micro}}
+          faceB = frame : P.avatar {width: 36px, height: 36px, fill[0].color: T.colors.sky, initials {contents: "DR", font-size: T.size.micro}}
+          faceC = frame : P.avatar {width: 36px, height: 36px, fill[0].color: T.colors.pink, initials {contents: "IK", font-size: T.size.micro}}}
+        ratingText = frame {layout: {direction: .column, item-gap: 2px}, children: [ratingStars, ratingLine]
+          ratingStars = frame : P.stars {}
+          ratingLine = text : P.smallText {contents: "4.9 · 18,000 families",
+            subrange: [{range: [0, 3], font-style: T.weights.strong, fill: T.colors.ink}]}}}}
+  }
+
+  // Product art: a sky panel, two phones overhanging it (timer behind, today's list in front), two stickers.
+  art = frame {
+    width: 640px, height: 720px, overflow: .visible,
+    children: [panel, timerPhone, todayPhone, streakSticker, doneSticker]
+
+    panel = frame {left: 0px, top: 130px, width: 640px, height: 500px, corner-radius: T.radius.panel, fill: T.colors.sky-soft}
+
+    // The front phone covers this phone's left 40px, so its screen pads 48px on the left to keep content clear.
+    timerPhone = frame : P.phone {left: 300px, top: 0px,
+      screen {
+        padding: [12px, 18px, 18px, 48px],
+        homeBar {display: .none}
+        overrides: [insert(timerTop, after = P.phone.screen.statusBar), insert(ring, after = timerTop), insert(taskCard, after = ring), insert(controls, after = taskCard), insert(upNext, after = controls)]
+        timerTop = frame {width: 100%, padding: [6px, 0px, 0px, 0px], layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [back, timerTitle, subjectTag]
+          back = frame {width: 32px, height: 32px, corner-radius: T.radius.pill, fill: T.colors.surface, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [backGlyph]
+            backGlyph = asset {width: 16px, height: 16px, contents: backIcon, fill: T.colors.ink}}
+          timerTitle = text : P.h3Text {contents: "Focus", font-size: T.size.body}
+          subjectTag = frame : P.chip {fill[0].color: T.colors.sky, label {contents: "Science"}}}
+        // Progress ring: a thick angular-gradient stroke with a hard stop at 72%.
+        ring = frame {width: 100%, height: 236px, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [ringDial]
+          ringDial = frame {width: 216px, height: 216px, corner-radius: T.radius.pill, fill: T.colors.surface,
+            border: {angular-gradient: {at: point(50%, 50%), angle: 0deg, stops: [stop(0%, T.colors.accent), stop(72%, T.colors.accent), stop(72%, T.colors.accent-soft), stop(100%, T.colors.accent-soft)]}, width: 18px},
+            shadow: T.shadow.card,
+            layout: {direction: .column, align-items: .center, justify-content: .center, item-gap: 2px}, children: [timeLeft, timeOf]
+            timeLeft = text : P.displayText {contents: "18:24", font-size: T.size.stat, letter-spacing: T.tracking.h2}
+            timeOf = text : P.uiText {contents: "of 25 minutes", font-style: T.weights.medium, fill: T.colors.muted}}}
+        taskCard = frame {width: 100%, padding: 14px, overflow: .visible, corner-radius: T.radius.card, fill: T.colors.surface, shadow: T.shadow.card, layout: {direction: .column, item-gap: 10px}, children: [taskName, sessionRow]
+          taskName = text : P.h3Text {contents: "Label the plant cell", font-size: T.size.small}
+          sessionRow = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [sessionText, sessionDots]
+            sessionText = text : P.microText {contents: "Sprint 2 of 4"}
+            sessionDots = frame {layout: {direction: .row, item-gap: 4px}, children: [d1, d2, d3, d4]
+              d1 = frame {width: 22px, height: 6px, corner-radius: T.radius.pill, fill: T.colors.accent}
+              d2 = frame {width: 22px, height: 6px, corner-radius: T.radius.pill, fill: T.colors.accent}
+              d3 = frame {width: 22px, height: 6px, corner-radius: T.radius.pill, fill: T.colors.line}
+              d4 = frame {width: 22px, height: 6px, corner-radius: T.radius.pill, fill: T.colors.line}}}}
+        controls = frame {width: 100%, layout: {direction: .row, item-gap: 10px}, children: [pause, skip]
+          pause = frame {width: 100%, height: 48px, corner-radius: T.radius.pill, fill: T.colors.deep, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [pauseLabel]
+            pauseLabel = text : P.smallText {contents: "Pause", font-style: T.weights.strong, fill: T.colors.on-deep}}
+          skip = frame {width: 100%, height: 48px, corner-radius: T.radius.pill, fill: T.colors.surface, border: {color: T.colors.line, width: 1.5px}, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [skipLabel]
+            skipLabel = text : P.smallText {contents: "Take a break", font-style: T.weights.strong, fill: T.colors.ink}}}
+        upNext = frame {width: 100%, padding: [4px, 4px], layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [upNextLabel, upNextTask]
+          upNextLabel = text : P.microText {contents: "Up next"}
+          upNextTask = text : P.microText {contents: "Essay plan · 30 min", font-style: T.weights.strong, fill: T.colors.ink}}
+      }
+    }
+
+    todayPhone = frame : P.phone {left: 40px, top: 90px,
+      screen {
+        overrides: [insert(todayTop, after = P.phone.screen.statusBar), insert(week, after = todayTop), insert(tasks, after = week), insert(addButton, after = tasks)]
+        todayTop = frame {width: 100%, padding: [6px, 0px, 0px, 0px], layout: {direction: .column, item-gap: 2px}, children: [dateLine, titleRow, progress]
+          dateLine = text : P.microText {contents: "Tuesday 14 October"}
+          titleRow = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [todayTitle, leftTag]
+            todayTitle = text : P.displayText {contents: "Today", font-size: T.size.h3, letter-spacing: T.tracking.h3}
+            leftTag = frame : P.chip {fill[0].color: T.colors.accent-soft, label {contents: "3 to go", fill[0].color: T.colors.accent-deep}}}
+          progress = frame {width: 100%, padding: [8px, 0px, 0px, 0px], layout: {direction: .row, align-items: .center, item-gap: 10px}, children: [track, progressText]
+            track = frame {width: 100%, height: 8px, corner-radius: T.radius.pill, fill: T.colors.line, layout: {direction: .row}, children: [trackDone]
+              trackDone = frame {width: 25%, height: 100%, corner-radius: T.radius.pill, fill: T.colors.mint}}
+            progressText = text : P.microText {contents: "1 of 4", font-style: T.weights.strong, fill: T.colors.ink}}}
+        week = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [mon, tue, wed, thu, fri]
+          mon = frame {width: 40px, padding: [8px, 0px], corner-radius: T.radius.chip, layout: {direction: .column, align-items: .center, item-gap: 2px}, children: [monDay, monDate]
+            monDay = text : P.microText {contents: "M"}
+            monDate = text : P.uiText {contents: "13"}}
+          tue = frame {width: 40px, padding: [8px, 0px], corner-radius: T.radius.chip, fill: T.colors.deep, layout: {direction: .column, align-items: .center, item-gap: 2px}, children: [tueDay, tueDate]
+            tueDay = text : P.microText {contents: "T", fill: T.colors.on-deep}
+            tueDate = text : P.uiText {contents: "14", fill: T.colors.on-deep}}
+          wed = frame {width: 40px, padding: [8px, 0px], corner-radius: T.radius.chip, layout: {direction: .column, align-items: .center, item-gap: 2px}, children: [wedDay, wedDate]
+            wedDay = text : P.microText {contents: "W"}
+            wedDate = text : P.uiText {contents: "15"}}
+          thu = frame {width: 40px, padding: [8px, 0px], corner-radius: T.radius.chip, layout: {direction: .column, align-items: .center, item-gap: 2px}, children: [thuDay, thuDate]
+            thuDay = text : P.microText {contents: "T"}
+            thuDate = text : P.uiText {contents: "16"}}
+          fri = frame {width: 40px, padding: [8px, 0px], corner-radius: T.radius.chip, layout: {direction: .column, align-items: .center, item-gap: 2px}, children: [friDay, friDate]
+            friDay = text : P.microText {contents: "F"}
+            friDate = text : P.uiText {contents: "17"}}}
+        tasks = frame {width: 100%, overflow: .visible, layout: {direction: .column, item-gap: 8px}, children: [taskMaths, taskEnglish, taskScience, taskHistory]
+          taskMaths = frame {width: 100%, padding: 12px, corner-radius: 18px, fill: opacity(T.colors.surface, 60%), layout: {direction: .row, align-items: .center, item-gap: 10px}, children: [mathsCheck, mathsText]
+            mathsCheck = frame {width: 22px, height: 22px, corner-radius: T.radius.pill, fill: T.colors.mint, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [mathsTick]
+              mathsTick = asset {width: 13px, height: 13px, contents: checkIcon, fill: T.colors.ink}}
+            mathsText = frame {layout: {direction: .column, item-gap: 5px}, children: [mathsTitle, mathsMeta]
+              mathsTitle = text : P.uiText {contents: "Fractions worksheet, p. 42", strikethrough: .single, fill: T.colors.muted}
+              mathsMeta = frame {layout: {direction: .row, align-items: .center, item-gap: 6px}, children: [mathsTag, mathsTime]
+                mathsTag = frame : P.chip {}
+                mathsTime = text : P.microText {contents: "Done · 22 min"}}}}
+          taskEnglish = frame {width: 100%, padding: 12px, corner-radius: 18px, fill: T.colors.surface, shadow: T.shadow.card, layout: {direction: .row, align-items: .center, item-gap: 10px}, children: [englishCheck, englishText]
+            englishCheck = frame {width: 22px, height: 22px, corner-radius: T.radius.pill, border: {color: T.colors.faint, width: 2px}}
+            englishText = frame {layout: {direction: .column, item-gap: 5px}, children: [englishTitle, englishMeta]
+              englishTitle = text : P.uiText {contents: "Read chapter 6, then 3 notes"}
+              englishMeta = frame {layout: {direction: .row, align-items: .center, item-gap: 6px}, children: [englishTag, englishTime]
+                englishTag = frame : P.chip {fill[0].color: T.colors.pink, label {contents: "English"}}
+                englishTime = text : P.microText {contents: "20 min"}}}}
+          taskScience = frame {width: 100%, padding: 12px, corner-radius: 18px, fill: T.colors.surface, shadow: T.shadow.card, layout: {direction: .row, align-items: .center, item-gap: 10px}, children: [scienceCheck, scienceText]
+            scienceCheck = frame {width: 22px, height: 22px, corner-radius: T.radius.pill, border: {color: T.colors.faint, width: 2px}}
+            scienceText = frame {layout: {direction: .column, item-gap: 5px}, children: [scienceTitle, scienceMeta]
+              scienceTitle = text : P.uiText {contents: "Label the plant cell"}
+              scienceMeta = frame {layout: {direction: .row, align-items: .center, item-gap: 6px}, children: [scienceTag, scienceTime]
+                scienceTag = frame : P.chip {fill[0].color: T.colors.sky, label {contents: "Science"}}
+                scienceTime = text : P.microText {contents: "15 min · in focus"}}}}
+          taskHistory = frame {width: 100%, padding: 12px, corner-radius: 18px, fill: T.colors.surface, shadow: T.shadow.card, layout: {direction: .row, align-items: .center, item-gap: 10px}, children: [historyCheck, historyText]
+            historyCheck = frame {width: 22px, height: 22px, corner-radius: T.radius.pill, border: {color: T.colors.faint, width: 2px}}
+            historyText = frame {layout: {direction: .column, item-gap: 5px}, children: [historyTitle, historyMeta]
+              historyTitle = text : P.uiText {contents: "Essay plan: the Normans"}
+              historyMeta = frame {layout: {direction: .row, align-items: .center, item-gap: 6px}, children: [historyTag, historyTime]
+                historyTag = frame : P.chip {fill[0].color: T.colors.butter, label {contents: "History"}}
+                historyTime = text : P.microText {contents: "Due Fri · 30 min"}}}}}
+        addButton = frame {width: 100%, height: 44px, corner-radius: T.radius.pill, fill: T.colors.deep, layout: {direction: .row, align-items: .center, justify-content: .center, item-gap: 6px}, children: [addGlyph, addLabel]
+          addGlyph = asset {width: 16px, height: 16px, contents: plusIcon, fill: T.colors.on-deep}
+          addLabel = text : P.uiText {contents: "Add homework", fill: T.colors.on-deep}}
+      }
+    }
+
+    // Stickers, rotated -8° and +6° around their top-left corners.
+    streakSticker = frame : P.sticker {left: -44px, top: 64px, transform: [0.9903, 0.1392, 0, -0.1392, 0.9903, 0]}
+    doneSticker = frame : P.sticker {left: 400px, top: 590px, fill[0].color: T.colors.mint, transform: [0.9945, -0.1045, 0, 0.1045, 0.9945, 0],
+      disc {pic {contents: checkIcon}}
+      label {contents: "Maths done"}}
+  }
+}

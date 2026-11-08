@@ -1,0 +1,199 @@
+// Kitebook shared parts: logo, pill and store buttons, stickers, chips, avatars, stars, check rows and a phone frame.
+// Every section instances these, so a change here restyles the whole site.
+import "soft/tokens.elyx" as T
+import "soft/art/kite-a.svg" as kiteA
+import "soft/art/kite-b.svg" as kiteB
+import "soft/art/star.svg" as starGlyph
+import "soft/art/flame.svg" as flameGlyph
+import "soft/art/blob.svg" as blobArt
+import "soft/art/kite.svg" as kiteFull
+import "icons/check.svg" as checkGlyph
+
+// Two-color kite mark beside a heavy wordmark.
+export logo = frame {
+  left: 0px, top: 0px,
+  layout: {direction: .row, align-items: .center, item-gap: 10px},
+  children: [mark, wordmark]
+  mark = frame {width: 35px, height: 42px, children: [halfA, halfB]
+    halfA = asset {left: 0px, top: 0px, width: 35px, height: 42px, contents: kiteA, fill: T.colors.accent}
+    halfB = asset {left: 0px, top: 0px, width: 35px, height: 42px, contents: kiteB, fill: T.colors.peach}}
+  wordmark = text {contents: "Kitebook", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.h3, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+}
+
+// Primary pill: the one filled violet action in a section.
+export pillButton = frame {
+  left: 0px, top: 80px, height: 48px, padding: [0px, 24px],
+  corner-radius: T.radius.pill, fill: T.colors.accent, shadow: T.shadow.button,
+  layout: {direction: .row, align-items: .center, justify-content: .center, item-gap: 8px},
+  children: [label]
+  label = text {contents: "Get Kitebook", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.body, fill: T.colors.on-accent}
+}
+
+// Quiet pill for secondary plans and actions: tinted violet, deep-violet label (5.9:1).
+@variant
+export pillButtonSoft = frame : pillButton {
+  left: 0px, top: 680px, fill[0].color: T.colors.accent-soft, shadow: [],
+  label {fill[0].color: T.colors.accent-deep}
+}
+
+// Store-style button with a drawn phone glyph and a two-line label.
+export storeButton = frame {
+  left: 0px, top: 160px, height: 60px, padding: [0px, 28px, 0px, 24px],
+  corner-radius: T.radius.pill, fill: T.colors.accent, shadow: T.shadow.button,
+  layout: {direction: .row, align-items: .center, item-gap: 16px},
+  children: [glyph, lines]
+  glyph = frame {width: 18px, height: 28px, corner-radius: 6px, border: {color: T.colors.on-accent, width: 2.5px},
+    padding: [4px, 0px, 0px, 0px], layout: {direction: .column, align-items: .center}, children: [notch]
+    notch = frame {width: 6px, height: 2.5px, corner-radius: 2px, fill: T.colors.on-accent}}
+  lines = frame {layout: {direction: .column, item-gap: 1px}, children: [kicker, store]
+    kicker = text {contents: "Free · iOS 16 or later", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.ui, fill: T.colors.on-accent}
+    store = text {contents: "Download for iPhone", font-family: T.fonts.heading, font-style: T.weights.heading, font-size: T.size.body, letter-spacing: T.tracking.h3, fill: T.colors.on-accent}}
+}
+
+// White store button: the secondary on cream, the primary on the violet panel.
+@variant
+export storeButtonLight = frame : storeButton {
+  left: 0px, top: 760px, fill[0].color: T.colors.surface, shadow: T.shadow.card, border: {color: T.colors.line, width: 1.5px},
+  glyph {border[0].color: T.colors.ink, notch {fill[0].color: T.colors.ink}}
+  lines {kicker {fill[0].color: T.colors.muted, contents: "Free · Android 10 or later"}, store {fill[0].color: T.colors.ink, contents: "Get it on Android"}}
+}
+
+// Outline store button for violet or dark panels: transparent, so white text keeps the panel's contrast.
+@variant
+export storeButtonOutline = frame : storeButton {
+  left: 0px, top: 840px, fill: [], shadow: [], border: {color: T.colors.on-accent, width: 2px},
+  lines {kicker {contents: "Free · Android 10 or later"}, store {contents: "Get it on Android"}}
+}
+
+// Die-cut sticker: pastel pill, thick white edge, icon disc. Rotate per instance with `transform`.
+export sticker = frame {
+  left: 0px, top: 260px, padding: [8px, 20px, 8px, 8px],
+  corner-radius: T.radius.pill, fill: T.colors.pink, border: {color: T.colors.surface, width: 4px}, shadow: T.shadow.sticker,
+  layout: {direction: .row, align-items: .center, item-gap: 10px},
+  children: [disc, label]
+  disc = frame {width: 36px, height: 36px, corner-radius: T.radius.pill, fill: T.colors.surface,
+    layout: {direction: .row, align-items: .center, justify-content: .center}, children: [pic]
+    pic = asset {width: 20px, height: 20px, contents: flameGlyph, fill: T.colors.ink}}
+  label = text {contents: "12-day streak", font-family: T.fonts.heading, font-style: T.weights.heading, font-size: T.size.lead, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+}
+
+// Subject tag: pastel pill with an ink label (the label carries meaning, not the color).
+export chip = frame {
+  left: 0px, top: 340px, padding: [4px, 10px], corner-radius: T.radius.pill, fill: T.colors.mint,
+  layout: {direction: .row, align-items: .center},
+  children: [label]
+  label = text {contents: "Maths", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.micro, fill: T.colors.ink}
+}
+
+// Initials avatar on a pastel disc with a white ring, so stacks overlap cleanly.
+export avatar = frame {
+  left: 0px, top: 380px, width: 44px, height: 44px, corner-radius: T.radius.pill, fill: T.colors.peach,
+  border: {color: T.colors.surface, width: 3px},
+  layout: {direction: .row, align-items: .center, justify-content: .center},
+  children: [initials]
+  initials = text {contents: "MA", font-family: T.fonts.heading, font-style: T.weights.heading, font-size: T.size.small, fill: T.colors.ink}
+}
+
+// Five filled stars.
+export stars = frame {
+  left: 0px, top: 440px, layout: {direction: .row, item-gap: 2px},
+  children: [s1, s2, s3, s4, s5]
+  s1 = asset {width: 18px, height: 18px, contents: starGlyph, fill: T.colors.star}
+  s2 = asset {width: 18px, height: 18px, contents: starGlyph, fill: T.colors.star}
+  s3 = asset {width: 18px, height: 18px, contents: starGlyph, fill: T.colors.star}
+  s4 = asset {width: 18px, height: 18px, contents: starGlyph, fill: T.colors.star}
+  s5 = asset {width: 18px, height: 18px, contents: starGlyph, fill: T.colors.star}
+}
+
+// Feature row: mint check disc plus label.
+export checkItem = frame {
+  left: 0px, top: 480px, layout: {direction: .row, align-items: .center, item-gap: 12px},
+  children: [tick, label]
+  tick = frame {width: 24px, height: 24px, corner-radius: T.radius.pill, fill: T.colors.mint,
+    layout: {direction: .row, align-items: .center, justify-content: .center}, children: [glyph]
+    glyph = asset {width: 14px, height: 14px, contents: checkGlyph, fill: T.colors.ink}}
+  label = text {contents: "Weekly planner", font-family: T.fonts.body, font-style: T.weights.regular, font-size: T.size.body, line-height: T.leading.body, fill: T.colors.ink}
+}
+
+// Section eyebrow: white pill, pastel dot, ink-soft label.
+export eyebrow = frame {
+  left: 0px, top: 520px, padding: [8px, 16px, 8px, 12px], corner-radius: T.radius.pill,
+  fill: T.colors.surface, border: {color: T.colors.line, width: 1.5px},
+  layout: {direction: .row, align-items: .center, item-gap: 8px},
+  children: [dot, label]
+  dot = frame {width: 10px, height: 10px, corner-radius: T.radius.pill, fill: T.colors.mint}
+  label = text {contents: "What's inside", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.label, fill: T.colors.ink-soft}
+}
+
+// Phone frame: deep bezel, cream screen, status bar. `screen` is a slot; insert app UI after statusBar.
+export phone = frame {
+  left: 400px, top: 0px, width: 300px, height: 620px, padding: 10px,
+  corner-radius: 50px, fill: T.colors.deep, shadow: T.shadow.float,
+  layout: {direction: .column},
+  children: [screen]
+  screen = frame {
+    slot: .true, width: 100%, height: 100%, corner-radius: 40px, fill: T.colors.bg,
+    padding: [12px, 18px, 18px, 18px], layout: {direction: .column, item-gap: 14px},
+    children: [statusBar, homeBar]
+    homeBar = frame {ignore-stack: .true, left: 85px, bottom: 8px, width: 110px, height: 5px, corner-radius: T.radius.pill, fill: T.colors.ink}
+    statusBar = frame {width: 100%, padding: [0px, 8px], layout: {direction: .row, justify-content: .space-between, align-items: .center}, children: [clock, island, battery]
+      clock = text {contents: "9:41", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui, fill: T.colors.ink}
+      island = frame {width: 80px, height: 24px, corner-radius: T.radius.pill, fill: T.colors.deep}
+      battery = frame {width: 24px, height: 12px, padding: 2px, corner-radius: 4px, border: {color: T.colors.ink, width: 1.5px}, layout: {direction: .row}, children: [level]
+        level = frame {width: 70%, height: 100%, corner-radius: 2px, fill: T.colors.ink}}}
+  }
+}
+
+// Text styles. Instance them (`title = text : P.h2Text {contents: "…"}`) instead of restating font, size and color.
+export displayText = text {left: 760px, top: -120px, contents: "Display", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.display, line-height: T.leading.display, letter-spacing: T.tracking.display, fill: T.colors.ink}
+export h2Text = text {left: 760px, top: 0px, contents: "Section heading", font-family: T.fonts.heading, font-style: T.weights.heading, font-size: T.size.h2, line-height: T.leading.h2, letter-spacing: T.tracking.h2, fill: T.colors.ink}
+export h3Text = text {left: 760px, top: 80px, contents: "Card title", font-family: T.fonts.heading, font-style: T.weights.heading, font-size: T.size.h3, line-height: T.leading.h3, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+export bodyText = text {left: 760px, top: 120px, contents: "Body copy at 17px on a 1.55 leading.", font-family: T.fonts.body, font-style: T.weights.regular, font-size: T.size.body, line-height: T.leading.body, letter-spacing: T.tracking.body, fill: T.colors.muted}
+export smallText = text {left: 760px, top: 160px, contents: "Small text", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.muted}
+// Mockup UI text: 13px strong labels and 11px meta.
+export uiText = text {left: 760px, top: 190px, contents: "UI label", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui, fill: T.colors.ink}
+export microText = text {left: 760px, top: 215px, contents: "Meta", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.micro, fill: T.colors.muted}
+
+// Testimonial: pastel speech bubble with a rotated-square tail, then avatar, name and role.
+// Override bubble and tail fill together.
+export quoteCard = frame {
+  left: 0px, top: 960px, width: 408px, overflow: .visible,
+  layout: {direction: .column, item-gap: 24px},
+  children: [bubble, person]
+  bubble = frame {width: 100%, padding: [28px, 32px, 32px, 32px], corner-radius: T.radius.large, fill: T.colors.mint, overflow: .visible, layout: {direction: .column}, children: [quote, tail]
+    quote = text {width: 100%, contents: "I used to remember homework on Sunday night. Now I see Thursday coming on Monday.", font-family: T.fonts.heading, font-style: T.weights.heading, font-size: T.size.h3, line-height: T.leading.quote, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+    tail = frame {ignore-stack: .true, left: 52px, bottom: -7px, width: 24px, height: 24px, corner-radius: 5px, fill: T.colors.mint, transform: [0.7071, -0.7071, 0, 0.7071, 0.7071, 0]}}
+  person = frame {padding: [0px, 0px, 0px, 24px], layout: {direction: .row, align-items: .center, item-gap: 12px}, children: [face, who]
+    face = frame : avatar {fill[0].color: T.colors.mint, initials {contents: "MO"}}
+    who = frame {layout: {direction: .column, item-gap: 1px}, children: [name, role]
+      name = text {contents: "Maya O.", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.small, fill: T.colors.ink}
+      role = text {contents: "Age 13 · Year 8", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.muted}}}
+}
+
+// Plan card: white r32 card, a pastel blob bleeding off the top-right corner (clipped), price, one action, check list.
+export planCard = frame {
+  left: 1000px, top: 0px, width: 408px, padding: 36px,
+  corner-radius: T.radius.large, fill: T.colors.surface, border: {color: T.colors.line, width: 1.5px}, shadow: T.shadow.card,
+  layout: {direction: .column, item-gap: 28px},
+  children: [blob, glyph, head, price, cta, list]
+  blob = asset {ignore-stack: .true, right: -64px, top: -72px, width: 230px, height: 207px, contents: blobArt, fill: T.colors.mint}
+  glyph = asset {ignore-stack: .true, right: 44px, top: 38px, width: 32px, height: 38px, contents: kiteFull, fill: T.colors.ink}
+  head = frame {layout: {direction: .column, item-gap: 4px}, children: [planName, planFor]
+    planName = text {contents: "Free", font-family: T.fonts.heading, font-style: T.weights.heading, font-size: T.size.quote, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+    planFor = text {contents: "For trying it out", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.muted}}
+  price = frame {layout: {direction: .column, item-gap: 4px}, children: [amount, note]
+    amount = frame {layout: {direction: .row, align-items: .end, item-gap: 6px}, children: [value, per]
+      value = text {contents: "$0", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.stat, letter-spacing: T.tracking.h2, fill: T.colors.ink}
+      per = frame {padding: [0px, 0px, 10px, 0px], layout: {direction: .row}, children: [perLabel]
+        perLabel = text {contents: "/ month", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.muted}}}
+    note = text {contents: "Free forever, no card needed", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.muted}}
+  cta = frame : pillButtonSoft {width: 100%, label {contents: "Start free"}}
+  list = frame {width: 100%, padding: [24px, 0px, 0px, 0px], layout: {direction: .column, item-gap: 14px}, children: [rule, includes, c1, c2, c3, c4, c5]
+    rule = frame {ignore-stack: .true, left: 0px, top: 0px, width: 100%, height: 1.5px, fill: T.colors.line}
+    includes = text {contents: "What you get", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.small, fill: T.colors.ink}
+    c1 = frame : checkItem {label {contents: "Weekly planner for 3 subjects"}}
+    c2 = frame : checkItem {label {contents: "25-minute focus timer"}}
+    c3 = frame : checkItem {label {contents: "Daily streaks and stickers"}}
+    c4 = frame : checkItem {label {contents: "Works on one phone"}}
+    c5 = frame : checkItem {label {contents: "Ad-free, always"}}}
+}

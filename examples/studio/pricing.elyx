@@ -1,0 +1,128 @@
+// Ways to work: three engagement models as pricing panels, the recommended one raised on an inset aubergine panel with the only filled button.
+// Motion: panels rise 32px and fade in, 100ms apart (600ms, cubic-bezier(0,.75,.56,1)); the aubergine panel lands last and its badge fades in 200ms later.
+import "studio/tokens.elyx" as T
+import "studio/parts.elyx" as P
+import "icons/sparkles.svg" as sparkles
+
+export pricing = frame {
+  left: 0px, top: 0px, width: 1440px,
+  padding: [T.space.section-y, T.space.gutter],
+  layout: {direction: .column, item-gap: T.space.block},
+  fill: T.colors.bg,
+  children: [header, plans, small]
+
+  header = frame {
+    width: 100%, layout: {direction: .row, align-items: .end, justify-content: .space-between},
+    children: [titles, aside]
+    titles = frame {
+      layout: {direction: .column, item-gap: 20px},
+      children: [label, heading]
+      label = text : P.eyebrow {contents: "WAYS TO WORK"}
+      heading = text {contents: "Pick the shape\nof the work.", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.h2, line-height: T.leading.h2, letter-spacing: T.tracking.h2, fill: T.colors.ink}
+    }
+    aside = text {
+      contents: "Fixed scopes, fixed prices. Every engagement names the number we're moving on day one, and reports against it every month.",
+      width: 360px, font-family: T.fonts.body, font-size: T.size.body, line-height: T.leading.body, letter-spacing: T.tracking.body, fill: T.colors.muted
+    }
+  }
+
+  // align-items .center lets the taller recommended panel stand proud of its neighbours.
+  plans = frame {
+    width: 100%, layout: {direction: .row, align-items: .center, item-gap: 16px},
+    children: [sprint, embedded, system]
+
+    sprint = frame {
+      width: 424px, height: 572px, padding: 36px,
+      layout: {direction: .column, justify-content: .space-between},
+      corner-radius: T.radius.panel, fill: T.colors.surface, shadow: T.shadows.ring,
+      children: [body, action]
+      body = frame {
+        width: 100%, layout: {direction: .column, item-gap: 24px},
+        children: [top, desc, price, rule, list]
+        top = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [name, term]
+          name = text {contents: "Design sprint", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.h3, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+          term = frame : P.metricChip {fill: T.colors.raised, value {contents: "2 weeks"}, caption {display: .none}}}
+        desc = text {contents: "Test a risky idea with real users before anyone writes a line of code.", width: 100%, font-family: T.fonts.body, font-size: T.size.body, line-height: T.leading.body, letter-spacing: T.tracking.body, fill: T.colors.muted}
+        price = frame {layout: {direction: .row, align-items: .end, item-gap: 8px}, children: [amount, unit]
+          amount = text {contents: "€18k", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.stat, line-height: 1, letter-spacing: -4%, fill: T.colors.ink}
+          unit = text {contents: "fixed price", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, line-height: 2.2, fill: T.colors.muted}}
+        rule = frame {width: 100%, height: 1px, fill: T.colors.surface-2}
+        list = frame {width: 100%, layout: {direction: .column, item-gap: 14px}, children: [i1, i2, i3, i4]
+          i1 = frame : P.checkItem {tick {fill: T.colors.raised}, item {contents: "Kick-off workshop with your leads"}}
+          i2 = frame : P.checkItem {tick {fill: T.colors.raised}, item {contents: "Clickable prototype of the core flow"}}
+          i3 = frame : P.checkItem {tick {fill: T.colors.raised}, item {contents: "5 moderated user tests, recorded"}}
+          i4 = frame : P.checkItem {tick {fill: T.colors.raised}, item {contents: "Go / no-go readout with next steps"}}}
+      }
+      action = frame {width: 100%, layout: {direction: .column, item-gap: 12px}, children: [button, note]
+        button = frame : P.quietButton {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .center}, label {contents: "Book a sprint"}}
+        note = text {contents: "Next sprint slot: 11 January", width: 100%, align: .center, font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.muted}}
+    }
+
+    // The recommendation: inset aubergine panel, 40px taller, a badge that says why, and the section's one filled button.
+    embedded = frame {
+      width: 432px, height: 620px, padding: 36px,
+      layout: {direction: .column, justify-content: .space-between},
+      corner-radius: T.radius.panel,
+      fill: [T.colors.deep, {radial-gradient: {at: point(100%, 0%), radius: [80%, 60%], stops: [stop(0%, #3A2342FF), stop(100%, #3A234200)]}}],
+      shadow: [T.shadows.ring-deep, {drop-shadow: {color: #2A153029, offset: point(0, 24), blur-radius: 48px}}],
+      children: [body, action]
+      body = frame {
+        width: 100%, layout: {direction: .column, item-gap: 24px},
+        children: [badge, top, desc, price, rule, list]
+        badge = frame {height: 28px, padding: [0px, 12px, 0px, 10px], layout: {direction: .row, align-items: .center, item-gap: 6px}, corner-radius: T.radius.pill, fill: T.colors.deep-surface, shadow: T.shadows.ring-deep, children: [spark, t]
+          spark = asset {width: 14px, height: 14px, contents: sparkles, fill: T.colors.on-deep}
+          t = text {contents: "Most teams start here", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.label, fill: T.colors.on-deep}}
+        top = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [name, term]
+          name = text {contents: "Embedded team", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.h3, letter-spacing: T.tracking.h3, fill: T.colors.on-deep}
+          term = frame : P.metricChip {fill: T.colors.deep-surface, shadow: T.shadows.ring-deep, value {contents: "Monthly", fill: T.colors.on-deep}, caption {display: .none}}}
+        desc = text {contents: "Two senior designers inside your squads, shipping with your engineers every week.", width: 100%, font-family: T.fonts.body, font-size: T.size.body, line-height: T.leading.body, letter-spacing: T.tracking.body, fill: T.colors.deep-muted}
+        price = frame {layout: {direction: .row, align-items: .end, item-gap: 8px}, children: [from, amount, unit]
+          from = text {contents: "from", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, line-height: 2.2, fill: T.colors.deep-muted}
+          amount = text {contents: "€24k", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.stat, line-height: 1, letter-spacing: -4%, fill: T.colors.on-deep}
+          unit = text {contents: "per month", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, line-height: 2.2, fill: T.colors.deep-muted}}
+        rule = frame {width: 100%, height: 1px, fill: T.colors.deep-surface}
+        list = frame {width: 100%, layout: {direction: .column, item-gap: 14px}, children: [i1, i2, i3, i4]
+          i1 = frame : P.checkItem {tick {fill: T.colors.deep-surface, glyph {fill: T.colors.on-deep}}, item {contents: "2 senior designers, 4 days a week", fill: T.colors.on-deep}}
+          i2 = frame : P.checkItem {tick {fill: T.colors.deep-surface, glyph {fill: T.colors.on-deep}}, item {contents: "In your rituals, Linear and Slack", fill: T.colors.on-deep}}
+          i3 = frame : P.checkItem {tick {fill: T.colors.deep-surface, glyph {fill: T.colors.on-deep}}, item {contents: "One shared metric, reviewed monthly", fill: T.colors.on-deep}}
+          i4 = frame : P.checkItem {tick {fill: T.colors.deep-surface, glyph {fill: T.colors.on-deep}}, item {contents: "30 days' notice, no lock-in", fill: T.colors.on-deep}}}
+      }
+      action = frame {width: 100%, layout: {direction: .column, item-gap: 12px}, children: [button, note]
+        button = frame : P.primaryButton {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .center, item-gap: 10px}, label {contents: "Start with a team"}}
+        note = text {contents: "Most clients stay 9 months or longer", width: 100%, align: .center, font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.deep-muted}}
+    }
+
+    system = frame {
+      width: 424px, height: 572px, padding: 36px,
+      layout: {direction: .column, justify-content: .space-between},
+      corner-radius: T.radius.panel, fill: T.colors.surface, shadow: T.shadows.ring,
+      children: [body, action]
+      body = frame {
+        width: 100%, layout: {direction: .column, item-gap: 24px},
+        children: [top, desc, price, rule, list]
+        top = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [name, term]
+          name = text {contents: "Design system build", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.h3, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+          term = frame : P.metricChip {fill: T.colors.raised, value {contents: "12–16 weeks"}, caption {display: .none}}}
+        desc = text {contents: "One source of truth for every team that ships UI, in Figma and in code.", width: 100%, font-family: T.fonts.body, font-size: T.size.body, line-height: T.leading.body, letter-spacing: T.tracking.body, fill: T.colors.muted}
+        price = frame {layout: {direction: .row, align-items: .end, item-gap: 8px}, children: [from, amount, unit]
+          from = text {contents: "from", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, line-height: 2.2, fill: T.colors.muted}
+          amount = text {contents: "€60k", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.stat, line-height: 1, letter-spacing: -4%, fill: T.colors.ink}
+          unit = text {contents: "per system", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, line-height: 2.2, fill: T.colors.muted}}
+        rule = frame {width: 100%, height: 1px, fill: T.colors.surface-2}
+        list = frame {width: 100%, layout: {direction: .column, item-gap: 14px}, children: [i1, i2, i3, i4]
+          i1 = frame : P.checkItem {tick {fill: T.colors.raised}, item {contents: "Audit of your 10 most-used components"}}
+          i2 = frame : P.checkItem {tick {fill: T.colors.raised}, item {contents: "Tokens, components and docs in code"}}
+          i3 = frame : P.checkItem {tick {fill: T.colors.raised}, item {contents: "An adoption plan for every squad"}}
+          i4 = frame : P.checkItem {tick {fill: T.colors.raised}, item {contents: "3 months of office hours after launch"}}}
+      }
+      action = frame {width: 100%, layout: {direction: .column, item-gap: 12px}, children: [button, note]
+        button = frame : P.quietButton {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .center}, label {contents: "Scope a system"}}
+        note = text {contents: "Fixed quote after a 2-week audit", width: 100%, align: .center, font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.muted}}
+    }
+  }
+
+  small = text {
+    contents: "Prices exclude 21% Dutch VAT. Not sure which fits? We'll tell you on the first call, even if the answer is none of them.",
+    width: 100%, align: .center, font-family: T.fonts.body, font-size: T.size.small, line-height: T.leading.body, fill: T.colors.muted
+  }
+}

@@ -1,0 +1,324 @@
+// Features: centred head, two zig-zag rows (copy beside a drawn product visual), then three cards that each carry their own mini visual instead of an icon.
+// Motion: row copy fades up 16px (500ms, cubic-bezier(.16,1,.3,1)) as its visual rises 32px at +120ms; the actual line draws left to right (700ms); cards stagger 100ms; card hover lifts 2px (150ms).
+import "clean/tokens.elyx" as T
+import "clean/parts.elyx" as P
+import "icons/layers.svg" as layersIcon
+import "clean/art/plan-line.svg" as planLine
+import "clean/art/actual-line.svg" as actualLine
+import "clean/art/actual-area.svg" as actualArea
+
+export features = frame {
+  left: 0px,
+  top: 0px,
+  width: 1440px,
+  padding: [T.space.section, T.space.gutter],
+  fill: T.colors.bg,
+  layout: {direction: .column, item-gap: T.space.block},
+  overflow: .visible,
+  children: [head, rows]
+
+  head = frame : P.sectionHead {
+    heading {contents: "One plan, from offer letter to payslip"}
+    intro {contents: "Headcount, approvals and payroll share one source of truth, so a hire approved in March is paid correctly in June."}
+  }
+
+  rows = frame {width: 100%, layout: {direction: .column, item-gap: T.space.section}, overflow: .visible, children: [approvalsRow, planRow, trio]
+
+    // Row 1: copy left, approval flow right.
+    approvalsRow = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, overflow: .visible, children: [approvalsCopy, approvalsArt]
+      approvalsCopy = frame : P.featureCopy {
+        copyHead {
+          kicker {contents: "APPROVALS"}
+          heading {width: 360px, contents: "Approvals that follow your org chart"}
+          para {contents: "Every payroll run and headcount change routes to the right people by amount, entity and cost centre. Nothing is paid until the last sign-off lands."}
+        }
+        points {
+          p1 {label {contents: "Rules by amount, country or cost centre"}}
+          p2 {label {contents: "Approve from email or the mobile app"}}
+          p3 {label {contents: "A full audit trail on every change"}}
+        }
+        more {label {contents: "Explore approvals"}}
+      }
+      approvalsArt = frame {width: 680px, height: 480px, corner-radius: T.radius.panel, fill: T.colors.surface, border: {color: T.colors.line, width: 1px}, children: [runCard, ruleCard]
+        runCard = frame {left: 48px, top: 64px, width: 404px, padding: 20px, corner-radius: T.radius.card, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, shadow: T.shadows.card, layout: {direction: .column, item-gap: 16px}, overflow: .visible, children: [runHead, runRule, steps, runActions]
+          runHead = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [runTitles, runBadge]
+            runTitles = frame {layout: {direction: .column, item-gap: 4px}, children: [runTitle, runFigure]
+              runTitle = text : P.ui {contents: "Netherlands · November run"}
+              runFigure = text : P.h3 {contents: "€452,880 for 96 people", font-features: {tnum: 1}}
+            }
+            runBadge = frame : P.warningBadge {}
+          }
+          runRule = frame {width: 100%, height: 1px, fill: T.colors.line}
+          steps = frame {layout: {direction: .column}, children: [s1, s2, s3, s4]
+            s1 = frame : P.approvalStep {}
+            s2 = frame : P.approvalStep {stepText {stepTitle {contents: "Reviewed by Finance"} stepMeta {contents: "Marco Rossi, Controller · Nov 19, 14:40"}}}
+            s3 = frame : P.approvalStep {
+              rail {node {fill: T.colors.accent-soft, border: {color: T.colors.accent, width: 2px}, nodeGlyph {display: .none}}}
+              stepText {stepTitle {contents: "CFO sign-off"} stepMeta {contents: "Amara Okafor · waiting, due Nov 24"}}
+            }
+            s4 = frame : P.approvalStep {
+              rail {node {fill: T.colors.bg, border: {color: T.colors.line, width: 2px}, nodeGlyph {display: .none}} wire {display: .none}}
+              stepText {stepTitle {contents: "Sent to bank", fill: T.colors.muted} stepMeta {contents: "Scheduled Nov 25, 06:00"}}
+            }
+          }
+          runActions = frame {width: 100%, layout: {direction: .row, justify-content: .end, item-gap: 8px}, overflow: .visible, children: [changes, approve]
+            changes = frame : P.button {height: 36px, padding: [0px, 16px], label {contents: "Request changes", font-size: T.size.label}}
+            approve = frame : P.primaryButton {height: 36px, padding: [0px, 16px], label {contents: "Approve run", font-size: T.size.label}}
+          }
+        }
+        ruleCard = frame {left: 404px, top: 196px, width: 236px, padding: 16px, corner-radius: T.radius.card, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, shadow: T.shadows.float, layout: {direction: .column, item-gap: 8px}, children: [ruleHead, ruleText, ruleMeta]
+          ruleHead = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [ruleTag, toggle]
+            ruleTag = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [ruleIcon, ruleName]
+              ruleIcon = frame {width: 24px, height: 24px, corner-radius: T.radius.chip, fill: T.colors.surface-2, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [ruleGlyph]
+                ruleGlyph = asset {width: 14px, height: 14px, contents: layersIcon, fill: T.colors.ink}
+              }
+              ruleName = text : P.ui {contents: "Approval rule · On"}
+            }
+            toggle = frame {width: 28px, height: 16px, corner-radius: T.radius.pill, fill: T.colors.ink, children: [knob]
+              knob = frame {left: 14px, top: 2px, width: 12px, height: 12px, corner-radius: 6px, fill: T.colors.bg}
+            }
+          }
+          ruleText = text : P.uiStrong {width: 180px, font-size: T.size.small, line-height: T.leading.h3, contents: "Runs above €400k need CFO sign-off"}
+          ruleMeta = text : P.ui {contents: "Netherlands, Germany · 2 approvers"}
+        }
+      }
+    }
+
+    // Row 2: plan-vs-actual chart left, copy right.
+    planRow = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, overflow: .visible, children: [planArt, planCopy]
+      planArt = frame {width: 680px, height: 480px, corner-radius: T.radius.panel, fill: T.colors.surface, border: {color: T.colors.line, width: 1px}, children: [chartCard]
+        chartCard = frame {left: 40px, top: 66px, width: 600px, padding: 20px, corner-radius: T.radius.card, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, shadow: T.shadows.card, layout: {direction: .column, item-gap: 16px}, overflow: .visible, children: [chartHead, legend, plot]
+          chartHead = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, overflow: .visible, children: [chartTitles, teams]
+            chartTitles = frame {layout: {direction: .column, item-gap: 4px}, children: [chartName, chartMeta]
+              chartName = text : P.uiStrong {contents: "Engineering headcount", font-size: T.size.small}
+              chartMeta = text : P.ui {contents: "Plan vs actual · FY2026"}
+            }
+            teams = frame {height: 30px, padding: 2px, corner-radius: T.radius.control, fill: T.colors.surface-2, layout: {direction: .row, item-gap: 2px}, overflow: .visible, children: [tAll, tEng, tSales, tOps]
+              tAll = frame {height: 26px, padding: [0px, 12px], layout: {direction: .row, align-items: .center}, children: [tAllText]
+                tAllText = text : P.ui {contents: "All teams"}
+              }
+              tEng = frame {height: 26px, padding: [0px, 12px], corner-radius: T.radius.chip, fill: T.colors.bg, shadow: T.shadows.control, layout: {direction: .row, align-items: .center}, children: [tEngText]
+                tEngText = text : P.uiStrong {contents: "Engineering", font-size: T.size.ui}
+              }
+              tSales = frame {height: 26px, padding: [0px, 12px], layout: {direction: .row, align-items: .center}, children: [tSalesText]
+                tSalesText = text : P.ui {contents: "Sales"}
+              }
+              tOps = frame {height: 26px, padding: [0px, 12px], layout: {direction: .row, align-items: .center}, children: [tOpsText]
+                tOpsText = text : P.ui {contents: "Ops"}
+              }
+            }
+          }
+          legend = frame {layout: {direction: .row, align-items: .center, item-gap: 16px}, children: [lActual, lPlan, lToday]
+            lActual = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [lActualKey, lActualText]
+              lActualKey = frame {width: 14px, height: 3px, corner-radius: 2px, fill: T.colors.accent}
+              lActualText = text : P.ui {contents: "Actual"}
+            }
+            lPlan = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [lPlanKey, lPlanText]
+              lPlanKey = frame {layout: {direction: .row, item-gap: 2px}, children: [dash1, dash2]
+                dash1 = frame {width: 6px, height: 2px, fill: T.colors.muted}
+                dash2 = frame {width: 6px, height: 2px, fill: T.colors.muted}
+              }
+              lPlanText = text : P.ui {contents: "Approved plan"}
+            }
+            lToday = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [lTodayKey, lTodayText]
+              lTodayKey = frame {width: 1px, height: 12px, fill: T.colors.faint}
+              lTodayText = text : P.ui {contents: "Today, Nov 18"}
+            }
+          }
+          // 536×200 chart area at x 24; 5px per person above 60.
+          plot = frame {width: 560px, height: 228px, overflow: .visible, children: [g100, g90, g80, g70, g60, y100, y90, y80, y70, y60, area, planPath, actualPath, today, planDot, actualDot, tip, months]
+            g100 = frame {left: 24px, top: 0px, width: 536px, height: 1px, fill: T.colors.surface-2}
+            g90 = frame {left: 24px, top: 50px, width: 536px, height: 1px, fill: T.colors.surface-2}
+            g80 = frame {left: 24px, top: 100px, width: 536px, height: 1px, fill: T.colors.surface-2}
+            g70 = frame {left: 24px, top: 150px, width: 536px, height: 1px, fill: T.colors.surface-2}
+            g60 = frame {left: 24px, top: 200px, width: 536px, height: 1px, fill: T.colors.line}
+            y100 = text : P.ui {left: 0px, top: -7px, contents: "100", font-size: T.size.micro}
+            y90 = text : P.ui {left: 0px, top: 43px, contents: "90", font-size: T.size.micro}
+            y80 = text : P.ui {left: 0px, top: 93px, contents: "80", font-size: T.size.micro}
+            y70 = text : P.ui {left: 0px, top: 143px, contents: "70", font-size: T.size.micro}
+            y60 = text : P.ui {left: 0px, top: 193px, contents: "60", font-size: T.size.micro}
+            area = asset {left: 20px, top: -4px, width: 544px, height: 208px, contents: actualArea, fill: {linear-gradient: {angle: 180deg, stops: [stop(0%, opacity(T.colors.accent, 16%)), stop(100%, opacity(T.colors.accent, 0%))]}}}
+            planPath = asset {left: 20px, top: -4px, width: 544px, height: 208px, contents: planLine, fill: T.colors.muted}
+            actualPath = asset {left: 20px, top: -4px, width: 544px, height: 208px, contents: actualLine, fill: T.colors.accent}
+            today = frame {left: 511px, top: 0px, width: 1px, height: 200px, fill: T.colors.faint}
+            planDot = frame {left: 507px, top: 36px, width: 9px, height: 9px, corner-radius: T.radius.pill, fill: T.colors.bg, border: {color: T.colors.muted, width: 2px}}
+            actualDot = frame {left: 506px, top: 65px, width: 11px, height: 11px, corner-radius: T.radius.pill, fill: T.colors.accent, border: {color: T.colors.bg, width: 2px}, shadow: T.shadows.control}
+            tip = frame {left: 370px, top: 110px, width: 136px, padding: 12px, corner-radius: T.radius.control, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, shadow: T.shadows.float, layout: {direction: .column, item-gap: 4px}, children: [tipActual, tipPlan, tipGap]
+              tipActual = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [tipActualLabel, tipActualValue]
+                tipActualLabel = text : P.ui {contents: "Actual"}
+                tipActualValue = text : P.uiStrong {contents: "86", font-size: T.size.ui}
+              }
+              tipPlan = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [tipPlanLabel, tipPlanValue]
+                tipPlanLabel = text : P.ui {contents: "Plan"}
+                tipPlanValue = text : P.uiStrong {contents: "92", font-size: T.size.ui}
+              }
+              tipGap = frame : P.warningBadge {label {contents: "6 roles open"}}
+            }
+            months = frame {left: 9px, top: 210px, layout: {direction: .row, item-gap: 18.73px}, children: [mJan, mFeb, mMar, mApr, mMay, mJun, mJul, mAug, mSep, mOct, mNov, mDec]
+              mJan = text : P.ui {width: 30px, align: .center, font-size: T.size.micro, contents: "Jan"}
+              mFeb = text : P.ui {width: 30px, align: .center, font-size: T.size.micro, contents: "Feb"}
+              mMar = text : P.ui {width: 30px, align: .center, font-size: T.size.micro, contents: "Mar"}
+              mApr = text : P.ui {width: 30px, align: .center, font-size: T.size.micro, contents: "Apr"}
+              mMay = text : P.ui {width: 30px, align: .center, font-size: T.size.micro, contents: "May"}
+              mJun = text : P.ui {width: 30px, align: .center, font-size: T.size.micro, contents: "Jun"}
+              mJul = text : P.ui {width: 30px, align: .center, font-size: T.size.micro, contents: "Jul"}
+              mAug = text : P.ui {width: 30px, align: .center, font-size: T.size.micro, contents: "Aug"}
+              mSep = text : P.ui {width: 30px, align: .center, font-size: T.size.micro, contents: "Sep"}
+              mOct = text : P.ui {width: 30px, align: .center, font-size: T.size.micro, contents: "Oct"}
+              mNov = text : P.ui {width: 30px, align: .center, font-size: T.size.micro, contents: "Nov", fill: T.colors.ink}
+              mDec = text : P.ui {width: 30px, align: .center, font-size: T.size.micro, contents: "Dec"}
+            }
+          }
+        }
+      }
+      planCopy = frame : P.featureCopy {
+        overrides: [remove(P.featureCopy.points), insert(stats, after = P.featureCopy.copyHead)]
+        copyHead {
+          kicker {contents: "HEADCOUNT PLANNING"}
+          heading {width: 360px, contents: "See plan versus actual, every week"}
+          para {contents: "Tessel compares your approved plan with real hires, leavers and offers as they happen, so a hiring slip shows up in October, not at year-end."}
+        }
+        more {label {contents: "Explore planning"}}
+        stats = frame {layout: {direction: .row, item-gap: 48px}, children: [stat1, stat2]
+          stat1 = frame {layout: {direction: .column, item-gap: 4px}, children: [stat1Value, stat1Label]
+            stat1Value = text : P.title {contents: "3 weeks"}
+            stat1Label = text : P.small {contents: "faster budget sign-off"}
+          }
+          stat2 = frame {layout: {direction: .column, item-gap: 4px}, children: [stat2Value, stat2Label]
+            stat2Value = text : P.title {contents: "98%"}
+            stat2Label = text : P.small {contents: "forecast accuracy, FY2025"}
+          }
+        }
+      }
+    }
+
+    // Row 3: three smaller features, each with its own drawn visual.
+    trio = frame {width: 100%, layout: {direction: .row, align-items: .stretch, item-gap: 24px}, overflow: .visible, children: [payslipCard, reportCard, syncCard]
+
+      payslipCard = frame : P.featureCard {
+        art {
+          overrides: [insert(slipBack, after = .nil), insert(slip, after = slipBack), insert(codes, after = slip)]
+          slipBack = frame {left: 108px, top: 30px, width: 184px, height: 220px, corner-radius: 10px, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}}
+          slip = frame {left: 92px, top: 44px, width: 200px, padding: 16px, corner-radius: 10px, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, shadow: T.shadows.card, layout: {direction: .column, item-gap: 8px}, children: [slipHead, slipWho, slipRule, gross, tax, social, slipRule2, net]
+            slipHead = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [slipTitle, slipDate]
+              slipTitle = text : P.uiStrong {contents: "Payslip"}
+              slipDate = text : P.ui {contents: "Nov 2026", font-size: T.size.micro}
+            }
+            slipWho = text : P.ui {contents: "Sanne de Vries · NL"}
+            slipRule = frame {width: 100%, height: 1px, fill: T.colors.line}
+            gross = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [grossLabel, grossValue]
+              grossLabel = text : P.ui {contents: "Gross"}
+              grossValue = text : P.ui {contents: "€5,400.00", fill: T.colors.ink, font-features: {tnum: 1}}
+            }
+            tax = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [taxLabel, taxValue]
+              taxLabel = text : P.ui {contents: "Income tax"}
+              taxValue = text : P.ui {contents: "−€1,162.40", fill: T.colors.ink, font-features: {tnum: 1}}
+            }
+            social = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [socialLabel, socialValue]
+              socialLabel = text : P.ui {contents: "Social security"}
+              socialValue = text : P.ui {contents: "−€598.20", fill: T.colors.ink, font-features: {tnum: 1}}
+            }
+            slipRule2 = frame {width: 100%, height: 1px, fill: T.colors.line}
+            net = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [netLabel, netValue]
+              netLabel = text : P.uiStrong {contents: "Net pay", font-size: T.size.ui}
+              netValue = text : P.uiStrong {contents: "€3,639.40", font-size: T.size.ui, font-features: {tnum: 1}}
+            }
+          }
+          codes = frame {left: 28px, top: 44px, layout: {direction: .column, item-gap: 8px}, children: [cDE, cNL, cES, cFR, cMore]
+            cDE = frame : P.countryCode {fill: T.colors.bg, border: {color: T.colors.line, width: 1px}}
+            cNL = frame : P.countryCode {fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, codeLabel {contents: "NL"}}
+            cES = frame : P.countryCode {fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, codeLabel {contents: "ES"}}
+            cFR = frame : P.countryCode {fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, codeLabel {contents: "FR"}}
+            cMore = frame : P.countryCode {codeLabel {contents: "+10"}}
+          }
+        }
+        cardText {
+          cardTitle {contents: "Payslips in 14 countries"}
+          cardBody {contents: "Local tax, social security and filings for every entity, in each employee's language."}
+        }
+      }
+
+      reportCard = frame : P.featureCard {
+        art {
+          overrides: [insert(costs, after = .nil)]
+          costs = frame {left: 24px, top: 24px, width: 336px, padding: 16px, corner-radius: 10px, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, shadow: T.shadows.card, layout: {direction: .column, item-gap: 12px}, overflow: .visible, children: [costsHead, eng, sales, ops, ga]
+            costsHead = frame {width: 100%, padding: [0px, 0px, 4px, 0px], layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [costsTitle, costsBadge]
+              costsTitle = text : P.uiStrong {contents: "Cost by department"}
+              costsBadge = frame : P.successBadge {label {contents: "Reconciled"}}
+            }
+            eng = frame {width: 100%, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [engLabel, engTrack, engValue]
+              engLabel = text : P.ui {width: 72px, contents: "Engineering"}
+              engTrack = frame {width: 160px, height: 8px, corner-radius: 4px, fill: T.colors.surface-2, children: [engBar]
+                engBar = frame {left: 0px, top: 0px, width: 160px, height: 8px, corner-radius: 4px, fill: T.colors.accent}
+              }
+              engValue = text : P.uiStrong {width: 44px, align: .right, contents: "€720k", font-size: T.size.ui}
+            }
+            sales = frame {width: 100%, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [salesLabel, salesTrack, salesValue]
+              salesLabel = text : P.ui {width: 72px, contents: "Sales"}
+              salesTrack = frame {width: 160px, height: 8px, corner-radius: 4px, fill: T.colors.surface-2, children: [salesBar]
+                salesBar = frame {left: 0px, top: 0px, width: 91px, height: 8px, corner-radius: 4px, fill: T.colors.accent-line}
+              }
+              salesValue = text : P.uiStrong {width: 44px, align: .right, contents: "€410k", font-size: T.size.ui}
+            }
+            ops = frame {width: 100%, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [opsLabel, opsTrack, opsValue]
+              opsLabel = text : P.ui {width: 72px, contents: "Operations"}
+              opsTrack = frame {width: 160px, height: 8px, corner-radius: 4px, fill: T.colors.surface-2, children: [opsBar]
+                opsBar = frame {left: 0px, top: 0px, width: 58px, height: 8px, corner-radius: 4px, fill: T.colors.accent-line}
+              }
+              opsValue = text : P.uiStrong {width: 44px, align: .right, contents: "€260k", font-size: T.size.ui}
+            }
+            ga = frame {width: 100%, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [gaLabel, gaTrack, gaValue]
+              gaLabel = text : P.ui {width: 72px, contents: "G&A"}
+              gaTrack = frame {width: 160px, height: 8px, corner-radius: 4px, fill: T.colors.surface-2, children: [gaBar]
+                gaBar = frame {left: 0px, top: 0px, width: 40px, height: 8px, corner-radius: 4px, fill: T.colors.accent-line}
+              }
+              gaValue = text : P.uiStrong {width: 44px, align: .right, contents: "€180k", font-size: T.size.ui}
+            }
+          }
+        }
+        cardText {
+          cardTitle {contents: "Reports finance trusts"}
+          cardBody {contents: "Cost by department or entity, reconciled to the ledger before export."}
+        }
+      }
+
+      syncCard = frame : P.featureCard {
+        art {
+          overrides: [insert(wires, after = .nil), insert(hub, after = wires), insert(ledger, after = hub), insert(ats, after = ledger), insert(bank, after = ats), insert(synced, after = bank)]
+          wires = frame {left: 0px, top: 0px, width: 384px, height: 224px, children: [wLeft, wRight, wDown, nLeft, nRight, nDown]
+            wLeft = frame {left: 132px, top: 108px, width: 34px, height: 1px, fill: T.colors.faint}
+            wRight = frame {left: 218px, top: 108px, width: 34px, height: 1px, fill: T.colors.faint}
+            wDown = frame {left: 192px, top: 134px, width: 1px, height: 30px, fill: T.colors.faint}
+            nLeft = frame {left: 129px, top: 105px, width: 7px, height: 7px, corner-radius: T.radius.pill, fill: T.colors.bg, border: {color: T.colors.faint, width: 1px}}
+            nRight = frame {left: 248px, top: 105px, width: 7px, height: 7px, corner-radius: T.radius.pill, fill: T.colors.bg, border: {color: T.colors.faint, width: 1px}}
+            nDown = frame {left: 189px, top: 161px, width: 7px, height: 7px, corner-radius: T.radius.pill, fill: T.colors.bg, border: {color: T.colors.faint, width: 1px}}
+          }
+          hub = frame {left: 166px, top: 82px, width: 52px, height: 52px, corner-radius: T.radius.card, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, shadow: T.shadows.card, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [hubMark]
+            hubMark = frame : P.logo.mark {}
+          }
+          ledger = frame {left: 24px, top: 90px, width: 106px, height: 36px, padding: [0px, 12px], corner-radius: T.radius.control, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [ledgerMark, ledgerName]
+            ledgerMark = frame {width: 14px, height: 14px, layout: {direction: .column, item-gap: 2px}, children: [lm1, lm2, lm3]
+              lm1 = frame {width: 14px, height: 3px, corner-radius: 1px, fill: T.colors.ink}
+              lm2 = frame {width: 10px, height: 3px, corner-radius: 1px, fill: T.colors.ink}
+              lm3 = frame {width: 14px, height: 3px, corner-radius: 1px, fill: T.colors.ink}
+            }
+            ledgerName = text : P.uiStrong {contents: "Ledgerly", font-size: T.size.ui}
+          }
+          ats = frame {left: 254px, top: 90px, width: 106px, height: 36px, padding: [0px, 12px], corner-radius: T.radius.control, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [atsMark, atsName]
+            atsMark = frame {width: 14px, height: 14px, corner-radius: T.radius.pill, border: {color: T.colors.ink, width: 3px}}
+            atsName = text : P.uiStrong {contents: "Hirewell", font-size: T.size.ui}
+          }
+          bank = frame {left: 139px, top: 166px, width: 106px, height: 36px, padding: [0px, 12px], corner-radius: T.radius.control, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [bankMark, bankName]
+            bankMark = frame {width: 12px, height: 12px, corner-radius: 2px, fill: T.colors.ink, transform: [0.7071, -0.7071, 0, 0.7071, 0.7071, 0]}
+            bankName = text : P.uiStrong {contents: "Bankline", font-size: T.size.ui}
+          }
+          synced = frame : P.successBadge {left: 139px, top: 28px, label {contents: "Synced 02:00 CET"}}
+        }
+        cardText {
+          cardTitle {contents: "Syncs with the tools you use"}
+          cardBody {contents: "Your ATS, ledger and bank stay in step every night. Mismatches are flagged by morning."}
+        }
+      }
+    }
+  }
+}

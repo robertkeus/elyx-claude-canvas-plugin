@@ -1,0 +1,67 @@
+// Pricing: three white r32 plan cards with clipped pastel blobs, a monthly/yearly toggle, and the Family plan raised by a violet edge, the only filled button and a sticker.
+// Motion: toggle thumb slides 200ms ease-out and prices cross-fade 150ms; cards rise 32px staggered 100ms; the Family sticker pops in last with a 0.85→1 scale.
+import "soft/tokens.elyx" as T
+import "soft/parts.elyx" as P
+import "soft/art/star.svg" as starGlyph
+import "icons/house.svg" as houseIcon
+import "icons/sparkles.svg" as sparkIcon
+
+export pricing = frame {
+  left: 0px, top: 0px, width: 1440px,
+  padding: [T.space.half, T.space.gutter], fill: T.colors.bg,
+  layout: {direction: .column, align-items: .center, item-gap: T.space.block},
+  children: [header, plans, footnote]
+
+  header = frame {layout: {direction: .column, align-items: .center, item-gap: 20px}, children: [badge, title, billing]
+    badge = frame : P.eyebrow {dot {fill[0].color: T.colors.butter}, label {contents: "Pricing"}}
+    title = text : P.h2Text {align: .center, contents: "Free to start.\nPlus when you're ready."}
+    // Toggle: the selected option is ink-filled and bold; the saving is spelled out, not just colored.
+    billing = frame {padding: [8px, 0px, 0px, 0px], layout: {direction: .row, align-items: .center, item-gap: 12px}, children: [toggle, saving]
+      toggle = frame {padding: 4px, corner-radius: T.radius.pill, fill: T.colors.surface, border: {color: T.colors.line, width: 1.5px}, layout: {direction: .row, item-gap: 4px}, children: [monthly, yearly]
+        monthly = frame {height: 40px, padding: [0px, 20px], corner-radius: T.radius.pill, layout: {direction: .row, align-items: .center}, children: [monthlyLabel]
+          monthlyLabel = text : P.smallText {contents: "Monthly", fill: T.colors.ink-soft}}
+        yearly = frame {height: 40px, padding: [0px, 20px], corner-radius: T.radius.pill, fill: T.colors.deep, layout: {direction: .row, align-items: .center}, children: [yearlyLabel]
+          yearlyLabel = text : P.smallText {contents: "Yearly", font-style: T.weights.strong, fill: T.colors.on-deep}}}
+      saving = frame : P.chip {padding: [6px, 12px], label {contents: "2 months free", font-size: T.size.ui}}}}
+
+  plans = frame {overflow: .visible, layout: {direction: .row, item-gap: 28px}, children: [freePlan, plusPlan, familyPlan]
+    freePlan = frame : P.planCard {}
+
+    plusPlan = frame : P.planCard {
+      blob {fill[0].color: T.colors.sky}
+      glyph {contents: sparkIcon, width: 32px, height: 32px}
+      head {planName {contents: "Plus"}, planFor {contents: "For one student"}}
+      price {amount {value {contents: "$3.25"}}, note {contents: "$39 billed yearly"}}
+      cta {label {contents: "Try Plus free for 14 days"}}
+      list {
+        includes {contents: "Everything in Free, plus"}
+        c1 {label {contents: "Unlimited subjects and tasks"}}
+        c2 {label {contents: "Grade tracker and term report"}}
+        c3 {label {contents: "Custom sprints and quiet mode"}}
+        c4 {label {contents: "Exam countdowns"}}
+        c5 {label {contents: "Sync phone, tablet and laptop"}}}}
+
+    familyPlan = frame : P.planCard {
+      border: {color: T.colors.accent, width: 2.5px}, shadow: T.shadow.float,
+      overrides: [insert(siblings, after = P.planCard.list)]
+      blob {fill[0].color: T.colors.peach}
+      glyph {display: .none}
+      head {planName {contents: "Family"}, planFor {contents: "For up to 4 kids"}}
+      price {amount {value {contents: "$5.75"}}, note {contents: "$69 billed yearly, for the whole family"}}
+      cta {fill[0].color: T.colors.accent, shadow: T.shadow.button, label {contents: "Get Family", fill[0].color: T.colors.on-accent}}
+      list {
+        includes {contents: "Everything in Plus, plus"}
+        c1 {label {contents: "Sunday summary for 2 parents"}}
+        c2 {label {contents: "Shared family calendar"}}
+        c3 {label {contents: "A plan per child, side by side"}}
+        c4 {label {contents: "Gentle reminders, no tracking"}}
+        c5 {label {contents: "Priority help from real people"}}}
+      // The section's one sticker, sitting on the blob.
+      siblings = frame : P.sticker {ignore-stack: .true, right: 18px, top: 30px, fill[0].color: T.colors.butter,
+        transform: [0.9945, 0.1045, 0, -0.1045, 0.9945, 0],
+        disc {pic {contents: houseIcon}}
+        label {contents: "Best for siblings"}}}
+  }
+
+  footnote = text : P.smallText {contents: "Every plan is ad-free and never sells student data. Prices in US dollars; cancel any time in the app.", align: .center}
+}

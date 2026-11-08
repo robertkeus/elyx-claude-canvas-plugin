@@ -1,0 +1,71 @@
+// Editorial parts: the shared pieces every Marlow section composes as instances (buttons, link, labels, folio).
+// Motion: buttons darken 6% and nudge the arrow 3px right on hover over 160ms ease-out; links grow their underline.
+import "editorial/tokens.elyx" as T
+import "icons/arrow-right.svg" as arrowRight
+
+// The one filled action per section: oxblood, 48px, trailing arrow, tighter padding on the arrow side.
+export buttonPrimary = frame {
+  left: 0px, top: 0px, height: 48px, padding: [0px, 20px, 0px, 24px],
+  corner-radius: T.radius.chip, fill: T.colors.accent,
+  layout: {direction: .row, align-items: .center, item-gap: 8px},
+  children: [label, arrow]
+  label = text {contents: "Start writing", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.button, letter-spacing: T.tracking.body, fill: T.colors.on-accent}
+  arrow = asset {width: 16px, height: 16px, contents: arrowRight, fill: T.colors.on-accent}
+}
+
+// Secondary action: same geometry, a 1px ink outline, no fill.
+export buttonGhost = frame {
+  left: 0px, top: 72px, height: 48px, padding: [0px, 24px],
+  corner-radius: T.radius.chip, border: {color: T.colors.rule, width: 1px},
+  layout: {direction: .row, align-items: .center, justify-content: .center},
+  children: [label]
+  label = text {contents: "Choose plan", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.button, letter-spacing: T.tracking.body, fill: T.colors.ink}
+}
+
+// Tertiary action: underlined body text with a small arrow.
+export textLink = frame {
+  left: 0px, top: 144px,
+  layout: {direction: .row, align-items: .center, item-gap: 8px},
+  children: [label, arrow]
+  label = text {contents: "Browse the showcase", underline: .single, font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.button, letter-spacing: T.tracking.body, fill: T.colors.ink}
+  arrow = asset {width: 14px, height: 14px, contents: arrowRight, fill: T.colors.ink}
+}
+
+// Small-print label: Geist Mono, uppercase, wide tracking. Write contents in capitals.
+export label = text {
+  left: 0px, top: 200px,
+  contents: "ISSUE 48 · WINTER 2026",
+  font-family: T.fonts.mono, font-size: T.size.label, letter-spacing: T.tracking.label, fill: T.colors.muted
+}
+
+// Running header that opens each section like a magazine folio: ink rule, section name left, page right.
+export folio = frame {
+  left: 0px, top: 240px, width: 1248px, padding-top: T.space.item,
+  border: {color: T.colors.rule, width: 1px, sides: [.top]},
+  layout: {direction: .row, justify-content: .space-between},
+  children: [section, page]
+  section = text : label {contents: "02 — THE TOOLS", fill: T.colors.ink}
+  page = text : label {contents: "MARLOW · NO. 48 · P. 04"}
+}
+
+// One line of a ruled list (plan features, footer links): body text over a hairline.
+export listItem = frame {
+  left: 0px, top: 296px, width: 360px, padding: [12px, 0px],
+  border: {color: T.colors.line, width: 1px, sides: [.bottom]},
+  layout: {direction: .row, align-items: .center},
+  children: [item]
+  item = text {contents: "Up to 10,000 readers", font-family: T.fonts.body, font-size: T.size.body, letter-spacing: T.tracking.body, fill: T.colors.ink}
+}
+
+// A column of footer links under a mono heading.
+export linkColumn = frame {
+  left: 0px, top: 360px, width: 176px,
+  layout: {direction: .column, item-gap: 12px},
+  children: [heading, links]
+  heading = text : label {contents: "PRODUCT", fill: T.colors.ink}
+  links = text {
+    contents: "Editor\nIssues\nMemberships",
+    width: 100%, padding-top: 4px,
+    font-family: T.fonts.body, font-size: T.size.button, line-height: 2, letter-spacing: T.tracking.body, fill: T.colors.muted
+  }
+}

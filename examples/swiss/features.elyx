@@ -1,0 +1,191 @@
+// Features: a 4-column grid, each column under its own black rule — index, a precise drawn figure, title, body — with red marking the one critical value per figure.
+// Motion: columns enter left to right, 500ms ease-out, 120ms stagger; each rule draws before its figure; figure lines plot in 600ms and the red mark lands last.
+import "swiss/tokens.elyx" as T
+import "swiss/parts.elyx" as P
+import "swiss/glyphs/deflection.svg" as deflection
+
+export features = frame {
+  left: 0px, top: 0px, width: 1440px, fill: T.colors.bg,
+  padding: [T.space.block, T.space.gutter, T.space.section, T.space.gutter],
+  layout: {direction: .column, item-gap: T.space.block},
+  children: [head, intro, grid]
+
+  head = frame : P.sectionHead {
+    row {
+      index {contents: "01"}
+      name {contents: "Product"}
+      aside {contents: "Four tools, one model"}
+    }
+  }
+
+  // H2 on cols 1–8; the note on cols 10–12 sits on its last baseline.
+  intro = frame {
+    width: 100%, layout: {direction: .row, align-items: .end, item-gap: T.space.column-gap}, children: [title, gap, note]
+    title = text {
+      width: T.grid.c8, contents: "One model from first sketch to signed calculation.",
+      font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.h2,
+      line-height: T.leading.h2, letter-spacing: T.tracking.h2, fill: T.colors.ink
+    }
+    gap = frame {width: T.grid.c1}
+    note = text : P.body {width: T.grid.c3, contents: "Geometry, loads, results and review live in one Gridform file. Nobody redraws a frame just to check it."}
+  }
+
+  grid = frame {
+    width: 100%, layout: {direction: .row, item-gap: T.space.column-gap}, children: [loads, mesh, deflect, versions]
+
+    // Local source: one 3-column feature. Instances swap the copy and the figure's contents.
+    feature = frame {
+      width: T.grid.c3, layout: {direction: .column, item-gap: 16px}, children: [rule, meta, figure, copy]
+      rule = frame : P.rule {width: 100%}
+      meta = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [index, tag]
+        index = text : P.mono {contents: "1.1"}
+        tag = text : P.monoMuted {contents: "EN 1991 · ASCE 7"}
+      }
+      figure = frame {width: 100%, height: 240px, slot: .true, border: {color: T.colors.line, width: 1px}}
+      copy = frame {width: 100%, padding: [8px, 0px, 0px, 0px], layout: {direction: .column, item-gap: T.space.item}, children: [title, body]
+        title = text : P.h3 {contents: "Every load case, combined"}
+        body = text : P.body {width: 100%, contents: "Dead, live, snow and wind to EN 1991 and ASCE 7, combined into ULS and SLS cases for you."}
+      }
+    }
+
+    // 1.1 — a snow-drift load rising along a simply supported beam; the peak arrow is red.
+    loads = frame : feature {
+      figure {
+        overrides: [insert(art, after = .nil)]
+        art = frame {
+          left: 0px, top: 0px, width: 318px, height: 240px, children: [cap, std, arrows, envelope, qMin, qMax, beam, pin, roller, dim, dimL, dimR, span]
+          cap = text : P.monoMuted {left: 16px, top: 14px, contents: "LC2 Snow drift"}
+          std = text : P.mono {left: 228px, top: 14px, contents: "q, kN/m"}
+          arrows = frame {left: 28.5px, top: 84px, layout: {direction: .row, align-items: .end, item-gap: 19px}, children: [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10]
+            a1 = frame : P.loadDown {shaft {height: 20px}}
+            a2 = frame : P.loadDown {shaft {height: 26px}}
+            a3 = frame : P.loadDown {shaft {height: 32px}}
+            a4 = frame : P.loadDown {shaft {height: 38px}}
+            a5 = frame : P.loadDown {shaft {height: 44px}}
+            a6 = frame : P.loadDown {shaft {height: 50px}}
+            a7 = frame : P.loadDown {shaft {height: 56px}}
+            a8 = frame : P.loadDown {shaft {height: 62px}}
+            a9 = frame : P.loadDown {shaft {height: 68px}}
+            a10 = frame : P.loadDownHot {shaft {height: 74px}}
+          }
+          envelope = frame {left: 33px, top: 138px, width: 257.72px, height: 1px, fill: T.colors.ink, transform: [0.9778, 0.20953, 0, -0.20953, 0.9778, 0]}
+          qMin = text : P.mono {left: 24px, top: 116px, contents: "4.2"}
+          qMax = text : P.mono {left: 252px, top: 62px, contents: "12.4"}
+          beam = frame {left: 24px, top: 168px, width: 270px, height: 2px, fill: T.colors.ink}
+          pin = frame {left: 19px, top: 170px, width: 10px, height: 8px, fill: T.colors.ink}
+          roller = frame : P.node {left: 285px, top: 170px}
+          dim = frame {left: 24px, top: 202px, width: 270px, height: 1px, fill: T.colors.faint}
+          dimL = frame {left: 24px, top: 197px, width: 1px, height: 11px, fill: T.colors.faint}
+          dimR = frame {left: 293px, top: 197px, width: 1px, height: 11px, fill: T.colors.faint}
+          span = text : P.mono {left: 125px, top: 212px, contents: "L = 7.20 m"}
+        }
+      }
+    }
+
+    // 1.2 — a slab mesh, refined around a column; the peak-stress element is red.
+    mesh = frame : feature {
+      meta {index {contents: "1.2"} tag {contents: "Shell elements"}}
+      figure {
+        overrides: [insert(art, after = .nil)]
+        art = frame {
+          left: 0px, top: 0px, width: 318px, height: 240px, children: [cap, peak, peakKey, cols, rows, fineCols, fineRows, slab, opening, crossA, crossB, column, hotCell]
+          cap = text : P.monoMuted {left: 16px, top: 14px, contents: "Slab L4 · 4,312 el."}
+          peakKey = frame {left: 204px, top: 18px, width: 8px, height: 8px, fill: T.colors.accent}
+          peak = text : P.mono {left: 218px, top: 14px, contents: "182 MPa"}
+          vline = frame {width: 1px, height: 180px, fill: T.colors.faint}
+          hline = frame {width: 270px, height: 1px, fill: T.colors.faint}
+          cols = frame {left: 24px, top: 44px, layout: {direction: .row, item-gap: 29px}, children: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9]
+            v0 = frame : vline {}  v1 = frame : vline {}  v2 = frame : vline {}  v3 = frame : vline {}  v4 = frame : vline {}
+            v5 = frame : vline {}  v6 = frame : vline {}  v7 = frame : vline {}  v8 = frame : vline {}  v9 = frame : vline {}
+          }
+          rows = frame {left: 24px, top: 44px, layout: {direction: .column, item-gap: 29px}, children: [h0, h1, h2, h3, h4, h5, h6]
+            h0 = frame : hline {}  h1 = frame : hline {}  h2 = frame : hline {}  h3 = frame : hline {}
+            h4 = frame : hline {}  h5 = frame : hline {}  h6 = frame : hline {}
+          }
+          // Refinement: 15px cells in the four bays around the column at (144, 134).
+          fineCols = frame {left: 129px, top: 104px, layout: {direction: .row, item-gap: 29px}, children: [fv1, fv2]
+            fv1 = frame {width: 1px, height: 60px, fill: T.colors.faint}
+            fv2 = frame {width: 1px, height: 60px, fill: T.colors.faint}
+          }
+          fineRows = frame {left: 114px, top: 119px, layout: {direction: .column, item-gap: 29px}, children: [fh1, fh2]
+            fh1 = frame {width: 60px, height: 1px, fill: T.colors.faint}
+            fh2 = frame {width: 60px, height: 1px, fill: T.colors.faint}
+          }
+          slab = frame {left: 24px, top: 44px, width: 271px, height: 181px, border: {color: T.colors.ink, width: 1.5px}}
+          opening = frame {left: 204px, top: 74px, width: 60px, height: 60px, fill: T.colors.bg, border: {color: T.colors.ink, width: 1px}}
+          crossA = frame {left: 204px, top: 74px, width: 84.85px, height: 1px, fill: T.colors.faint, transform: [0.70711, -0.70711, 0, 0.70711, 0.70711, 0]}
+          crossB = frame {left: 204px, top: 133px, width: 84.85px, height: 1px, fill: T.colors.faint, transform: [0.70711, 0.70711, 0, -0.70711, 0.70711, 0]}
+          hotCell = frame {left: 144px, top: 119px, width: 15px, height: 15px, fill: T.colors.accent}
+          column = frame {left: 139px, top: 129px, width: 10px, height: 10px, fill: T.colors.ink}
+        }
+      }
+      copy {
+        title {contents: "Meshes that refine themselves"}
+        body {contents: "Slabs and walls are meshed for you, then refined around columns and openings until stresses converge."}
+      }
+    }
+
+    // 1.3 — the deflected shape of beam B-207 against its limit; the maximum is red.
+    deflect = frame : feature {
+      meta {index {contents: "1.3"} tag {contents: "SLS · L/360"}}
+      figure {
+        overrides: [insert(art, after = .nil)]
+        art = frame {
+          left: 0px, top: 0px, width: 318px, height: 240px, children: [cap, scale, value, chord, curve, pin, roller, max, maxDot, ratioLabel, ratio, track, used]
+          cap = text : P.monoMuted {left: 16px, top: 14px, contents: "Beam B-207 · LC1"}
+          scale = text : P.mono {left: 222px, top: 14px, contents: "Shape ×40"}
+          chord = frame {left: 24px, top: 84px, width: 270px, height: 1px, fill: T.colors.faint}
+          curve = asset {left: 24px, top: 84px, width: 270px, height: 44px, contents: deflection, fill: T.colors.ink}
+          pin = frame {left: 19px, top: 86px, width: 10px, height: 8px, fill: T.colors.ink}
+          roller = frame : P.node {left: 285px, top: 86px}
+          max = frame {left: 158px, top: 85px, width: 2px, height: 40px, fill: T.colors.accent}
+          maxDot = frame {left: 155px, top: 122px, width: 8px, height: 8px, fill: T.colors.accent}
+          value = text : P.mono {left: 170px, top: 100px, contents: "δ 18.2 mm"}
+          ratioLabel = text : P.monoMuted {left: 16px, top: 168px, contents: "δ / limit 20.0 mm"}
+          ratio = text : P.mono {left: 270px, top: 168px, contents: "0.91"}
+          track = frame {left: 16px, top: 194px, width: 286px, height: 6px, fill: T.colors.surface}
+          used = frame {left: 16px, top: 194px, width: 260px, height: 6px, fill: T.colors.ink}
+        }
+      }
+      copy {
+        title {contents: "Serviceability, checked live"}
+        body {contents: "Every member is checked against the deflection limit you set, each time the model changes."}
+      }
+    }
+
+    // 1.4 — the model's version history; the live version is red.
+    versions = frame : feature {
+      meta {index {contents: "1.4"} tag {contents: "Model 0412"}}
+      figure {
+        overrides: [insert(art, after = .nil)]
+        art = frame {
+          left: 0px, top: 0px, width: 318px, height: 240px, children: [cap, count, spine, list]
+          cap = text : P.monoMuted {left: 16px, top: 14px, contents: "Halden Tower"}
+          count = text : P.mono {left: 222px, top: 14px, contents: "4 runs today"}
+          spine = frame {left: 27.5px, top: 61px, width: 1px, height: 144px, fill: T.colors.line}
+          // Local source: one version row — node, initials, change, author and time.
+          version = frame {layout: {direction: .row, align-items: .center, item-gap: 12px}, children: [dot, avatar, info]
+            dot = frame : P.node {}
+            avatar = frame {width: 24px, height: 24px, fill: T.colors.ink, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [initials]
+              initials = text : P.mono {fill: T.colors.on-deep, contents: "IH"}
+            }
+            info = frame {layout: {direction: .column, item-gap: 2px}, children: [change, who]
+              change = text : P.mono {contents: "v38  Approved for issue"}
+              who = text : P.monoMuted {contents: "I. Halvorsen · 14:02"}
+            }
+          }
+          list = frame {left: 24px, top: 44px, layout: {direction: .column, item-gap: 14px}, children: [v38, v37, v36, v35]
+            v38 = frame : version {dot {fill: T.colors.accent, border: {color: T.colors.accent, width: 1.5px}}}
+            v37 = frame : version {avatar {initials {contents: "TO"}} info {change {contents: "v37  Wind LC3 re-run"} who {contents: "T. Okafor · 11:48"}}}
+            v36 = frame : version {avatar {initials {contents: "ML"}} info {change {contents: "v36  BR4 to HEB 220"} who {contents: "M. Lindqvist · 09:15"}}}
+            v35 = frame : version {avatar {initials {contents: "SB"}} info {change {contents: "v35  Imported grid A–G"} who {contents: "S. Brask · Yesterday"}}}
+          }
+        }
+      }
+      copy {
+        title {contents: "One model, every version"}
+        body {contents: "Each run keeps its author, inputs and results, so the whole team reviews the same numbers."}
+      }
+    }
+  }
+}

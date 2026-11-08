@@ -1,0 +1,63 @@
+// Studio: warm neutrals, one hot accent, very large display type, tinted fills instead of borders.
+// For agencies, studios, portfolios and brand sites.
+use "fonts/BricolageGrotesque-400.ttf"
+use "fonts/BricolageGrotesque-700.ttf"
+use "fonts/InterTight.ttf"
+
+export colors = tokens {
+  bg: #FCFAF8,
+  surface: #F6F1EE,
+  surface-2: #EFE7E3,
+  ink: #221A17,
+  muted: #7A6B66,
+  faint: #A89A94,
+  line: #ECE3DE,
+  accent: #FF5B2E,
+  on-accent: #FFFFFF,
+  accent-soft: #FFE6DC,
+  accent-ink: #B5391A,
+  deep: #2A1530,
+  on-deep: #FBF2F8,
+  deep-muted: #B9A3B6,
+  deep-surface: #3A2342,
+  raised: #FFFFFF,
+  live: #23A15B
+}
+
+export fonts = tokens {display: "Bricolage Grotesque", body: "Inter Tight"}
+export weights = tokens {display: "Regular", heading: "Bold", regular: "Regular", medium: "Medium", strong: "SemiBold"}
+export size = tokens {display: 132, h2: 64, h3: 22, quote: 34, stat: 52, lead: 20, body: 16, small: 14, label: 13, link: 26, wordmark: 316, ui-xs: 10, ui-sm: 11, ui: 12, ui-md: 14, ui-lg: 18, ui-xl: 28}
+export tracking = tokens {display: -5%, h2: -3.5%, h3: -1%, body: -0.5%, label: 4%}
+export leading = tokens {display: 0.92, h2: 1.04, h3: 1.2, body: 1.6}
+export space = tokens {section: 160px, gutter: 64px, block: 64px, group: 32px, item: 12px, section-y: 80px, inset: 8px, panel-y: 120px}
+export radius = tokens {chip: 6px, card: 10px, panel: 16px, pill: 999px}
+
+// Separation without borders: a 1px ring at 6% plus warm layered shadows at ≤8% alpha.
+export shadows = tokens {
+  ring: {drop-shadow: {color: #221A170F, offset: point(0, 0), blur-radius: 0px, spread: 1px}},
+  card: [
+    {drop-shadow: {color: #221A170F, offset: point(0, 0), blur-radius: 0px, spread: 1px}},
+    {drop-shadow: {color: #5F4E240A, offset: point(0, 1), blur-radius: 2px}},
+    {drop-shadow: {color: #B5391A0A, offset: point(0, 8), blur-radius: 20px}},
+    {drop-shadow: {color: #2A153014, offset: point(0, 30), blur-radius: 24px, spread: -20px}}
+  ],
+  float: [
+    {drop-shadow: {color: #221A170F, offset: point(0, 0), blur-radius: 0px, spread: 1px}},
+    {drop-shadow: {color: #5F4E240F, offset: point(0, 2), blur-radius: 4px}},
+    {drop-shadow: {color: #B5391A14, offset: point(0, 24), blur-radius: 48px}},
+    {drop-shadow: {color: #2A153014, offset: point(0, 48), blur-radius: 40px, spread: -24px}}
+  ],
+  control: [
+    {drop-shadow: {color: #221A170F, offset: point(0, 0), blur-radius: 0px, spread: 1px}},
+    {drop-shadow: {color: #5F4E240F, offset: point(0, 1), blur-radius: 2px}},
+    {drop-shadow: {color: #B5391A0F, offset: point(0, 6), blur-radius: 14px}}
+  ],
+  ring-deep: {drop-shadow: {color: #FBF2F81F, offset: point(0, 0), blur-radius: 0px, spread: 1px}}
+}
+
+// Client palettes: used only inside drawn client product UIs, never on Fernhouse chrome.
+export kestrel = tokens {forest: #0E3B2E, pine: #17513F, mint: #CFEFDC, lime: #C4F36E, paper: #F6FAF7, ink: #0E2A21, muted: #557567}
+export mossa = tokens {night: #15133A, dusk: #24216A, haze: #4B4699, lavender: #B4ACFF, moon: #F4E8C1, text: #F1EFFF, muted: #A29ED6}
+export haulio = tokens {cobalt: #1E40D8, sky: #DCE4FF, amber: #FFC233, ink: #0B1533, mist: #EEF1FA, muted: #5D6787, paper: #FFFFFF}
+export tessel = tokens {teal: #0E6B62, sea: #CDEAE5, sand: #F1EADF, clay: #D9CBB6, ink: #13201E, muted: #5E6B68, paper: #FFFDF9}
+export pennant = tokens {navy: #14213D, gold: #E9B949}

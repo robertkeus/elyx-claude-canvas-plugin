@@ -1,0 +1,300 @@
+// Hero: a two-line display headline over a narrow pitch column and an overlapping collage of real-looking client products on a fading accent glow.
+// Motion: H1 de-blurs from 20px at scale .98 (700ms, cubic-bezier(0,.75,.56,1)); windows rise 60px in turn, 150ms apart; logo tiles fade up 80ms apart.
+import "studio/tokens.elyx" as T
+import "studio/parts.elyx" as P
+
+export hero = frame {
+  left: 0px, top: 0px, width: 1440px,
+  padding: [T.space.block, T.space.gutter, T.space.section-y, T.space.gutter],
+  layout: {direction: .column, item-gap: T.space.block},
+  fill: T.colors.bg,
+  children: [glow, intro, stage, logos]
+
+  // Accent glow behind the collage; the radial stops fade it out well before the logo row.
+  glow = frame {
+    ignore-stack: .true, left: 380px, top: 300px, width: 1200px, height: 980px,
+    fill: [
+      {radial-gradient: {at: point(50%, 50%), radius: [50%, 50%], stops: [stop(0%, #FF5B2E66), stop(50%, #FF5B2E2E), stop(100%, #FF5B2E00)]}},
+      {radial-gradient: {at: point(80%, 30%), radius: [30%, 30%], stops: [stop(0%, #2A153012), stop(100%, #2A153000)]}}
+    ]
+  }
+
+  intro = frame {
+    layout: {direction: .column, item-gap: 28px},
+    children: [label, headline]
+    label = text : P.eyebrow {contents: "INDEPENDENT PRODUCT DESIGN STUDIO · ROTTERDAM"}
+    headline = text {
+      contents: "Interfaces that\nmove the numbers.", width: 1100px,
+      font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.display,
+      line-height: T.leading.display, letter-spacing: T.tracking.display, fill: T.colors.ink
+    }
+  }
+
+  stage = frame {
+    layout: {direction: .row, item-gap: T.space.block}, overflow: .visible,
+    children: [pitch, collage]
+
+    pitch = frame {
+      width: 360px, padding: [40px, 0px, 0px, 0px],
+      layout: {direction: .column, item-gap: T.space.group},
+      children: [copy, actions, kickoff]
+      copy = frame {
+        width: 100%, layout: {direction: .column, item-gap: T.space.item},
+        children: [lead, body]
+        lead = text {contents: "Apps and design systems\nfor scale-ups that measure.", width: 100%, font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.lead, line-height: 1.4, letter-spacing: T.tracking.body, fill: T.colors.ink}
+        body = text {contents: "Fourteen designers in Rotterdam. Every engagement starts with the metric we agree to move, and ends with a readout against it.", width: 100%, font-family: T.fonts.body, font-size: T.size.body, line-height: T.leading.body, letter-spacing: T.tracking.body, fill: T.colors.muted}
+      }
+      actions = frame {
+        layout: {direction: .row, align-items: .center, item-gap: 24px},
+        children: [start, work]
+        start = frame : P.primaryButton {}
+        work = frame : P.textLink {}
+      }
+      kickoff = frame {
+        padding: [16px, 0px, 0px, 0px], layout: {direction: .column, item-gap: 4px},
+        children: [kLabel, kDate]
+        kLabel = text : P.eyebrow {contents: "NEXT KICKOFF"}
+        kDate = text {contents: "Monday 11 January 2027", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.body, fill: T.colors.ink}
+      }
+    }
+
+    // Freeform on purpose: the overlap is the point. overflow stays visible so shadows aren't clipped.
+    collage = frame {
+      width: 888px, height: 640px, overflow: .visible,
+      children: [kestrelWindow, haulioCard, mossaPhone, callout]
+
+      // Client 1: Kestrel's spend dashboard, in Kestrel's forest and lime.
+      kestrelWindow = frame {
+        left: 150px, top: 0px, width: 720px, height: 450px,
+        layout: {direction: .column}, corner-radius: T.radius.card, fill: T.colors.raised, shadow: T.shadows.float,
+        children: [bar, app]
+        bar = frame : P.windowBar {width: 100%, url {address {contents: "app.kestrel.eu/spend"}}}
+        app = frame {
+          width: 100%, height: 416px, layout: {direction: .row},
+          children: [side, main]
+          side = frame {
+            width: 168px, height: 100%, padding: [20px, 14px],
+            layout: {direction: .column, item-gap: 4px}, fill: T.kestrel.forest,
+            children: [brand, n1, n2, n3, n4, n5]
+            brand = frame {
+              padding: [0px, 8px, 18px, 8px], layout: {direction: .row, align-items: .center, item-gap: 8px},
+              children: [kMark, kName]
+              kMark = frame {width: 16px, height: 16px, corner-radius: [8px, 0px, 8px, 0px], fill: T.kestrel.lime}
+              kName = text {contents: "kestrel", font-family: T.fonts.display, font-style: T.weights.heading, font-size: T.size.ui-lg, letter-spacing: -3%, fill: T.kestrel.paper}
+            }
+            n1 = frame {width: 100%, height: 30px, padding: [0px, 10px], layout: {direction: .row, align-items: .center}, corner-radius: T.radius.chip, fill: T.kestrel.pine, children: [t]
+              t = text {contents: "Overview", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui, fill: T.kestrel.paper}}
+            n2 = frame {width: 100%, height: 30px, padding: [0px, 10px], layout: {direction: .row, align-items: .center}, children: [t]
+              t = text {contents: "Cards", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.ui, fill: T.kestrel.mint}}
+            n3 = frame {width: 100%, height: 30px, padding: [0px, 10px], layout: {direction: .row, align-items: .center}, children: [t]
+              t = text {contents: "Expenses", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.ui, fill: T.kestrel.mint}}
+            n4 = frame {width: 100%, height: 30px, padding: [0px, 10px], layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [t, count]
+              t = text {contents: "Approvals", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.ui, fill: T.kestrel.mint}
+              count = frame {height: 16px, padding: [0px, 6px], layout: {direction: .row, align-items: .center}, corner-radius: T.radius.pill, fill: T.kestrel.lime, children: [c]
+                c = text {contents: "3", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui-xs, fill: T.kestrel.ink}}}
+            n5 = frame {width: 100%, height: 30px, padding: [0px, 10px], layout: {direction: .row, align-items: .center}, children: [t]
+              t = text {contents: "Team", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.ui, fill: T.kestrel.mint}}
+          }
+          main = frame {
+            width: 552px, height: 100%, padding: [22px, 24px],
+            layout: {direction: .column, item-gap: 18px}, fill: T.kestrel.paper,
+            children: [head, kpis, chart]
+            head = frame {
+              width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between},
+              children: [title, period]
+              title = text {contents: "Spend overview", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui-lg, letter-spacing: -1%, fill: T.kestrel.ink}
+              period = frame {height: 26px, padding: [0px, 10px], layout: {direction: .row, align-items: .center}, corner-radius: T.radius.chip, fill: T.colors.raised, shadow: T.shadows.ring, children: [p]
+                p = text {contents: "November 2026", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.ui-sm, fill: T.kestrel.ink}}
+            }
+            kpis = frame {
+              width: 100%, layout: {direction: .row, item-gap: 28px},
+              children: [k1, k2, k3]
+              k1 = frame {layout: {direction: .column, item-gap: 4px}, children: [l, v]
+                l = text {contents: "Total spend", font-family: T.fonts.body, font-size: T.size.ui-sm, fill: T.kestrel.muted}
+                v = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [n, d]
+                  n = text {contents: "€184,320", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui-xl, letter-spacing: -3%, font-features: {tnum: 1}, fill: T.kestrel.ink}
+                  d = frame {height: 20px, padding: [0px, 6px], layout: {direction: .row, align-items: .center}, corner-radius: T.radius.chip, fill: T.kestrel.mint, children: [dt]
+                    dt = text {contents: "−12% vs Oct", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui-xs, fill: T.kestrel.forest}}}}
+              k2 = frame {layout: {direction: .column, item-gap: 4px}, children: [l, n]
+                l = text {contents: "Active cards", font-family: T.fonts.body, font-size: T.size.ui-sm, fill: T.kestrel.muted}
+                n = text {contents: "126", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui-xl, letter-spacing: -3%, fill: T.kestrel.ink}}
+              k3 = frame {layout: {direction: .column, item-gap: 4px}, children: [l, n]
+                l = text {contents: "Receipts matched", font-family: T.fonts.body, font-size: T.size.ui-sm, fill: T.kestrel.muted}
+                n = text {contents: "98%", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui-xl, letter-spacing: -3%, fill: T.kestrel.ink}}
+            }
+            chart = frame {
+              width: 100%, height: 236px, padding: [16px, 18px],
+              layout: {direction: .column, item-gap: 14px}, corner-radius: T.radius.card, fill: T.colors.raised, shadow: T.shadows.ring,
+              children: [cHead, bars, axis]
+              cHead = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [ct, legend]
+                ct = text {contents: "Daily card spend", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui, fill: T.kestrel.ink}
+                legend = text {contents: "Budget €6,400 / day", font-family: T.fonts.body, font-size: T.size.ui-sm, fill: T.kestrel.muted}}
+              // Bars sit on a shared baseline (align-items .end); today's bar is the client's lime.
+              bars = frame {
+                width: 100%, height: 140px, layout: {direction: .row, align-items: .end, justify-content: .space-between},
+                children: [b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14]
+                b1 = frame {width: 22px, height: 62px, corner-radius: 4px, fill: T.kestrel.mint}
+                b2 = frame {width: 22px, height: 88px, corner-radius: 4px, fill: T.kestrel.mint}
+                b3 = frame {width: 22px, height: 74px, corner-radius: 4px, fill: T.kestrel.mint}
+                b4 = frame {width: 22px, height: 112px, corner-radius: 4px, fill: T.kestrel.mint}
+                b5 = frame {width: 22px, height: 96px, corner-radius: 4px, fill: T.kestrel.mint}
+                b6 = frame {width: 22px, height: 40px, corner-radius: 4px, fill: T.kestrel.mint}
+                b7 = frame {width: 22px, height: 34px, corner-radius: 4px, fill: T.kestrel.mint}
+                b8 = frame {width: 22px, height: 80px, corner-radius: 4px, fill: T.kestrel.mint}
+                b9 = frame {width: 22px, height: 104px, corner-radius: 4px, fill: T.kestrel.mint}
+                b10 = frame {width: 22px, height: 92px, corner-radius: 4px, fill: T.kestrel.mint}
+                b11 = frame {width: 22px, height: 120px, corner-radius: 4px, fill: T.kestrel.mint}
+                b12 = frame {width: 22px, height: 86px, corner-radius: 4px, fill: T.kestrel.mint}
+                b13 = frame {width: 22px, height: 44px, corner-radius: 4px, fill: T.kestrel.mint}
+                b14 = frame {width: 22px, height: 132px, corner-radius: 4px, fill: T.kestrel.forest}
+              }
+              axis = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [a1, a2, a3]
+                a1 = text {contents: "1 Nov", font-family: T.fonts.body, font-size: T.size.ui-xs, fill: T.kestrel.muted}
+                a2 = text {contents: "7 Nov", font-family: T.fonts.body, font-size: T.size.ui-xs, fill: T.kestrel.muted}
+                a3 = text {contents: "Today", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui-xs, fill: T.kestrel.ink}}
+            }
+          }
+        }
+      }
+
+      // Client 2: Mossa's sleep app on a phone, in Mossa's night and lavender.
+      mossaPhone = frame {
+        left: 0px, top: 226px, width: 236px, padding: [16px, 18px, 10px, 18px],
+        layout: {direction: .column, align-items: .center, item-gap: 16px},
+        corner-radius: 36px, fill: {linear-gradient: {angle: 180deg, stops: [stop(0%, T.mossa.dusk), stop(60%, T.mossa.night)]}},
+        shadow: [T.shadows.float, {inner-shadow: {color: #FFFFFF1F, offset: point(0, 1), blur-radius: 0px}}],
+        children: [status, greet, ring, stages, phases, wind, home]
+        status = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [time, island, batt]
+          time = text {contents: "7:12", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui-sm, fill: T.mossa.text}
+          island = frame {width: 64px, height: 18px, corner-radius: T.radius.pill, fill: #0A0920}
+          batt = frame {width: 22px, height: 11px, corner-radius: 3px, fill: T.mossa.muted}}
+        greet = frame {width: 100%, layout: {direction: .column, item-gap: 2px}, children: [hi, date]
+          hi = text {contents: "Morning, Ines", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui-lg, letter-spacing: -1%, fill: T.mossa.text}
+          date = text {contents: "Thu 12 Nov · 7h 42m asleep", font-family: T.fonts.body, font-size: T.size.ui-sm, fill: T.mossa.muted}}
+        // Progress ring: a track, then an angular-gradient border cut off hard at 86%. Both are children:
+        // a frame's own border paints over its children, so it can't be the track.
+        ring = frame {
+          width: 136px, height: 136px, layout: {direction: .column, align-items: .center, justify-content: .center},
+          children: [track, arc, score, scoreLabel]
+          track = frame {ignore-stack: .true, left: 0px, top: 0px, width: 136px, height: 136px, corner-radius: T.radius.pill, border: {color: T.mossa.dusk, width: 10px}}
+          arc = frame {ignore-stack: .true, left: 0px, top: 0px, width: 136px, height: 136px, corner-radius: T.radius.pill,
+            border: {angular-gradient: {stops: [stop(0%, T.mossa.lavender), stop(86%, T.mossa.moon), stop(86.5%, #00000000), stop(100%, #00000000)]}, width: 10px}}
+          score = text {contents: "86", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.stat, letter-spacing: -4%, line-height: 1, fill: T.mossa.text}
+          scoreLabel = text {contents: "Sleep score", font-family: T.fonts.body, font-size: T.size.ui-sm, fill: T.mossa.muted}
+        }
+        // Last night as one stacked bar, in the order the stages happened.
+        stages = frame {width: 100%, height: 8px, layout: {direction: .row, item-gap: 2px}, children: [s1, s2, s3, s4, s5, s6, s7, s8, s9]
+          s1 = frame {width: 18px, height: 100%, corner-radius: [4px, 0px, 0px, 4px], fill: T.mossa.haze}
+          s2 = frame {width: 26px, height: 100%, fill: T.mossa.lavender}
+          s3 = frame {width: 22px, height: 100%, fill: T.mossa.haze}
+          s4 = frame {width: 12px, height: 100%, fill: T.mossa.moon}
+          s5 = frame {width: 18px, height: 100%, fill: T.mossa.lavender}
+          s6 = frame {width: 30px, height: 100%, fill: T.mossa.haze}
+          s7 = frame {width: 14px, height: 100%, fill: T.mossa.moon}
+          s8 = frame {width: 34px, height: 100%, fill: T.mossa.haze}
+          s9 = frame {width: 10px, height: 100%, corner-radius: [0px, 4px, 4px, 0px], fill: T.mossa.moon}}
+        phases = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [deep, rem, light]
+          deep = frame {layout: {direction: .column, item-gap: 2px}, children: [v, l]
+            v = text {contents: "1h 52m", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui, fill: T.mossa.text}
+            l = frame {layout: {direction: .row, align-items: .center, item-gap: 4px}, children: [d, t]
+              d = shape {type: .ellipse, width: 6px, height: 6px, fill: T.mossa.lavender}
+              t = text {contents: "Deep", font-family: T.fonts.body, font-size: T.size.ui-xs, fill: T.mossa.muted}}}
+          rem = frame {layout: {direction: .column, item-gap: 2px}, children: [v, l]
+            v = text {contents: "1h 38m", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui, fill: T.mossa.text}
+            l = frame {layout: {direction: .row, align-items: .center, item-gap: 4px}, children: [d, t]
+              d = shape {type: .ellipse, width: 6px, height: 6px, fill: T.mossa.moon}
+              t = text {contents: "REM", font-family: T.fonts.body, font-size: T.size.ui-xs, fill: T.mossa.muted}}}
+          light = frame {layout: {direction: .column, item-gap: 2px}, children: [v, l]
+            v = text {contents: "4h 12m", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui, fill: T.mossa.text}
+            l = frame {layout: {direction: .row, align-items: .center, item-gap: 4px}, children: [d, t]
+              d = shape {type: .ellipse, width: 6px, height: 6px, fill: T.mossa.haze}
+              t = text {contents: "Light", font-family: T.fonts.body, font-size: T.size.ui-xs, fill: T.mossa.muted}}}
+        }
+        wind = frame {width: 100%, height: 38px, layout: {direction: .row, align-items: .center, justify-content: .center}, corner-radius: T.radius.pill, fill: T.mossa.lavender, children: [w]
+          w = text {contents: "Plan tonight's wind-down", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui, fill: T.mossa.night}}
+        home = frame {width: 84px, height: 4px, corner-radius: T.radius.pill, fill: T.mossa.muted}
+      }
+
+      // Client 3: one load from Haulio's dispatch board, in Haulio's cobalt and amber.
+      haulioCard = frame {
+        left: 572px, top: 318px, width: 316px, padding: 18px,
+        layout: {direction: .column, item-gap: 14px}, corner-radius: T.radius.card, fill: T.haulio.paper, shadow: T.shadows.float,
+        children: [top, load, route, progress, driver]
+        top = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [hBrand, onTime]
+          hBrand = frame {layout: {direction: .row, align-items: .center, item-gap: 6px}, children: [hMark, hName]
+            hMark = frame {width: 14px, height: 14px, corner-radius: 3px, fill: T.haulio.cobalt}
+            hName = text {contents: "HAULIO", font-family: "Archivo", font-style: "Black", font-size: T.size.ui, letter-spacing: 4%, fill: T.haulio.ink}}
+          onTime = frame {height: 22px, padding: [0px, 8px], layout: {direction: .row, align-items: .center, item-gap: 5px}, corner-radius: T.radius.pill, fill: #FFF3D1, children: [od, ot]
+            od = shape {type: .ellipse, width: 6px, height: 6px, fill: T.haulio.amber}
+            ot = text {contents: "On time", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui-sm, fill: T.haulio.ink}}}
+        load = text {contents: "Load 48213 · Truck 214", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui-md, letter-spacing: -1%, fill: T.haulio.ink}
+        route = frame {width: 100%, layout: {direction: .row, align-items: .center, item-gap: 10px}, children: [from, line, to]
+          from = frame {layout: {direction: .column, item-gap: 2px}, children: [c, s]
+            c = text {contents: "Rotterdam", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.ui, fill: T.haulio.ink}
+            s = text {contents: "Maasvlakte 08:10", font-family: T.fonts.body, font-size: T.size.ui-xs, fill: T.haulio.muted}}
+          line = frame {width: 64px, layout: {direction: .row, align-items: .center}, children: [d1, rail, d2]
+            d1 = shape {type: .ellipse, width: 8px, height: 8px, fill: T.haulio.cobalt}
+            rail = frame {width: 48px, height: 2px, fill: {linear-gradient: {angle: 90deg, stops: [stop(0%, T.haulio.cobalt), stop(100%, T.haulio.sky)]}}}
+            d2 = shape {type: .ellipse, width: 8px, height: 8px, fill: T.haulio.paper, border: {color: T.haulio.cobalt, width: 2px}}}
+          to = frame {layout: {direction: .column, item-gap: 2px}, children: [c, s]
+            c = text {contents: "Duisburg", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.ui, fill: T.haulio.ink}
+            s = text {contents: "ETA 13:45", font-family: T.fonts.body, font-size: T.size.ui-xs, fill: T.haulio.muted}}}
+        progress = frame {width: 100%, layout: {direction: .column, item-gap: 6px}, children: [track, km]
+          track = frame {width: 100%, height: 6px, corner-radius: T.radius.pill, fill: T.haulio.mist, children: [done]
+            done = frame {left: 0px, top: 0px, width: 174px, height: 6px, corner-radius: T.radius.pill, fill: T.haulio.cobalt}}
+          km = text {contents: "142 of 228 km · 3 stops left", font-family: T.fonts.body, font-size: T.size.ui-sm, fill: T.haulio.muted}}
+        driver = frame {width: 100%, padding: [12px, 0px, 0px, 0px], layout: {direction: .row, align-items: .center, item-gap: 10px}, children: [dAv, dName]
+          dAv = frame : P.avatar {width: 28px, height: 28px, fill: T.haulio.sky, shadow: .nil, initials {contents: "JB", font-size: T.size.ui-sm, fill: T.haulio.cobalt}}
+          dName = text {contents: "Jeroen Bakker · driver", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.ui, fill: T.haulio.ink}}
+      }
+
+      // Callout floating over the screenshots: the outcome, not the feature.
+      callout = frame {
+        left: 704px, top: -36px, padding: [14px, 16px],
+        layout: {direction: .column, item-gap: 6px}, corner-radius: T.radius.card, fill: T.colors.raised, shadow: T.shadows.float,
+        children: [cLabel, cValue]
+        cLabel = text : P.eyebrow {contents: "KESTREL · 90 DAYS", font-size: T.size.ui-sm}
+        cValue = frame {layout: {direction: .row, align-items: .end, item-gap: 8px}, children: [num, what]
+          num = text {contents: "+38%", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.quote, letter-spacing: -4%, line-height: 1, fill: T.colors.ink}
+          what = text {contents: "activation", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.muted}}
+      }
+    }
+  }
+
+  logos = frame {
+    width: 100%, padding: [T.space.group, 0px, 0px, 0px],
+    layout: {direction: .column, item-gap: 20px},
+    children: [caption, tiles]
+    caption = text {contents: "Shipped with 38 product teams since 2014, including", font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.muted}
+    tiles = frame {
+      width: 100%, layout: {direction: .row, item-gap: 8px},
+      children: [kestrel, mossa, haulio, tessel, pennant]
+      // Five invented clients, each its own typeface and drawn mark, all in ink on the same tint.
+      kestrel = frame {width: 256px, height: 96px, layout: {direction: .row, align-items: .center, justify-content: .center, item-gap: 8px}, corner-radius: T.radius.card, fill: T.colors.surface, children: [m, w]
+        m = frame {width: 18px, height: 18px, corner-radius: [9px, 0px, 9px, 0px], fill: T.colors.ink}
+        w = text {contents: "kestrel", font-family: T.fonts.display, font-style: T.weights.heading, font-size: 24, letter-spacing: -4%, fill: T.colors.ink}}
+      mossa = frame {width: 256px, height: 96px, layout: {direction: .row, align-items: .center, justify-content: .center, item-gap: 8px}, corner-radius: T.radius.card, fill: T.colors.surface, children: [m, w]
+        m = frame {width: 18px, height: 18px, corner-radius: T.radius.pill, fill: T.colors.ink, children: [bite]
+          bite = shape {type: .ellipse, left: 6px, top: -3px, width: 16px, height: 16px, fill: T.colors.surface}}
+        w = text {contents: "mossa", font-family: T.fonts.body, font-style: T.weights.medium, font-size: 24, letter-spacing: -2%, fill: T.colors.ink}}
+      haulio = frame {width: 256px, height: 96px, layout: {direction: .row, align-items: .center, justify-content: .center, item-gap: 10px}, corner-radius: T.radius.card, fill: T.colors.surface, children: [m, w]
+        m = frame {layout: {direction: .column, align-items: .end, item-gap: 3px}, children: [s1, s2, s3]
+          s1 = frame {width: 16px, height: 3px, fill: T.colors.ink}
+          s2 = frame {width: 11px, height: 3px, fill: T.colors.ink}
+          s3 = frame {width: 6px, height: 3px, fill: T.colors.ink}}
+        w = text {contents: "HAULIO", font-family: "Archivo", font-style: "Black", font-size: 20, letter-spacing: 6%, fill: T.colors.ink}}
+      tessel = frame {width: 256px, height: 96px, layout: {direction: .row, align-items: .center, justify-content: .center, item-gap: 10px}, corner-radius: T.radius.card, fill: T.colors.surface, children: [m, w]
+        m = frame {width: 18px, layout: {direction: .row, wrap: .true, item-gap: 2px, line-gap: 2px}, children: [q1, q2, q3, q4]
+          q1 = frame {width: 8px, height: 8px, fill: T.colors.ink}
+          q2 = frame {width: 8px, height: 8px, corner-radius: [0px, 4px, 0px, 0px], fill: T.colors.ink}
+          q3 = frame {width: 8px, height: 8px, corner-radius: [0px, 0px, 0px, 4px], fill: T.colors.ink}
+          q4 = frame {width: 8px, height: 8px, fill: T.colors.ink}}
+        w = text {contents: "Tessel", font-family: "Instrument Serif", font-size: 30, letter-spacing: -1%, fill: T.colors.ink}}
+      pennant = frame {width: 256px, height: 96px, layout: {direction: .row, align-items: .center, justify-content: .center, item-gap: 8px}, corner-radius: T.radius.card, fill: T.colors.surface, children: [m, w]
+        m = frame {width: 14px, height: 18px, children: [pole, flag]
+          pole = frame {left: 0px, top: 0px, width: 2px, height: 18px, fill: T.colors.ink}
+          flag = frame {left: 2px, top: 1px, width: 11px, height: 8px, corner-radius: [0px, 4px, 4px, 0px], fill: T.colors.ink}}
+        w = text {contents: "pennant", font-family: "Geist Mono", font-style: "Medium", font-size: 19, letter-spacing: -2%, fill: T.colors.ink}}
+    }
+  }
+}

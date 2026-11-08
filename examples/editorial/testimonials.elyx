@@ -1,0 +1,72 @@
+// Editorial testimonials: one centered serif pull quote under an oversized oxblood quotation mark, then three short letters in hairline-divided columns.
+// Motion: the quotation mark fades up first, the pull quote unblurs line by line over 600ms ease-out, then the three columns rise 16px, 120ms apart.
+import "editorial/tokens.elyx" as T
+import "editorial/parts.elyx" as P
+
+export testimonials = frame {
+  left: 0px, top: 0px, width: 1440px,
+  fill: T.colors.bg,
+  padding: [T.space.block, T.space.gutter],
+  layout: {direction: .column, align-items: .center, item-gap: T.space.block},
+  children: [folio, pull, letters]
+
+  folio = frame : P.folio {section {contents: "LETTERS TO THE EDITOR"}, page {contents: "MARLOW · NO. 48 · P. 03"}}
+
+  pull = frame {
+    width: 960px,
+    layout: {direction: .column, align-items: .center, item-gap: T.space.group},
+    children: [mark, quote, byline]
+    mark = text {contents: "“", height: 132px, font-family: T.fonts.display, font-size: T.size.glyph, line-height: 1, fill: T.colors.accent}
+    quote = text {
+      contents: "We left three tools and a spreadsheet behind. Our first paid issue covered its own print run in nine days.",
+      width: 100%, align: .center,
+      font-family: T.fonts.display, font-size: T.size.quote, line-height: 1.18, letter-spacing: T.tracking.h3, fill: T.colors.ink,
+      subrange: [{range: [67, 106], font-style: T.weights.italic}]
+    }
+    byline = frame {
+      layout: {direction: .row, align-items: .center, item-gap: 16px},
+      children: [ruleL, who, ruleR]
+      ruleL = frame {width: 32px, height: 1px, fill: T.colors.rule}
+      who = text : P.label {contents: "ADA OKONKWO · EDITOR, UNDERTOW · BRISTOL", subrange: [{range: [0, 11], fill: T.colors.ink}]}
+      ruleR = frame {width: 32px, height: 1px, fill: T.colors.rule}
+    }
+  }
+
+  // Three letters: equal columns, a top rule, vertical hairlines between them.
+  letters = frame {
+    width: 100%,
+    border: {color: T.colors.rule, width: 1px, sides: [.top]},
+    layout: {direction: .row, align-items: .stretch},
+    children: [pantry, kiln, candle]
+
+    pantry = frame {
+      width: 416px, padding: [T.space.group, 40px, 0px, 0px],
+      layout: {direction: .column, justify-content: .space-between, item-gap: 24px},
+      children: [q, by]
+      q = text {contents: "“The editor gets out of the way. I draft, footnote and lay out the issue without leaving the page.”", width: 100%, font-family: T.fonts.body, font-size: T.size.body, line-height: T.leading.body, letter-spacing: T.tracking.body, fill: T.colors.ink}
+      by = frame {layout: {direction: .column, item-gap: 4px}, children: [pub, name]
+        pub = text {contents: "The Pantry Review", font-family: T.fonts.display, font-style: T.weights.italic, font-size: T.size.h3, fill: T.colors.ink}
+        name = text : P.label {contents: "TOMÁS FERREIRA · PORTO"}}
+    }
+    kiln = frame {
+      width: 416px, padding: [T.space.group, 40px, 0px, 40px],
+      border: {color: T.colors.line, width: 1px, sides: [.left]},
+      layout: {direction: .column, justify-content: .space-between, item-gap: 24px},
+      children: [q, by]
+      q = text {contents: "“Members renew at 91%. Nothing else we tried came close, and payouts arrive every Friday.”", width: 100%, font-family: T.fonts.body, font-size: T.size.body, line-height: T.leading.body, letter-spacing: T.tracking.body, fill: T.colors.ink}
+      by = frame {layout: {direction: .column, item-gap: 4px}, children: [pub, name]
+        pub = text {contents: "Kiln", font-family: T.fonts.display, font-style: T.weights.italic, font-size: T.size.h3, fill: T.colors.ink}
+        name = text : P.label {contents: "HANA SATO · KYOTO"}}
+    }
+    candle = frame {
+      width: 416px, padding: [T.space.group, 0px, 0px, 40px],
+      border: {color: T.colors.line, width: 1px, sides: [.left]},
+      layout: {direction: .column, justify-content: .space-between, item-gap: 24px},
+      children: [q, by]
+      q = text {contents: "“Our letters finally look like the print edition, which was the whole point of starting.”", width: 100%, font-family: T.fonts.body, font-size: T.size.body, line-height: T.leading.body, letter-spacing: T.tracking.body, fill: T.colors.ink}
+      by = frame {layout: {direction: .column, item-gap: 4px}, children: [pub, name]
+        pub = text {contents: "Brief Candle", font-family: T.fonts.display, font-style: T.weights.italic, font-size: T.size.h3, fill: T.colors.ink}
+        name = text : P.label {contents: "MARGUERITE HALE · EDINBURGH"}}
+    }
+  }
+}

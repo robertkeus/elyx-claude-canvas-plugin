@@ -1,0 +1,238 @@
+// Hero: a 9-column headline with a 3-column text block hung on its baseline, over a drawn structural elevation and a column of big numbers — the grid is the composition.
+// Motion: headline lines rise 24px and fade, 600ms cubic-bezier(.16,1,.3,1), 100ms stagger; members draw in 700ms, then the red load path traces top to base in 900ms; numbers count up.
+import "swiss/tokens.elyx" as T
+import "swiss/parts.elyx" as P
+
+export hero = frame {
+  left: 0px, top: 0px, width: 1440px, fill: T.colors.bg,
+  padding: [T.space.block, T.space.gutter, T.space.section, T.space.gutter],
+  layout: {direction: .column, item-gap: T.space.block},
+  children: [meta, lead, figure]
+
+  meta = frame : P.sectionHead {
+    overrides: [remove(P.sectionHead.rule)]
+    row {
+      index {contents: "00"}
+      name {contents: "Structural analysis"}
+      aside {contents: "New in 4.2 — P-Delta analysis, released 14 Oct 2026"}
+    }
+  }
+
+  // Headline on cols 1–9; the text block on cols 10–12 sits on the headline's last baseline.
+  lead = frame {
+    width: 100%, layout: {direction: .row, align-items: .end, item-gap: T.space.column-gap}, children: [title, aside]
+    title = text {
+      width: T.grid.c9, contents: "Every member,\nevery load,\none model.",
+      font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.display-xl,
+      line-height: T.leading.display, letter-spacing: T.tracking.display, fill: T.colors.ink
+    }
+    aside = frame {
+      width: T.grid.c3, padding: [0px, 0px, 14px, 0px], layout: {direction: .column, item-gap: T.space.group}, children: [copy, primary, review]
+      copy = text : P.body {width: 100%, fill: T.colors.ink, contents: "Model the frame, run every load case in seconds and share one live result with engineers, architects and the site team."}
+      primary = frame : P.button {width: 100%, layout.justify-content: .space-between}
+      review = text {contents: "Book a 20-minute model review", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.body, underline: .single, fill: T.colors.ink}
+    }
+  }
+
+  figure = frame {
+    width: 100%, layout: {direction: .row, align-items: .stretch, item-gap: T.space.column-gap}, children: [drawing, stats]
+
+    // Fig. 1 — a braced steel frame, elevation A–G, with the wind load path traced in red.
+    drawing = frame {
+      width: T.grid.c9, layout: {direction: .column, item-gap: 16px}, children: [top, plate, caption]
+      top = frame : P.rule {width: 100%}
+      plate = frame {
+        width: 100%, height: 568px,
+        children: [gridlines, bubbles, levels, datums, members, roofPath, b8, b7, b6, b5, b4, b3, b2, b1, r0, r1, r2, r3, r4, r5, r6, r7, r8, hot, supports, ground, winds, w8, w8Label, reaction, reactionLabel, forces]
+
+        // Local sources (not children): a 7-node row on the 132px bay, a 22px grid bubble, the two brace directions.
+        nodeRow = frame {layout: {direction: .row, item-gap: 124px}, children: [n1, n2, n3, n4, n5, n6, n7]
+          n1 = frame : P.node {}
+          n2 = frame : P.node {}
+          n3 = frame : P.node {}
+          n4 = frame : P.node {}
+          n5 = frame : P.node {}
+          n6 = frame : P.node {}
+          n7 = frame : P.node {}
+        }
+        bubble = frame {width: 22px, height: 22px, border: {color: T.colors.ink, width: 1px}, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [letter]
+          letter = text : P.mono {contents: "A"}
+        }
+        braceDown = frame {width: 141.87px, height: 3px, fill: T.colors.accent, transform: [0.93042, -0.36653, 0, 0.36653, 0.93042, 0]}
+        braceUp = frame {width: 141.87px, height: 3px, fill: T.colors.accent, transform: [0.93042, 0.36653, 0, -0.36653, 0.93042, 0]}
+
+        // Gridlines A–G at x = 72 + 132n, tagged by bubbles.
+        gridlines = frame {left: 71.5px, top: 46px, layout: {direction: .row, item-gap: 131px}, children: [g1, g2, g3, g4, g5, g6, g7]
+          g1 = frame {width: 1px, height: 494px, fill: T.colors.line}
+          g2 = frame {width: 1px, height: 494px, fill: T.colors.line}
+          g3 = frame {width: 1px, height: 494px, fill: T.colors.line}
+          g4 = frame {width: 1px, height: 494px, fill: T.colors.line}
+          g5 = frame {width: 1px, height: 494px, fill: T.colors.line}
+          g6 = frame {width: 1px, height: 494px, fill: T.colors.line}
+          g7 = frame {width: 1px, height: 494px, fill: T.colors.line}
+        }
+        bubbles = frame {left: 61px, top: 24px, layout: {direction: .row, item-gap: 110px}, children: [ba, bb, bc, bd, be, bf, bg]
+          ba = frame : bubble {}
+          bb = frame : bubble {letter {contents: "B"}}
+          bc = frame : bubble {letter {contents: "C"}}
+          bd = frame : bubble {letter {contents: "D"}}
+          be = frame : bubble {letter {contents: "E"}}
+          bf = frame : bubble {letter {contents: "F"}}
+          bg = frame : bubble {letter {contents: "G"}}
+        }
+
+        // Levels L8–L0 at y = 100 + 52n.
+        levels = frame {left: 0px, top: 92px, layout: {direction: .column, item-gap: 36px}, children: [l8, l7, l6, l5, l4, l3, l2, l1, l0]
+          l8 = text : P.monoMuted {contents: "L8"}
+          l7 = text : P.monoMuted {contents: "L7"}
+          l6 = text : P.monoMuted {contents: "L6"}
+          l5 = text : P.monoMuted {contents: "L5"}
+          l4 = text : P.monoMuted {contents: "L4"}
+          l3 = text : P.monoMuted {contents: "L3"}
+          l2 = text : P.monoMuted {contents: "L2"}
+          l1 = text : P.monoMuted {contents: "L1"}
+          l0 = text : P.monoMuted {contents: "L0"}
+        }
+        datums = frame {left: 28px, top: 99.5px, layout: {direction: .column, item-gap: 51px}, children: [d8, d7, d6]
+          d8 = frame {width: 247px, height: 1px, fill: T.colors.line}
+          d7 = frame {width: 247px, height: 1px, fill: T.colors.line}
+          d6 = frame {width: 247px, height: 1px, fill: T.colors.line}
+        }
+
+        // Members, 1.5px ink: columns A–B stop at L5 (the setback), C–G run to the roof.
+        members = frame {left: 0px, top: 0px, width: 1002px, height: 568px, children: [cA, cB, cC, cD, cE, cF, cG, f0, f1, f2, f3, f4, f5, f6, f7, f8]
+          cA = frame {left: 71.25px, top: 256px, width: 1.5px, height: 260px, fill: T.colors.ink}
+          cB = frame {left: 203.25px, top: 256px, width: 1.5px, height: 260px, fill: T.colors.ink}
+          cC = frame {left: 335.25px, top: 100px, width: 1.5px, height: 416px, fill: T.colors.ink}
+          cD = frame {left: 467.25px, top: 100px, width: 1.5px, height: 416px, fill: T.colors.ink}
+          cE = frame {left: 599.25px, top: 100px, width: 1.5px, height: 416px, fill: T.colors.ink}
+          cF = frame {left: 731.25px, top: 100px, width: 1.5px, height: 416px, fill: T.colors.ink}
+          cG = frame {left: 863.25px, top: 100px, width: 1.5px, height: 416px, fill: T.colors.ink}
+          f0 = frame {left: 72px, top: 515.25px, width: 792px, height: 1.5px, fill: T.colors.ink}
+          f1 = frame {left: 72px, top: 463.25px, width: 792px, height: 1.5px, fill: T.colors.ink}
+          f2 = frame {left: 72px, top: 411.25px, width: 792px, height: 1.5px, fill: T.colors.ink}
+          f3 = frame {left: 72px, top: 359.25px, width: 792px, height: 1.5px, fill: T.colors.ink}
+          f4 = frame {left: 72px, top: 307.25px, width: 792px, height: 1.5px, fill: T.colors.ink}
+          f5 = frame {left: 72px, top: 255.25px, width: 792px, height: 1.5px, fill: T.colors.ink}
+          f6 = frame {left: 336px, top: 203.25px, width: 528px, height: 1.5px, fill: T.colors.ink}
+          f7 = frame {left: 336px, top: 151.25px, width: 528px, height: 1.5px, fill: T.colors.ink}
+          f8 = frame {left: 336px, top: 99.25px, width: 528px, height: 1.5px, fill: T.colors.ink}
+        }
+
+        // The load path: wind enters at C/L8, runs along the roof beam to F, then zigzags down the braced bay F–G.
+        roofPath = frame {left: 336px, top: 98.5px, width: 396px, height: 3px, fill: T.colors.accent}
+        b8 = frame : braceDown {left: 732.55px, top: 98.6px}
+        b7 = frame : braceUp {left: 731.45px, top: 202.6px}
+        b6 = frame : braceDown {left: 732.55px, top: 202.6px}
+        b5 = frame : braceUp {left: 731.45px, top: 306.6px}
+        b4 = frame : braceDown {left: 732.55px, top: 306.6px}
+        b3 = frame : braceUp {left: 731.45px, top: 410.6px}
+        b2 = frame : braceDown {left: 732.55px, top: 410.6px}
+        b1 = frame : braceUp {left: 731.45px, top: 514.6px}
+
+        // Nodes, centered on every intersection; the setback rows drop A and B.
+        r0 = frame : nodeRow {left: 68px, top: 512px}
+        r1 = frame : nodeRow {left: 68px, top: 460px}
+        r2 = frame : nodeRow {left: 68px, top: 408px}
+        r3 = frame : nodeRow {left: 68px, top: 356px}
+        r4 = frame : nodeRow {left: 68px, top: 304px}
+        r5 = frame : nodeRow {left: 68px, top: 252px}
+        r6 = frame : nodeRow {left: 332px, top: 200px, overrides: [remove(nodeRow.n1), remove(nodeRow.n2)]}
+        r7 = frame : nodeRow {left: 332px, top: 148px, overrides: [remove(nodeRow.n1), remove(nodeRow.n2)]}
+        r8 = frame : nodeRow {left: 332px, top: 96px, overrides: [remove(nodeRow.n1), remove(nodeRow.n2)]}
+        hot = frame {left: 0px, top: 0px, width: 1002px, height: 568px, children: [h1, h2, h3, h4, h5, h6, h7, h8, h9, h10]
+          h1 = frame : P.nodeHot {left: 332px, top: 96px}
+          h2 = frame : P.nodeHot {left: 728px, top: 96px}
+          h3 = frame : P.nodeHot {left: 860px, top: 148px}
+          h4 = frame : P.nodeHot {left: 728px, top: 200px}
+          h5 = frame : P.nodeHot {left: 860px, top: 252px}
+          h6 = frame : P.nodeHot {left: 728px, top: 304px}
+          h7 = frame : P.nodeHot {left: 860px, top: 356px}
+          h8 = frame : P.nodeHot {left: 728px, top: 408px}
+          h9 = frame : P.nodeHot {left: 860px, top: 460px}
+          h10 = frame : P.nodeHot {left: 728px, top: 512px}
+        }
+
+        // Fixed supports and the ground.
+        supports = frame {left: 64px, top: 520px, layout: {direction: .row, item-gap: 116px}, children: [s1, s2, s3, s4, s5, s6, s7]
+          s1 = frame {width: 16px, height: 6px, fill: T.colors.ink}
+          s2 = frame {width: 16px, height: 6px, fill: T.colors.ink}
+          s3 = frame {width: 16px, height: 6px, fill: T.colors.ink}
+          s4 = frame {width: 16px, height: 6px, fill: T.colors.ink}
+          s5 = frame {width: 16px, height: 6px, fill: T.colors.ink}
+          s6 = frame {width: 16px, height: 6px, fill: T.colors.ink}
+          s7 = frame {width: 16px, height: 6px, fill: T.colors.ink}
+        }
+        ground = frame {left: 24px, top: 526px, width: 888px, height: 10px, fill: T.colors.surface, border: {color: T.colors.ink, width: 1px}}
+
+        // Wind on the windward face; the roof load starts the red path.
+        winds = frame {left: 0px, top: 0px, width: 1002px, height: 568px, children: [w7, w6, w5, w4, w3, w2, w1]
+          w7 = frame : P.loadRight {left: 275px, top: 147.5px, shaft {width: 50px}}
+          w6 = frame : P.loadRight {left: 275px, top: 199.5px, shaft {width: 50px}}
+          w5 = frame : P.loadRight {left: 31px, top: 251.5px}
+          w4 = frame : P.loadRight {left: 31px, top: 303.5px}
+          w3 = frame : P.loadRight {left: 31px, top: 355.5px}
+          w2 = frame : P.loadRight {left: 31px, top: 407.5px}
+          w1 = frame : P.loadRight {left: 31px, top: 459.5px}
+        }
+        w8 = frame : P.loadRightHot {left: 275px, top: 95.5px, shaft {width: 50px}}
+        w8Label = text : P.mono {left: 275px, top: 72px, contents: "W8  38 kN"}
+        reaction = frame : P.loadLeftHot {left: 732px, top: 547.5px}
+        reactionLabel = text : P.mono {left: 784px, top: 544px, contents: "H  252 kN"}
+
+        // Brace forces, one per storey, set as a mono schedule in the right margin.
+        forces = frame {left: 888px, top: 74px, layout: {direction: .column, item-gap: 36px}, children: [fh, f8, f7, f6, f5, f4, f3, f2, f1]
+          fh = text : P.monoMuted {contents: "Axial"}
+          f8 = text : P.mono {contents: "BR8   41 kN"}
+          f7 = text : P.mono {contents: "BR7   80 kN"}
+          f6 = text : P.mono {contents: "BR6  117 kN"}
+          f5 = text : P.mono {contents: "BR5  153 kN"}
+          f4 = text : P.mono {contents: "BR4  187 kN"}
+          f3 = text : P.mono {contents: "BR3  218 kN"}
+          f2 = text : P.mono {contents: "BR2  248 kN"}
+          f1 = text : P.mono {contents: "BR1  274 kN"}
+        }
+      }
+      caption = frame {
+        width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [note, legend]
+        note = text : P.monoMuted {contents: "Fig. 1 — Elevation 2, grid A–G · LC3: 1.0 G + 1.5 W, wind +X · 1:200"}
+        legend = frame {layout: {direction: .row, align-items: .center, item-gap: 20px}, children: [k1, k2, k3]
+          k1 = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [sw1, t1]
+            sw1 = frame {width: 16px, height: 3px, fill: T.colors.accent}
+            t1 = text : P.mono {contents: "Load path"}
+          }
+          k2 = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [sw2, t2]
+            sw2 = frame {width: 16px, height: 1.5px, fill: T.colors.ink}
+            t2 = text : P.mono {contents: "Member"}
+          }
+          k3 = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [sw3, t3]
+            sw3 = frame : P.node {}
+            t3 = text : P.mono {contents: "Node"}
+          }
+        }
+      }
+    }
+
+    // Three big numbers on cols 10–12, each under its own rule.
+    stats = frame {
+      width: T.grid.c3, layout: {direction: .column, justify-content: .space-between}, children: [solve, firms, rounds]
+      stat = frame {width: 100%, layout: {direction: .column, item-gap: 12px}, children: [rule, index, value, note]
+        rule = frame : P.rule {width: 100%}
+        index = text : P.monoMuted {contents: "(a) Solve time"}
+        value = text : P.stat {contents: "3.8s"}
+        note = text : P.body {width: 100%, contents: "for all 14 load cases on a 32-storey steel frame."}
+      }
+      solve = frame : stat {}
+      firms = frame : stat {
+        index {contents: "(b) In practice"}
+        value {contents: "214"}
+        note {contents: "engineering firms run live projects in Gridform."}
+      }
+      rounds = frame : stat {
+        index {contents: "(c) Review rounds"}
+        value {contents: "−61%"}
+        note {contents: "between structural and architectural teams."}
+      }
+    }
+  }
+}

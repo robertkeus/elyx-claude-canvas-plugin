@@ -1,0 +1,236 @@
+// Features: a two-row bento of pastel cards (wide/narrow, then narrow/wide), each with its own drawn mini UI with real data.
+// Motion: cards rise 32px and fade in 600ms ease-out, staggered 120ms; mini UIs fill in after (bars grow from 0, 500ms); cards lift 4px with a deeper shadow on 200ms hover.
+import "soft/tokens.elyx" as T
+import "soft/parts.elyx" as P
+import "soft/art/star.svg" as starGlyph
+import "icons/moon.svg" as moonIcon
+import "icons/sparkles.svg" as sparkIcon
+
+export features = frame {
+  left: 0px, top: 0px, width: 1440px,
+  padding: [T.space.half, T.space.gutter], fill: T.colors.bg,
+  layout: {direction: .column, item-gap: T.space.block},
+  children: [header, bento]
+
+  header = frame {width: 100%, layout: {direction: .row, justify-content: .space-between, align-items: .end}, children: [headline, intro]
+    headline = frame {layout: {direction: .column, item-gap: 20px}, children: [badge, title]
+      badge = frame : P.eyebrow {dot {fill[0].color: T.colors.mint}, label {contents: "What's inside"}}
+      title = text : P.h2Text {width: 640px, contents: "Small steps for every school night"}}
+    intro = text : P.bodyText {width: 440px, contents: "Four tools, one calm week view. Students plan and focus; parents see the big picture without the nightly questions."}
+  }
+
+  // Cards pad 40px on three sides; each white panel runs past the card's bottom edge and is clipped there.
+  bento = frame {width: 100%, layout: {direction: .column, item-gap: 24px}, children: [rowOne, rowTwo]
+    rowOne = frame {width: 100%, layout: {direction: .row, item-gap: 24px}, children: [plannerCard, timerCard]
+
+      // 1. Weekly planner: five evenings with subject-coloured blocks.
+      plannerCard = frame {width: 752px, height: 480px, padding: [40px, 40px, 0px, 40px], corner-radius: T.radius.panel, fill: T.colors.mint-soft, layout: {direction: .column, item-gap: 32px}, children: [plannerCopy, weekPanel]
+        plannerCopy = frame {layout: {direction: .column, item-gap: 10px}, children: [plannerTitle, plannerBody]
+          plannerTitle = text : P.h3Text {contents: "A week you can actually see"}
+          plannerBody = text : P.bodyText {width: 440px, fill: T.colors.ink-soft, contents: "Drop assignments onto evenings. Big projects break into small chunks, so Thursday never piles up."}}
+        weekPanel = frame {width: 100%, height: 360px, padding: 20px, corner-radius: T.radius.card, fill: T.colors.surface, shadow: T.shadow.card, layout: {direction: .column, item-gap: 16px}, children: [weekHead, weekGrid, nudge]
+          weekHead = frame {width: 100%, layout: {direction: .row, justify-content: .space-between, align-items: .center}, children: [weekTitle, weekTotal]
+            weekTitle = text : P.uiText {contents: "Week of 13 October"}
+            weekTotal = frame : P.chip {fill[0].color: T.colors.mint-soft, label {contents: "8 tasks · 3 h 10 min"}}}
+          weekGrid = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [mon, tue, wed, thu, fri]
+            mon = frame {width: 116px, layout: {direction: .column, item-gap: 8px}, children: [monHead, monA, monB]
+              monHead = frame {width: 100%, padding: [6px, 10px], layout: {direction: .row}, children: [monLabel]
+                monLabel = text : P.microText {contents: "Mon 13"}}
+              monA = frame {width: 100%, padding: [10px, 10px], corner-radius: T.radius.chip, fill: T.colors.mint, layout: {direction: .column, item-gap: 2px}, children: [monASubject, monATask]
+                monASubject = text : P.microText {contents: "Maths", font-style: T.weights.strong, fill: T.colors.ink}
+                monATask = text : P.microText {contents: "Algebra · 30 min", fill: T.colors.ink-soft}}
+              monB = frame {width: 100%, padding: [10px, 10px], corner-radius: T.radius.chip, fill: T.colors.pink, layout: {direction: .column, item-gap: 2px}, children: [monBSubject, monBTask]
+                monBSubject = text : P.microText {contents: "English", font-style: T.weights.strong, fill: T.colors.ink}
+                monBTask = text : P.microText {contents: "Read ch. 5 · 20 min", fill: T.colors.ink-soft}}}
+            tue = frame {width: 116px, layout: {direction: .column, item-gap: 8px}, children: [tueHead, tueA, tueB]
+              tueHead = frame {width: 100%, padding: [6px, 10px], corner-radius: T.radius.pill, fill: T.colors.deep, layout: {direction: .row, justify-content: .space-between}, children: [tueLabel, tueNow]
+                tueLabel = text : P.microText {contents: "Tue 14", font-style: T.weights.strong, fill: T.colors.on-deep}
+                tueNow = text : P.microText {contents: "Today", fill: T.colors.on-deep}}
+              tueA = frame {width: 100%, padding: [10px, 10px], corner-radius: T.radius.chip, fill: T.colors.sky, layout: {direction: .column, item-gap: 2px}, children: [tueASubject, tueATask]
+                tueASubject = text : P.microText {contents: "Science", font-style: T.weights.strong, fill: T.colors.ink}
+                tueATask = text : P.microText {contents: "Plant cell · 15 min", fill: T.colors.ink-soft}}
+              tueB = frame {width: 100%, padding: [10px, 10px], corner-radius: T.radius.chip, fill: T.colors.mint, layout: {direction: .column, item-gap: 2px}, children: [tueBSubject, tueBTask]
+                tueBSubject = text : P.microText {contents: "Maths", font-style: T.weights.strong, fill: T.colors.ink}
+                tueBTask = text : P.microText {contents: "Fractions · 25 min", fill: T.colors.ink-soft}}}
+            wed = frame {width: 116px, layout: {direction: .column, item-gap: 8px}, children: [wedHead, wedA]
+              wedHead = frame {width: 100%, padding: [6px, 10px], layout: {direction: .row}, children: [wedLabel]
+                wedLabel = text : P.microText {contents: "Wed 15"}}
+              wedA = frame {width: 100%, padding: [10px, 10px], corner-radius: T.radius.chip, fill: T.colors.butter, layout: {direction: .column, item-gap: 2px}, children: [wedASubject, wedATask]
+                wedASubject = text : P.microText {contents: "History", font-style: T.weights.strong, fill: T.colors.ink}
+                wedATask = text : P.microText {contents: "Essay plan · 30 min", fill: T.colors.ink-soft}}}
+            thu = frame {width: 116px, layout: {direction: .column, item-gap: 8px}, children: [thuHead, thuA, thuB]
+              thuHead = frame {width: 100%, padding: [6px, 10px], layout: {direction: .row}, children: [thuLabel]
+                thuLabel = text : P.microText {contents: "Thu 16"}}
+              thuA = frame {width: 100%, padding: [10px, 10px], corner-radius: T.radius.chip, fill: T.colors.peach, layout: {direction: .column, item-gap: 2px}, children: [thuASubject, thuATask]
+                thuASubject = text : P.microText {contents: "Project 1 of 3", font-style: T.weights.strong, fill: T.colors.ink}
+                thuATask = text : P.microText {contents: "Volcano · 40 min", fill: T.colors.ink-soft}}
+              thuB = frame {width: 100%, padding: [10px, 10px], corner-radius: T.radius.chip, fill: T.colors.pink, layout: {direction: .column, item-gap: 2px}, children: [thuBSubject, thuBTask]
+                thuBSubject = text : P.microText {contents: "French", font-style: T.weights.strong, fill: T.colors.ink}
+                thuBTask = text : P.microText {contents: "Vocab quiz · 10 min", fill: T.colors.ink-soft}}}
+            fri = frame {width: 116px, layout: {direction: .column, item-gap: 8px}, children: [friHead, friA]
+              friHead = frame {width: 100%, padding: [6px, 10px], layout: {direction: .row}, children: [friLabel]
+                friLabel = text : P.microText {contents: "Fri 17"}}
+              friA = frame {width: 100%, height: 92px, padding: [8px, 10px], corner-radius: T.radius.chip, border: {color: T.colors.faint, width: 1.5px, dash: [5px, 4px]}, layout: {direction: .column, justify-content: .center, align-items: .center, item-gap: 2px}, children: [friATitle, friANote]
+                friATitle = text : P.microText {contents: "Free evening", font-style: T.weights.strong, fill: T.colors.ink}
+                friANote = text : P.microText {contents: "Nothing due", fill: T.colors.muted}}}}
+          nudge = frame {width: 100%, padding: [8px, 8px, 8px, 14px], corner-radius: T.radius.pill, fill: T.colors.bg, layout: {direction: .row, justify-content: .space-between, align-items: .center}, children: [nudgeText, nudgeAction]
+            nudgeText = frame {layout: {direction: .row, align-items: .center, item-gap: 10px}, children: [nudgeIcon, nudgeLine]
+              nudgeIcon = asset {width: 16px, height: 16px, contents: sparkIcon, fill: T.colors.ink}
+              nudgeLine = text : P.uiText {font-style: T.weights.medium, contents: "Thursday looks busy. Move the French quiz to Wednesday?"}}
+            nudgeAction = frame {height: 30px, padding: [0px, 14px], corner-radius: T.radius.pill, fill: T.colors.deep, layout: {direction: .row, align-items: .center}, children: [nudgeLabel]
+              nudgeLabel = text : P.microText {contents: "Move it", font-style: T.weights.strong, fill: T.colors.on-deep}}}}}
+
+      // 2. Focus timer: tonight's sprints as a segmented track, plus quiet mode.
+      timerCard = frame {width: 504px, height: 480px, padding: [40px, 40px, 0px, 40px], corner-radius: T.radius.panel, fill: T.colors.sky-soft, layout: {direction: .column, item-gap: 32px}, children: [timerCopy, focusPanel]
+        timerCopy = frame {layout: {direction: .column, item-gap: 10px}, children: [timerTitle, timerBody]
+          timerTitle = text : P.h3Text {contents: "Focus in 25-minute sprints"}
+          timerBody = text : P.bodyText {width: 400px, fill: T.colors.ink-soft, contents: "A timer with breaks built in. Notifications wait until the sprint is over."}}
+        focusPanel = frame {width: 100%, height: 360px, padding: 20px, corner-radius: T.radius.card, fill: T.colors.surface, shadow: T.shadow.card, layout: {direction: .column, item-gap: 14px}, children: [focusStat, lengths, track, trackTimes, quiet]
+          focusStat = frame {width: 100%, layout: {direction: .row, justify-content: .space-between, align-items: .end}, children: [focusNumber, focusDelta]
+            focusNumber = frame {layout: {direction: .column, item-gap: 0px}, children: [focusMinutes, focusLabel]
+              focusMinutes = text : P.displayText {contents: "52 min", font-size: T.size.stat, letter-spacing: T.tracking.h2}
+              focusLabel = text : P.microText {contents: "focused tonight"}}
+            focusDelta = frame : P.chip {label {contents: "+12 min vs. last week"}}}
+          lengths = frame {padding: 3px, corner-radius: T.radius.pill, fill: T.colors.bg, layout: {direction: .row, item-gap: 2px}, children: [len15, len25, len40]
+            len15 = frame {padding: [5px, 12px], corner-radius: T.radius.pill, layout: {direction: .row}, children: [len15Label]
+              len15Label = text : P.microText {contents: "15 min"}}
+            len25 = frame {padding: [5px, 12px], corner-radius: T.radius.pill, fill: T.colors.surface, shadow: T.shadow.card, layout: {direction: .row}, children: [len25Label]
+              len25Label = text : P.microText {contents: "25 min", font-style: T.weights.strong, fill: T.colors.ink}}
+            len40 = frame {padding: [5px, 12px], corner-radius: T.radius.pill, layout: {direction: .row}, children: [len40Label]
+              len40Label = text : P.microText {contents: "40 min"}}}
+          track = frame {width: 100%, height: 44px, layout: {direction: .row, item-gap: 8px}, children: [sprintOne, breakOne, sprintTwo, breakTwo]
+            sprintOne = frame {width: 141px, height: 100%, padding: [0px, 12px], corner-radius: T.radius.chip, fill: T.colors.deep, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [sprintOneLabel, sprintOneDone]
+              sprintOneLabel = text : P.microText {contents: "Sprint 1", font-style: T.weights.strong, fill: T.colors.on-deep}
+              sprintOneDone = text : P.microText {contents: "Done", fill: T.colors.on-deep}}
+            breakOne = frame {width: 38px, height: 100%, corner-radius: T.radius.chip, fill: T.colors.sky, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [breakOneLabel]
+              breakOneLabel = text : P.microText {contents: "5", font-style: T.weights.strong, fill: T.colors.ink}}
+            // The one accent moment in this card: the sprint in progress.
+            sprintTwo = frame {width: 141px, height: 100%, corner-radius: T.radius.chip, fill: T.colors.accent-soft, children: [sprintTwoFill, sprintTwoLabel, sprintTwoLeft]
+              sprintTwoFill = frame {left: 0px, top: 0px, width: 62%, height: 100%, corner-radius: T.radius.chip, fill: T.colors.accent}
+              sprintTwoLabel = text : P.microText {left: 12px, top: 15px, contents: "Sprint 2", font-style: T.weights.strong, fill: T.colors.on-accent}
+              sprintTwoLeft = text : P.microText {right: 10px, top: 15px, contents: "9 min", font-style: T.weights.strong, fill: T.colors.accent-deep}}
+            breakTwo = frame {width: 38px, height: 100%, corner-radius: T.radius.chip, border: {color: T.colors.line, width: 1.5px, dash: [4px, 3px]}}}
+          trackTimes = frame {width: 100%, layout: {direction: .row, item-gap: 8px}, children: [timeOne, timeTwo, timeThree, timeFour]
+            timeOne = text : P.microText {width: 141px, contents: "4:30 pm"}
+            timeTwo = text : P.microText {width: 38px, contents: "4:55"}
+            timeThree = text : P.microText {width: 141px, contents: "5:00 pm"}
+            timeFour = text : P.microText {width: 38px, contents: "5:25"}}
+          quiet = frame {width: 100%, padding: [12px, 14px], corner-radius: 16px, fill: T.colors.bg, layout: {direction: .row, justify-content: .space-between, align-items: .center}, children: [quietText, toggle]
+            quietText = frame {layout: {direction: .row, align-items: .center, item-gap: 10px}, children: [quietIcon, quietLines]
+              quietIcon = asset {width: 18px, height: 18px, contents: moonIcon, fill: T.colors.ink}
+              quietLines = frame {layout: {direction: .column, item-gap: 1px}, children: [quietTitle, quietNote]
+                quietTitle = text : P.uiText {contents: "Quiet mode is on"}
+                quietNote = text : P.microText {contents: "3 messages held until 5:25"}}}
+            toggle = frame {width: 44px, height: 26px, padding: 3px, corner-radius: T.radius.pill, fill: T.colors.deep, layout: {direction: .row, justify-content: .end}, children: [knob]
+              knob = frame {width: 20px, height: 20px, corner-radius: T.radius.pill, fill: T.colors.surface}}}}}
+    }
+
+    rowTwo = frame {width: 100%, layout: {direction: .row, item-gap: 24px}, children: [parentCard, gradesCard]
+
+      // 3. Parent summary: one weekly note, with this section's sticker.
+      parentCard = frame {width: 504px, height: 480px, padding: [40px, 40px, 0px, 40px], corner-radius: T.radius.panel, fill: T.colors.peach-soft, layout: {direction: .column, item-gap: 32px}, children: [parentCopy, summaryPanel, favSticker]
+        parentCopy = frame {layout: {direction: .column, item-gap: 10px}, children: [parentTitle, parentBody]
+          parentTitle = text : P.h3Text {contents: "A calm Sunday summary"}
+          parentBody = text : P.bodyText {width: 400px, fill: T.colors.ink-soft, contents: "No live tracking, no nagging. One note a week shows what got done and what is coming up."}}
+        summaryPanel = frame {width: 100%, height: 360px, padding: 20px, corner-radius: T.radius.card, fill: T.colors.surface, shadow: T.shadow.card, layout: {direction: .column, item-gap: 16px}, children: [summaryHead, summaryResult, minutesChart, comingUp]
+          summaryHead = frame {layout: {direction: .row, align-items: .center, item-gap: 10px}, children: [samFace, samLines]
+            samFace = frame : P.avatar {width: 36px, height: 36px, fill[0].color: T.colors.sky, initials {contents: "SB", font-size: T.size.micro}}
+            samLines = frame {layout: {direction: .column, item-gap: 1px}, children: [samTitle, samMeta]
+              samTitle = text : P.uiText {contents: "Sunday summary for Sam"}
+              samMeta = text : P.microText {contents: "Year 8 · Sunday 19 October"}}}
+          summaryResult = frame {width: 100%, layout: {direction: .row, justify-content: .space-between, align-items: .center}, children: [resultLine, resultNote]
+            resultLine = text : P.h3Text {contents: "9 of 11 tasks done"}
+            resultNote = text : P.microText {contents: "2 moved to Monday"}}
+          minutesChart = frame {width: 100%, layout: {direction: .row, justify-content: .space-between, align-items: .end}, children: [cMon, cTue, cWed, cThu, cFri, cSat, cSun]
+            cMon = frame {width: 40px, layout: {direction: .column, align-items: .center, item-gap: 6px}, children: [cMonBar, cMonDay]
+              cMonBar = frame {width: 100%, height: 58px, corner-radius: 8px, fill: T.colors.peach}
+              cMonDay = text : P.microText {contents: "M"}}
+            cTue = frame {width: 40px, layout: {direction: .column, align-items: .center, item-gap: 6px}, children: [cTueBar, cTueDay]
+              cTueBar = frame {width: 100%, height: 72px, corner-radius: 8px, fill: T.colors.peach}
+              cTueDay = text : P.microText {contents: "T"}}
+            cWed = frame {width: 40px, layout: {direction: .column, align-items: .center, item-gap: 6px}, children: [cWedBar, cWedDay]
+              cWedBar = frame {width: 100%, height: 30px, corner-radius: 8px, fill: T.colors.peach}
+              cWedDay = text : P.microText {contents: "W"}}
+            cThu = frame {width: 40px, layout: {direction: .column, align-items: .center, item-gap: 6px}, children: [cThuBar, cThuDay]
+              cThuBar = frame {width: 100%, height: 80px, corner-radius: 8px, fill: T.colors.peach}
+              cThuDay = text : P.microText {contents: "T"}}
+            cFri = frame {width: 40px, layout: {direction: .column, align-items: .center, item-gap: 6px}, children: [cFriBar, cFriDay]
+              cFriBar = frame {width: 100%, height: 40px, corner-radius: 8px, fill: T.colors.peach}
+              cFriDay = text : P.microText {contents: "F"}}
+            cSat = frame {width: 40px, layout: {direction: .column, align-items: .center, item-gap: 6px}, children: [cSatBar, cSatDay]
+              cSatBar = frame {width: 100%, height: 12px, corner-radius: 8px, fill: T.colors.peach}
+              cSatDay = text : P.microText {contents: "S"}}
+            cSun = frame {width: 40px, layout: {direction: .column, align-items: .center, item-gap: 6px}, children: [cSunBar, cSunDay]
+              cSunBar = frame {width: 100%, height: 6px, corner-radius: 8px, fill: T.colors.line}
+              cSunDay = text : P.microText {contents: "S"}}}
+          comingUp = frame {width: 100%, padding: [10px, 12px], corner-radius: 14px, fill: T.colors.butter-soft, layout: {direction: .row, align-items: .center, item-gap: 10px}, children: [comingTag, comingText]
+            comingTag = frame : P.chip {fill[0].color: T.colors.butter, label {contents: "History"}}
+            comingText = text : P.uiText {contents: "Essay due Friday 24 October"}}}
+        favSticker = frame : P.sticker {ignore-stack: .true, left: 282px, top: 150px, fill[0].color: T.colors.pink,
+          transform: [0.9925, -0.1219, 0, 0.1219, 0.9925, 0],
+          disc {pic {contents: starGlyph}}
+          label {contents: "Parents' pick"}}
+      }
+
+      // 4. Grade tracker: subject progress beside a six-week score chart.
+      gradesCard = frame {width: 752px, height: 480px, padding: [40px, 40px, 0px, 40px], corner-radius: T.radius.panel, fill: T.colors.butter-soft, layout: {direction: .column, item-gap: 32px}, children: [gradesCopy, gradesPanel]
+        gradesCopy = frame {layout: {direction: .column, item-gap: 10px}, children: [gradesTitle, gradesBody]
+          gradesTitle = text : P.h3Text {contents: "See grades rise, not just due dates"}
+          gradesBody = text : P.bodyText {width: 460px, fill: T.colors.ink-soft, contents: "Log a quiz score in two taps. Kitebook shows which subjects are climbing and which need one more evening."}}
+        gradesPanel = frame {width: 100%, height: 360px, padding: 24px, corner-radius: T.radius.card, fill: T.colors.surface, shadow: T.shadow.card, layout: {direction: .row, item-gap: 32px}, children: [subjects, scoreChart]
+          subjects = frame {width: 264px, layout: {direction: .column, item-gap: 16px}, children: [subjectsHead, maths, english, science, french]
+            subjectsHead = frame {layout: {direction: .column, item-gap: 1px}, children: [termTitle, termMeta]
+              termTitle = text : P.uiText {contents: "Autumn term"}
+              termMeta = text : P.microText {contents: "Since 1 September"}}
+            maths = frame {width: 100%, layout: {direction: .column, item-gap: 8px}, children: [mathsRow, mathsTrack]
+              mathsRow = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [mathsName, mathsGrade]
+                mathsName = text : P.uiText {contents: "Maths"}
+                mathsGrade = text : P.uiText {contents: "B → A−"}}
+              mathsTrack = frame {width: 100%, height: 8px, corner-radius: T.radius.pill, fill: T.colors.line, layout: {direction: .row}, children: [mathsFill]
+                mathsFill = frame {width: 86%, height: 100%, corner-radius: T.radius.pill, fill: T.colors.mint}}}
+            english = frame {width: 100%, layout: {direction: .column, item-gap: 8px}, children: [englishRow, englishTrack]
+              englishRow = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [englishName, englishGrade]
+                englishName = text : P.uiText {contents: "English"}
+                englishGrade = text : P.uiText {contents: "C+ → B+"}}
+              englishTrack = frame {width: 100%, height: 8px, corner-radius: T.radius.pill, fill: T.colors.line, layout: {direction: .row}, children: [englishFill]
+                englishFill = frame {width: 79%, height: 100%, corner-radius: T.radius.pill, fill: T.colors.pink}}}
+            science = frame {width: 100%, layout: {direction: .column, item-gap: 8px}, children: [scienceRow, scienceTrack]
+              scienceRow = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [scienceName, scienceGrade]
+                scienceName = text : P.uiText {contents: "Science"}
+                scienceGrade = text : P.uiText {contents: "A− → A−"}}
+              scienceTrack = frame {width: 100%, height: 8px, corner-radius: T.radius.pill, fill: T.colors.line, layout: {direction: .row}, children: [scienceFill]
+                scienceFill = frame {width: 84%, height: 100%, corner-radius: T.radius.pill, fill: T.colors.sky}}}
+            french = frame {width: 100%, layout: {direction: .column, item-gap: 8px}, children: [frenchRow, frenchTrack]
+              frenchRow = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [frenchName, frenchGrade]
+                frenchName = text : P.uiText {contents: "French"}
+                frenchGrade = text : P.uiText {contents: "C → C+"}}
+              frenchTrack = frame {width: 100%, height: 8px, corner-radius: T.radius.pill, fill: T.colors.line, layout: {direction: .row}, children: [frenchFill]
+                frenchFill = frame {width: 64%, height: 100%, corner-radius: T.radius.pill, fill: T.colors.peach}}}}
+          // Bars map score to height: (score − 40) × 2.5px, so the 150px plot spans 40–100%.
+          scoreChart = frame {width: 100%, layout: {direction: .column, item-gap: 12px}, children: [chartHead, plot, weeks]
+            chartHead = frame {width: 100%, layout: {direction: .row, justify-content: .space-between, align-items: .center}, children: [chartTitle, chartDelta]
+              chartTitle = frame {layout: {direction: .column, item-gap: 0px}, children: [chartLabel, chartValue]
+                chartLabel = text : P.microText {contents: "Average quiz score"}
+                chartValue = text : P.h3Text {contents: "84%"}}
+              chartDelta = frame : P.chip {label {contents: "+16 pts since week 1"}}}
+            plot = frame {width: 100%, height: 150px, children: [grid100, grid80, grid60, bars]
+              grid100 = frame {left: 0px, top: 0px, width: 100%, height: 1px, fill: T.colors.line}
+              grid80 = frame {left: 0px, top: 50px, width: 100%, height: 1px, fill: T.colors.line}
+              grid60 = frame {left: 0px, top: 100px, width: 100%, height: 1px, fill: T.colors.line}
+              bars = frame {left: 0px, top: 0px, width: 100%, height: 150px, padding: [0px, 6px], layout: {direction: .row, justify-content: .space-between, align-items: .end}, children: [w1, w2, w3, w4, w5, w6]
+                w1 = frame {width: 36px, height: 70px, corner-radius: [10px, 10px, 4px, 4px], fill: T.colors.butter}
+                w2 = frame {width: 36px, height: 78px, corner-radius: [10px, 10px, 4px, 4px], fill: T.colors.butter}
+                w3 = frame {width: 36px, height: 75px, corner-radius: [10px, 10px, 4px, 4px], fill: T.colors.butter}
+                w4 = frame {width: 36px, height: 90px, corner-radius: [10px, 10px, 4px, 4px], fill: T.colors.butter}
+                w5 = frame {width: 36px, height: 100px, corner-radius: [10px, 10px, 4px, 4px], fill: T.colors.butter}
+                w6 = frame {width: 36px, height: 110px, corner-radius: [10px, 10px, 4px, 4px], fill: T.colors.deep}}}
+            weeks = frame {width: 100%, padding: [0px, 6px], layout: {direction: .row, justify-content: .space-between}, children: [l1, l2, l3, l4, l5, l6]
+              l1 = text : P.microText {width: 36px, align: .center, contents: "Wk 1"}
+              l2 = text : P.microText {width: 36px, align: .center, contents: "Wk 2"}
+              l3 = text : P.microText {width: 36px, align: .center, contents: "Wk 3"}
+              l4 = text : P.microText {width: 36px, align: .center, contents: "Wk 4"}
+              l5 = text : P.microText {width: 36px, align: .center, contents: "Wk 5"}
+              l6 = text : P.microText {width: 36px, align: .center, contents: "Wk 6", font-style: T.weights.strong, fill: T.colors.ink}}}}}
+    }
+  }
+}

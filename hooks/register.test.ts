@@ -43,6 +43,8 @@ test('a request goes to Claude, even one that ends in a file name', async ($, on
   expect(sent).toHaveLength(1)
   expect(sent[0]).toStartWith('Do this with Elyx: export the tokens of a.elyx')
   expect(sent[0]).toContain('elyx --help')
+  expect(sent[0]).toContain('/examples/index.json')
+  expect(sent[0]).toContain('elyx-canvas:improve')
 })
 
 test('the canvas can ask Claude, even when its line arrives in two pieces', async ($, on) => {

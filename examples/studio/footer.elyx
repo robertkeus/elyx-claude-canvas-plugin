@@ -1,0 +1,102 @@
+// Footer: an inset aubergine panel with large 26px link columns, the office and its local time, and a giant wordmark cropped by the bottom edge.
+// Motion: the panel scales .94 → 1 as it scrolls into view; the giant wordmark slides up 40px behind the crop; links underline in 150ms on hover.
+import "studio/tokens.elyx" as T
+import "studio/parts.elyx" as P
+
+export footer = frame {
+  left: 0px, top: 0px, width: 1440px, padding: T.space.inset,
+  layout: {direction: .column},
+  fill: T.colors.bg,
+  children: [panel]
+
+  panel = frame {
+    width: 100%, padding: [96px, 0px, 0px, 0px],
+    layout: {direction: .column, item-gap: T.space.block},
+    corner-radius: T.radius.panel, fill: T.colors.deep, shadow: T.shadows.ring-deep,
+    children: [top, legal, giant]
+    // legal's hairline is drawn out of flow 24px above it, so the gap reads as spacing, not a border.
+
+    // Rows carry their own gutter so the giant wordmark below can run the panel's full width.
+    top = frame {
+      width: 100%, padding: [0px, T.space.gutter], layout: {direction: .row, justify-content: .space-between},
+      children: [studio, office, sitemap, company, social]
+
+      studio = frame {
+        width: 340px, layout: {direction: .column, item-gap: 24px},
+        children: [mark, line, slots]
+        mark = frame : P.wordmark {mark {fill: T.colors.on-deep, door {fill: T.colors.deep}, doorway {fill: T.colors.on-deep}}, name {fill: T.colors.on-deep}}
+        line = text {contents: "Apps and design systems for scale-ups. Independent since 2014.", width: 100%, font-family: T.fonts.body, font-size: T.size.lead, line-height: 1.5, letter-spacing: T.tracking.body, fill: T.colors.deep-muted}
+        slots = frame : P.availabilityChip {fill: T.colors.deep-surface, shadow: T.shadows.ring-deep, note {fill: T.colors.on-deep}}
+      }
+
+      // Two-tone meta: muted label, light value. The clock shows it's a real place with real hours.
+      office = frame {
+        width: 220px, layout: {direction: .column, item-gap: 20px},
+        children: [label, address, clock]
+        label = text : P.eyebrow {contents: "OFFICE", fill: T.colors.deep-muted}
+        address = text {contents: "Schiehaven 14\n3024 EC Rotterdam\nThe Netherlands", font-family: T.fonts.body, font-size: T.size.body, line-height: T.leading.body, fill: T.colors.on-deep}
+        clock = frame {layout: {direction: .column, item-gap: 4px}, children: [time, open]
+          time = text {contents: "14:32 CET", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.body, font-features: {tnum: 1}, fill: T.colors.on-deep}
+          open = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [dot, t]
+            dot = shape {type: .ellipse, width: 6px, height: 6px, fill: T.colors.live}
+            t = text {contents: "Studio open until 18:00", font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.deep-muted}}}
+      }
+
+      sitemap = frame {
+        width: 180px, layout: {direction: .column, item-gap: 20px},
+        children: [label, links]
+        label = text : P.eyebrow {contents: "STUDIO", fill: T.colors.deep-muted}
+        links = frame {layout: {direction: .column, item-gap: 8px}, children: [a, b, c, d]
+          a = text {contents: "Work", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.link, letter-spacing: -2%, fill: T.colors.on-deep}
+          b = text {contents: "Services", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.link, letter-spacing: -2%, fill: T.colors.on-deep}
+          c = text {contents: "Approach", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.link, letter-spacing: -2%, fill: T.colors.on-deep}
+          d = text {contents: "Journal", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.link, letter-spacing: -2%, fill: T.colors.on-deep}}
+      }
+
+      company = frame {
+        width: 200px, layout: {direction: .column, item-gap: 20px},
+        children: [label, links]
+        label = text : P.eyebrow {contents: "COMPANY", fill: T.colors.deep-muted}
+        links = frame {layout: {direction: .column, item-gap: 8px}, children: [a, b, c, d]
+          a = text {contents: "About", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.link, letter-spacing: -2%, fill: T.colors.on-deep}
+          b = frame {layout: {direction: .row, align-items: .center, item-gap: 10px}, children: [t, open]
+            t = text {contents: "Careers", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.link, letter-spacing: -2%, fill: T.colors.on-deep}
+            open = frame {height: 22px, padding: [0px, 8px], layout: {direction: .row, align-items: .center}, corner-radius: T.radius.pill, fill: T.colors.deep-surface, children: [n]
+              n = text {contents: "2 open", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.ui, fill: T.colors.on-deep}}}
+          c = text {contents: "Press kit", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.link, letter-spacing: -2%, fill: T.colors.on-deep}
+          d = text {contents: "Contact", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.link, letter-spacing: -2%, fill: T.colors.on-deep}}
+      }
+
+      social = frame {
+        width: 180px, layout: {direction: .column, item-gap: 20px},
+        children: [label, links]
+        label = text : P.eyebrow {contents: "ELSEWHERE", fill: T.colors.deep-muted}
+        links = frame {layout: {direction: .column, item-gap: 8px}, children: [a, b, c, d]
+          a = text {contents: "LinkedIn", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.link, letter-spacing: -2%, fill: T.colors.on-deep}
+          b = text {contents: "Instagram", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.link, letter-spacing: -2%, fill: T.colors.on-deep}
+          c = text {contents: "Dribbble", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.link, letter-spacing: -2%, fill: T.colors.on-deep}
+          d = text {contents: "Newsletter", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.link, letter-spacing: -2%, fill: T.colors.on-deep}}
+      }
+    }
+
+    legal = frame {
+      width: 100%, padding: [0px, T.space.gutter], overflow: .visible,
+      layout: {direction: .row, align-items: .center, justify-content: .space-between},
+      children: [rule, owner, policies]
+      rule = frame {ignore-stack: .true, left: 64px, top: -24px, width: 1296px, height: 1px, fill: T.colors.deep-surface}
+      owner = text {contents: "© 2026 Fernhouse B.V. · KvK 81234567 · VAT NL862345678B01", font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.deep-muted}
+      policies = frame {layout: {direction: .row, item-gap: 24px}, children: [a, b, c, d]
+        a = text {contents: "Privacy", font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.deep-muted}
+        b = text {contents: "Cookies", font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.deep-muted}
+        c = text {contents: "Terms", font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.deep-muted}
+        d = text {contents: "Accessibility", font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.deep-muted}}
+    }
+
+    // The signature: the wordmark set huge and cropped by the panel's bottom edge (the frame clips it).
+    giant = frame {
+      width: 100%, height: 200px,
+      children: [word]
+      word = text {left: 12px, top: -20px, contents: "fernhouse", font-family: T.fonts.display, font-style: T.weights.heading, font-size: T.size.wordmark, line-height: 1, letter-spacing: -6%, fill: T.colors.deep-surface}
+    }
+  }
+}

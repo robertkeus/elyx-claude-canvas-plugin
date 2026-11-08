@@ -1,0 +1,326 @@
+// Editorial features: four numbered chapters in hairline-ruled rows (mono number, serif title and body, a drawn plate of the product on the right).
+// Motion: each chapter's rule draws left-to-right over 500ms ease-out, then its text and plate rise 16px, rows staggered 120ms.
+import "editorial/tokens.elyx" as T
+import "editorial/parts.elyx" as P
+import "icons/type.svg" as typeIcon
+import "icons/link.svg" as linkIcon
+import "icons/image.svg" as imageIcon
+
+export features = frame {
+  left: 0px, top: 0px, width: 1440px,
+  fill: T.colors.bg,
+  padding: [T.space.block, T.space.gutter],
+  layout: {direction: .column, item-gap: T.space.block},
+  children: [folio, header, chapters]
+
+  folio = frame : P.folio {section {contents: "THE TOOLS"}, page {contents: "MARLOW · NO. 48 · P. 02"}}
+
+  header = frame {
+    width: 100%,
+    layout: {direction: .row, align-items: .end},
+    children: [kicker, title]
+    kicker = frame {
+      width: 248px, padding-bottom: 12px,
+      layout: {direction: .column, item-gap: 8px},
+      children: [k1, k2]
+      k1 = text : P.label {contents: "IN FOUR CHAPTERS", fill: T.colors.ink}
+      k2 = text : P.label {contents: "01 — 04"}
+    }
+    title = text {
+      contents: "Everything a small press needs, nothing it doesn't.",
+      width: 840px,
+      font-family: T.fonts.display, font-size: T.size.h2, line-height: T.leading.h2, letter-spacing: T.tracking.h2, fill: T.colors.ink,
+      subrange: [{range: [32, 51], font-style: T.weights.italic}]
+    }
+  }
+
+  chapters = frame {
+    width: 100%,
+    border: {color: T.colors.rule, width: 1px, sides: [.bottom]},
+    layout: {direction: .column},
+    children: [write, design, earn, send]
+
+    // ── 01 Write: the editor, with its toolbar and a drafted essay.
+    write = frame {
+      width: 100%, padding: [40px, 0px],
+      border: {color: T.colors.rule, width: 1px, sides: [.top]},
+      layout: {direction: .row, justify-content: .space-between},
+      children: [num, copy, plate]
+      num = frame {width: 208px, layout: {direction: .column, item-gap: 8px}, children: [n, c]
+        n = text : P.label {contents: "01", fill: T.colors.ink}
+        c = text : P.label {contents: "WRITE"}}
+      copy = frame {width: 440px, padding-top: 4px, layout: {direction: .column, item-gap: 16px}, children: [h, p]
+        h = text {contents: "A writing room, not a dashboard", width: 100%, font-family: T.fonts.display, font-size: T.size.h3, line-height: T.leading.h3, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+        p = text {contents: "Draft long essays in a quiet editor with footnotes, pull quotes and drop caps built in. Your house style sets every page.", width: 100%, font-family: T.fonts.body, font-size: T.size.body, line-height: T.leading.body, letter-spacing: T.tracking.body, fill: T.colors.muted}}
+      plate = frame {
+        width: 520px, height: 272px, fill: T.colors.surface, corner-radius: T.radius.chip,
+        padding: [28px, 32px, 0px, 32px],
+        layout: {direction: .column},
+        children: [doc]
+        doc = frame {
+          width: 100%, height: 100%, fill: T.colors.bg,
+          border: {color: T.colors.line, width: 1px, sides: [.top, .left, .right]},
+          layout: {direction: .column},
+          children: [toolbar, page]
+          toolbar = frame {
+            width: 100%, height: 40px, padding: [0px, 14px],
+            border: {color: T.colors.line, width: 1px, sides: [.bottom]},
+            layout: {direction: .row, align-items: .center, justify-content: .space-between},
+            children: [tools, saved]
+            tools = frame {layout: {direction: .row, align-items: .center, item-gap: 14px}, children: [tType, tBold, tItalic, tH, tDiv, tQuote, tLink, tImage]
+              tType = asset {width: 14px, height: 14px, contents: typeIcon, fill: T.colors.ink}
+              tBold = text {contents: "B", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.small, fill: T.colors.ink}
+              tItalic = text {contents: "I", font-family: T.fonts.display, font-style: T.weights.italic, font-size: T.size.body, fill: T.colors.ink}
+              tH = text {contents: "H2", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.ui, fill: T.colors.ink}
+              tDiv = frame {width: 1px, height: 16px, fill: T.colors.line}
+              tQuote = text {contents: "“", font-family: T.fonts.display, font-size: T.size.lead, line-height: 1, fill: T.colors.ink}
+              tLink = asset {width: 14px, height: 14px, contents: linkIcon, fill: T.colors.ink}
+              tImage = asset {width: 14px, height: 14px, contents: imageIcon, fill: T.colors.ink}
+            }
+            saved = text : P.label {contents: "SAVED 14:02"}
+          }
+          page = frame {
+            width: 100%, padding: [20px, 28px],
+            layout: {direction: .column, item-gap: 8px},
+            children: [dTitle, dByline, dBody, dNote]
+            dTitle = text {contents: "The last keepers of the light", font-family: T.fonts.display, font-size: 26, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+            dByline = text : P.label {contents: "ADA OKONKWO · 2,340 WORDS · DRAFT 3"}
+            dBody = frame {
+              width: 100%, padding-top: 6px,
+              layout: {direction: .row, item-gap: 10px},
+              children: [dropCap, dText]
+              dropCap = text {contents: "T", font-family: T.fonts.display, font-size: T.size.stat, line-height: 0.8, fill: T.colors.ink}
+              dText = text {
+                contents: "he lamp at Kéréon was lit for the last time on a Tuesday. Marc Le Goff climbed the 129 steps at dusk, as he had for nineteen winters, and wound the clock¹ by hand.",
+                width: 340px,
+                font-family: T.fonts.body, font-size: T.size.ui, line-height: T.leading.body, fill: T.colors.ink,
+                subrange: [{range: [12, 18], underline: .single}]
+              }
+            }
+            dNote = frame {
+              width: 100%, padding-top: 12px,
+              layout: {direction: .column, item-gap: 8px},
+              children: [noteRule, noteText]
+              noteRule = frame {width: 40px, height: 1px, fill: T.colors.faint}
+              noteText = text {contents: "¹ The clock turns the lens; it is wound every four hours.", font-family: T.fonts.body, font-size: T.size.ui, fill: T.colors.muted}
+            }
+          }
+        }
+      }
+    }
+
+    // ── 02 Design: an issue's running order as page thumbnails, one spread selected.
+    design = frame {
+      width: 100%, padding: [40px, 0px],
+      border: {color: T.colors.line, width: 1px, sides: [.top]},
+      layout: {direction: .row, justify-content: .space-between},
+      children: [num, copy, plate]
+      num = frame {width: 208px, layout: {direction: .column, item-gap: 8px}, children: [n, c]
+        n = text : P.label {contents: "02", fill: T.colors.ink}
+        c = text : P.label {contents: "DESIGN"}}
+      copy = frame {width: 440px, padding-top: 4px, layout: {direction: .column, item-gap: 16px}, children: [h, p]
+        h = text {contents: "Lay out issues like the printed kind", width: 100%, font-family: T.fonts.display, font-size: T.size.h3, line-height: T.leading.h3, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+        p = text {contents: "Gather pieces into numbered issues with a cover, a contents page and real spreads. Readers can page through or read straight down.", width: 100%, font-family: T.fonts.body, font-size: T.size.body, line-height: T.leading.body, letter-spacing: T.tracking.body, fill: T.colors.muted}}
+      plate = frame {
+        width: 520px, height: 272px, fill: T.colors.surface, corner-radius: T.radius.chip,
+        padding: 32px,
+        layout: {direction: .column, justify-content: .space-between},
+        children: [order, strip, pages]
+        order = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [o1, o2]
+          o1 = text : P.label {contents: "NO. 12 — RUNNING ORDER", fill: T.colors.ink}
+          o2 = text : P.label {contents: "48 PP · 9 PIECES"}}
+        strip = frame {
+          width: 100%,
+          layout: {direction: .row, align-items: .end, justify-content: .space-between},
+          children: [cover, contents, feature, essay]
+          cover = frame {
+            width: 64px, height: 88px, fill: T.colors.deep, padding: 6px,
+            layout: {direction: .column, item-gap: 10px},
+            children: [cM, cSun]
+            cM = text {contents: "Undertow", font-family: T.fonts.display, font-size: T.size.small, fill: T.colors.on-deep}
+            cSun = shape {type: .ellipse, width: 22px, height: 22px, fill: T.colors.accent-soft}
+          }
+          contents = frame {
+            width: 116px, height: 88px, fill: T.colors.bg, padding: 8px,
+            layout: {direction: .row, item-gap: 16px},
+            children: [cL, cR]
+            cL = frame {width: 42px, layout: {direction: .column, item-gap: 5px}, children: [l1, l2, l3, l4, l5]
+              l1 = frame {width: 30px, height: 3px, fill: T.colors.ink}
+              l2 = frame {width: 42px, height: 2px, fill: T.colors.line}
+              l3 = frame {width: 42px, height: 2px, fill: T.colors.line}
+              l4 = frame {width: 36px, height: 2px, fill: T.colors.line}
+              l5 = frame {width: 42px, height: 2px, fill: T.colors.line}}
+            cR = frame {width: 42px, layout: {direction: .column, item-gap: 5px}, children: [r1, r2, r3, r4, r5, r6]
+              r1 = frame {width: 42px, height: 2px, fill: T.colors.line}
+              r2 = frame {width: 42px, height: 2px, fill: T.colors.line}
+              r3 = frame {width: 28px, height: 2px, fill: T.colors.line}
+              r4 = frame {width: 42px, height: 2px, fill: T.colors.line}
+              r5 = frame {width: 42px, height: 2px, fill: T.colors.line}
+              r6 = frame {width: 34px, height: 2px, fill: T.colors.line}}
+          }
+          // The selected spread: ink outline plus a mono tag, so selection never relies on color.
+          feature = frame {
+            layout: {direction: .column, item-gap: 8px},
+            children: [fTag, fSpread]
+            fTag = text : P.label {contents: "SPREAD 4–5", fill: T.colors.ink}
+            fSpread = frame {
+              width: 116px, height: 88px, fill: T.colors.bg, padding: 8px,
+              border: {color: T.colors.rule, width: 2px},
+              layout: {direction: .row, item-gap: 16px},
+              children: [fImg, fTxt]
+              fImg = frame {width: 42px, height: 72px, fill: T.colors.accent-soft}
+              fTxt = frame {width: 42px, layout: {direction: .column, item-gap: 5px}, children: [t1, t2, t3, t4, t5, t6, t7]
+                t1 = text {contents: "Keepers", font-family: T.fonts.display, font-style: T.weights.italic, font-size: T.size.small, line-height: 1, fill: T.colors.ink}
+                t2 = frame {width: 42px, height: 2px, fill: T.colors.line}
+                t3 = frame {width: 42px, height: 2px, fill: T.colors.line}
+                t4 = frame {width: 38px, height: 2px, fill: T.colors.line}
+                t5 = frame {width: 42px, height: 2px, fill: T.colors.line}
+                t6 = frame {width: 42px, height: 2px, fill: T.colors.line}
+                t7 = frame {width: 30px, height: 2px, fill: T.colors.line}}
+            }
+          }
+          essay = frame {
+            width: 116px, height: 88px, fill: T.colors.bg, padding: 8px,
+            layout: {direction: .row, item-gap: 16px},
+            children: [eQ, eTxt]
+            eQ = frame {width: 42px, layout: {direction: .column, item-gap: 2px}, children: [q, q1, q2]
+              q = text {contents: "“", font-family: T.fonts.display, font-size: T.size.quote, line-height: 1, fill: T.colors.ink}
+              q1 = frame {width: 42px, height: 3px, fill: T.colors.ink}
+              q2 = frame {width: 30px, height: 3px, fill: T.colors.ink}}
+            eTxt = frame {width: 42px, layout: {direction: .column, item-gap: 5px}, children: [e1, e2, e3, e4, e5, e6]
+              e1 = frame {width: 42px, height: 2px, fill: T.colors.line}
+              e2 = frame {width: 42px, height: 2px, fill: T.colors.line}
+              e3 = frame {width: 36px, height: 2px, fill: T.colors.line}
+              e4 = frame {width: 42px, height: 2px, fill: T.colors.line}
+              e5 = frame {width: 42px, height: 2px, fill: T.colors.line}
+              e6 = frame {width: 24px, height: 2px, fill: T.colors.line}}
+          }
+        }
+        pages = frame {
+          width: 100%, padding-top: 12px,
+          border: {color: T.colors.line, width: 1px, sides: [.top]},
+          layout: {direction: .row, justify-content: .space-between},
+          children: [pg1, pg2, pg3]
+          pg1 = text : P.label {contents: "COVER · CONTENTS 2–3"}
+          pg2 = text : P.label {contents: "DRAG TO REORDER"}
+          pg3 = text : P.label {contents: "ESSAY 6–7"}
+        }
+      }
+    }
+
+    // ── 03 Earn: paying members by month, this quarter set in ink.
+    earn = frame {
+      width: 100%, padding: [40px, 0px],
+      border: {color: T.colors.line, width: 1px, sides: [.top]},
+      layout: {direction: .row, justify-content: .space-between},
+      children: [num, copy, plate]
+      num = frame {width: 208px, layout: {direction: .column, item-gap: 8px}, children: [n, c]
+        n = text : P.label {contents: "03", fill: T.colors.ink}
+        c = text : P.label {contents: "EARN"}}
+      copy = frame {width: 440px, padding-top: 4px, layout: {direction: .column, item-gap: 16px}, children: [h, p]
+        h = text {contents: "Readers become paying members", width: 100%, font-family: T.fonts.display, font-size: T.size.h3, line-height: T.leading.h3, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+        p = text {contents: "Offer monthly, annual and founding tiers. Marlow keeps 4% of memberships and takes nothing from gifts or tips.", width: 100%, font-family: T.fonts.body, font-size: T.size.body, line-height: T.leading.body, letter-spacing: T.tracking.body, fill: T.colors.muted}}
+      plate = frame {
+        width: 520px, height: 272px, fill: T.colors.surface, corner-radius: T.radius.chip,
+        padding: 32px,
+        layout: {direction: .column, justify-content: .space-between},
+        children: [stat, chart, axis]
+        stat = frame {
+          width: 100%,
+          layout: {direction: .row, align-items: .end, justify-content: .space-between},
+          children: [figure, delta]
+          figure = frame {layout: {direction: .row, align-items: .end, item-gap: 12px}, children: [count, countLabel]
+            count = text {contents: "1,284", font-family: T.fonts.display, font-size: T.size.quote, line-height: 0.9, letter-spacing: T.tracking.h2, fill: T.colors.ink}
+            countLabel = text : P.label {contents: "PAYING MEMBERS"}}
+          delta = frame {
+            padding: [4px, 8px], corner-radius: T.radius.chip,
+            border: {color: T.colors.rule, width: 1px},
+            layout: {},
+            children: [dl]
+            dl = text : P.label {contents: "+18% THIS QUARTER", fill: T.colors.ink}
+          }
+        }
+        chart = frame {
+          width: 100%, height: 112px,
+          border: {color: T.colors.rule, width: 1px, sides: [.bottom]},
+          layout: {direction: .row, align-items: .end, justify-content: .space-between},
+          children: [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12]
+          m1 = frame {width: 28px, height: 30px, fill: T.colors.line}
+          m2 = frame {width: 28px, height: 34px, fill: T.colors.line}
+          m3 = frame {width: 28px, height: 37px, fill: T.colors.line}
+          m4 = frame {width: 28px, height: 42px, fill: T.colors.line}
+          m5 = frame {width: 28px, height: 46px, fill: T.colors.line}
+          m6 = frame {width: 28px, height: 50px, fill: T.colors.line}
+          m7 = frame {width: 28px, height: 57px, fill: T.colors.line}
+          m8 = frame {width: 28px, height: 61px, fill: T.colors.line}
+          m9 = frame {width: 28px, height: 68px, fill: T.colors.line}
+          m10 = frame {width: 28px, height: 80px, fill: T.colors.ink}
+          m11 = frame {width: 28px, height: 93px, fill: T.colors.ink}
+          m12 = frame {width: 28px, height: 108px, fill: T.colors.ink}
+        }
+        axis = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [a1, a2, a3]
+          a1 = text : P.label {contents: "FEB 2025"}
+          a2 = text : P.label {contents: "£6,420 / MONTH", fill: T.colors.ink}
+          a3 = text : P.label {contents: "JAN 2026"}}
+      }
+    }
+
+    // ── 04 Send: the issue as it lands in a reader's inbox.
+    send = frame {
+      width: 100%, padding: [40px, 0px],
+      border: {color: T.colors.line, width: 1px, sides: [.top]},
+      layout: {direction: .row, justify-content: .space-between},
+      children: [num, copy, plate]
+      num = frame {width: 208px, layout: {direction: .column, item-gap: 8px}, children: [n, c]
+        n = text : P.label {contents: "04", fill: T.colors.ink}
+        c = text : P.label {contents: "SEND"}}
+      copy = frame {width: 440px, padding-top: 4px, layout: {direction: .column, item-gap: 16px}, children: [h, p]
+        h = text {contents: "Every issue arrives in the inbox intact", width: 100%, font-family: T.fonts.display, font-size: T.size.h3, line-height: T.leading.h3, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+        p = text {contents: "Each piece goes out as a letter that keeps your typography, footnotes and images. No template fighting your layout.", width: 100%, font-family: T.fonts.body, font-size: T.size.body, line-height: T.leading.body, letter-spacing: T.tracking.body, fill: T.colors.muted}}
+      plate = frame {
+        width: 520px, height: 272px, fill: T.colors.surface, corner-radius: T.radius.chip,
+        padding: [24px, 32px, 0px, 32px],
+        layout: {direction: .column, item-gap: 16px},
+        children: [sent, mail]
+        sent = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [s1, s2]
+          s1 = text : P.label {contents: "SENT TO 4,816 READERS", fill: T.colors.ink}
+          s2 = text : P.label {contents: "OPENED 64% · 2H AGO"}}
+        mail = frame {
+          width: 100%, height: 220px, fill: T.colors.bg,
+          border: {color: T.colors.line, width: 1px, sides: [.top, .left, .right]},
+          layout: {direction: .column},
+          children: [headers, letter]
+          headers = frame {
+            width: 100%, padding: [12px, 20px],
+            border: {color: T.colors.line, width: 1px, sides: [.bottom]},
+            layout: {direction: .column, item-gap: 6px},
+            children: [from, subject]
+            from = frame {layout: {direction: .row, align-items: .center, item-gap: 12px}, children: [fl, fv]
+              fl = text : P.label {contents: "FROM"}
+              fv = text {contents: "Undertow  <letters@undertow.marlow.page>", font-family: T.fonts.body, font-size: T.size.ui, fill: T.colors.ink}}
+            subject = frame {layout: {direction: .row, align-items: .center, item-gap: 12px}, children: [sl, sv]
+              sl = text : P.label {contents: "SUBJ"}
+              sv = text {contents: "No. 12 is at the printer", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.ui, fill: T.colors.ink}}
+          }
+          letter = frame {
+            width: 100%, padding: [16px, 20px],
+            layout: {direction: .row, item-gap: 20px},
+            children: [lCopy, lArt]
+            lCopy = frame {width: 264px, layout: {direction: .column, item-gap: 8px}, children: [lh, lp]
+              lh = text {contents: "Winter is here, and so is No. 12", width: 100%, font-family: T.fonts.display, font-size: 22, line-height: 1.1, fill: T.colors.ink}
+              lp = text {contents: "Forty-eight pages on the sea in the cold months: lighthouse keepers, winter swimmers and new fiction.", width: 100%, font-family: T.fonts.body, font-size: T.size.ui, line-height: T.leading.body, fill: T.colors.muted}}
+            lArt = frame {
+              width: 122px, height: 104px, fill: T.colors.deep,
+              children: [lSun, lSea]
+              lSun = shape {type: .ellipse, left: 33px, top: 26px, width: 56px, height: 56px, fill: T.colors.accent-soft}
+              lSea = frame {left: 0px, top: 56px, width: 122px, height: 48px, fill: T.colors.deep, layout: {direction: .column, align-items: .center, item-gap: 5px}, padding-top: 6px, children: [w1, w2, w3]
+                w1 = frame {width: 48px, height: 2px, fill: T.colors.accent-soft}
+                w2 = frame {width: 32px, height: 2px, fill: T.colors.accent-soft, opacity: 0.6}
+                w3 = frame {width: 16px, height: 2px, fill: T.colors.accent-soft, opacity: 0.3}}
+            }
+          }
+        }
+      }
+    }
+  }
+}
