@@ -384,5 +384,5 @@ body.rail-open #rail { display: flex }
   min-height: 38px; padding: 8px 14px; border-radius: var(--r-md); background: var(--solid); color: var(--on-solid); box-shadow: 0 8px 24px #00000033; animation: rise .14s ease;
 }
 #toast.error { background: var(--danger) }
-#toast button { font-weight: 600 }
+#toast button, #toast a { font-weight: 600 }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important } }

@@ -32,6 +32,17 @@ export const sharePage = (template, data) =>
     .replace('__TITLE__', () => escapeHtml(data.title))
     .replace('__DATA__', () => JSON.stringify(data).replace(/</g, '\\u003c'))
 
+// The page's link from artifact.json, which Claude writes. Only a claude.ai address
+// counts, so the canvas never links anywhere else.
+export const sharedLink = text => {
+  try {
+    const { url } = JSON.parse(text)
+    return /^https:\/\/claude\.ai\/[\w/-]+$/.test(url) ? url : undefined
+  } catch {
+    return undefined
+  }
+}
+
 // What Claude is asked to do with the folder. A board shared before keeps its page.
 export const shareRequest = ({ folder, files, title, slug }) => {
   const list = files.map(file => `\`${file}\``).join(', ')
@@ -41,7 +52,7 @@ export const shareRequest = ({ folder, files, title, slug }) => {
   return [
     `Share an Elyx board as a Claude artifact. The canvas packed it in ${folder}: a viewer page and a PNG per frame.`,
     `${publish} Send exactly these files, each with \`as\` set to its path inside that folder: ${list}.`,
-    `Then write {"slug": "<the artifact's slug>"} to ${folder}/artifact.json, so the next share updates the same page, and give the person the link.`,
+    `Then write {"slug": "<the artifact's slug>", "url": "<its claude.ai link>"} to ${folder}/artifact.json, so the canvas can link to the page and the next share updates it, and give the person the link.`,
     'Tell them the page holds the frames and tokens as they are now, and that sharing again updates it. If it is new, it is private: they share it from its page on claude.ai, with people, their organization, or anyone with the link.',
   ].join('\n')
 }

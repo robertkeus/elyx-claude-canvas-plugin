@@ -16,7 +16,7 @@ import path from 'node:path'
 import { promisify } from 'node:util'
 import { blockSource, importAlias, setProperty, setToken, tokenLiteral } from './edit.mjs'
 import { fileVersions, hash, indexTree, LOG_FORMAT, mergeIndexes, parseLog } from './insight.mjs'
-import { frameIds, sharePage, shareRequest, shareScale } from './share.mjs'
+import { frameIds, sharedLink, sharePage, shareRequest, shareScale } from './share.mjs'
 import { treeToSvg } from './svg.mjs'
 
 const IMAGES = { '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp' }
@@ -536,12 +536,23 @@ const ask = async ({ text, file, layer }) => {
 // Packs the board in view as a page for a Claude artifact, then asks Claude to publish
 // it, or to update the page an earlier share made. Opened by hand, the request goes back
 // to the page to copy.
+const shareFolder = name => path.join(exportsFolder(), 'share', safeName(name.replace(/\.elyx$/, '')))
+
+// What an earlier share left: the page's link, once Claude has published it.
+const shareStatus = async file => {
+  const record = path.join(shareFolder(relative(await elyxFile(file))), 'artifact.json')
+  const [text, info] = await Promise.all([readFile(record, 'utf8'), stat(record)]).catch(() => [])
+  const url = text && sharedLink(text)
+  return url ? { url, updated: info.mtimeMs } : {}
+}
+
 const share = async ({ file }, { canAsk = Boolean(process.env.ELYX_CANVAS_BRIDGE) } = {}) => {
+  const at = Date.now()
   const absolute = await elyxFile(file || relative(opened))
   const name = relative(absolute)
   const [{ frames }, { tokens }] = await Promise.all([board(name), project()])
   if (!frames.length) throw new Error(`${name} has no frames to share.`)
-  const folder = path.join(exportsFolder(), 'share', safeName(name.replace(/\.elyx$/, '')))
+  const folder = shareFolder(name)
   await rm(path.join(folder, 'frames'), { recursive: true, force: true })
   await mkdir(path.join(folder, 'frames'), { recursive: true })
   const ids = frameIds(frames.map(frame => frame.name))
@@ -565,7 +576,7 @@ const share = async ({ file }, { canAsk = Boolean(process.env.ELYX_CANVAS_BRIDGE
   const text = shareRequest({ folder, files: ['index.html', ...shots.map(shot => shot.image)], title, slug })
   const sent = canAsk
   if (sent) process.stdout.write(`ask ${JSON.stringify({ text })}\n`)
-  return { folder: relative(folder), frames: shots.length, isUpdate: Boolean(slug), sent, text }
+  return { board: name, at, folder: relative(folder), frames: shots.length, isUpdate: Boolean(slug), sent, text }
 }
 
 const token = randomBytes(16).toString('hex')
@@ -616,6 +627,7 @@ const getters = {
   },
   layers: query => layers(query.get('file'), query.get('ref'), query.getAll('context')),
   source: query => source(query.get('file'), query.get('ref'), query.get('path')),
+  'share-status': query => shareStatus(query.get('file')),
 }
 const posters = { edit, token: editToken, move: moveFrame, undo, ask, share, export: exportLayer, reveal: revealExports, 'switch-project': switchProject }
 
