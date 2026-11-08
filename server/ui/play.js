@@ -3,7 +3,7 @@
 // project's motion tokens: smart animate, push, slide in, dissolve or instant.
 import { treeOf } from './board.js'
 import { closePopover, popover } from './pickers.js'
-import { $, el, get, icon, query, renderUrl, report, resolveMotion, state, TRANSITIONS } from './lib.js'
+import { $, el, get, icon, query, renderUrl, report, resolveMotion, state, TRANSITIONS, withContext } from './lib.js'
 
 const BARS = 52 + 64
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)')
@@ -61,13 +61,44 @@ export const matchLayers = (a, b, offA = { x: 0, y: 0 }, offB = { x: 0, y: 0 }, 
     const rb = { x: offB.x + (childB.position?.x ?? 0), y: offB.y + (childB.position?.y ?? 0), w: childB.resolvedSize?.width ?? 0, h: childB.resolvedSize?.height ?? 0 }
     if (!ra.w || !ra.h || !rb.w || !rb.h) continue
     const moved = ['x', 'y', 'w', 'h'].some(key => Math.abs(ra[key] - rb[key]) > 0.5)
-    if (moved) pairs.push([ra, rb])
+    if (moved) pairs.push([ra, rb, childB])
     else matchLayers(childA, childB, ra, rb, pairs)
   }
   return pairs
 }
 
 let play = null
+
+// A moving layer drawn on its own, without what sits around or on top of it. They are
+// fetched when a screen appears, for every smart link out of it, so they are ready by
+// the time you click. Until then a piece is cut from the next screen's render.
+const layers = new Map()
+const quantized = scale => Math.min(4, Math.max(0.5, Math.ceil(scale * devicePixelRatio * 2) / 2))
+const layerUrl = (layer, scale) => `export-image?${withContext({ file: layer.target.filePath, ref: layer.target.sourceRef, path: layer.target.overridePath ?? '', scale: quantized(scale) })}`
+const fetchLayer = url => {
+  if (!layers.has(url)) {
+    const image = new Image()
+    image.src = url
+    layers.set(url, image)
+  }
+  return layers.get(url)
+}
+const readyLayer = (layer, scale) => {
+  if (!layer?.target) return null
+  const image = layers.get(layerUrl(layer, scale))
+  return image?.complete && image.naturalWidth ? image : null
+}
+
+const prefetch = async current => {
+  for (const link of linksFrom(current.frame)) {
+    const target = frameNamed(link.to)
+    if (!target || resolveMotion(link.meta).transition !== 'smart') continue
+    await treeOf(target)
+    if (!current.frame.layers || !target.layers) continue
+    const scale = fitScale(target)
+    for (const [, , layer] of matchLayers(current.frame.layers, target.layers)) if (layer.target) fetchLayer(layerUrl(layer, scale))
+  }
+}
 
 const frameNamed = name => state.frames.find(frame => frame.name === name)
 const linksFrom = frame => state.links.filter(link => link.from === frame.name)
@@ -127,22 +158,38 @@ const smart = (from, to, motion) => {
   const pairs = matchLayers(from.frame.layers ?? {}, to.frame.layers ?? {})
   const fades = [run(to.view, [{ opacity: 0 }, { opacity: 1 }], motion), run(from.view, [{ opacity: 1 }, { opacity: 0 }], motion)]
   if (!pairs.length) return fades
+  // The incoming screen leaves holes where the pieces land, so nothing shows twice.
+  const holes = el('canvas', { width: Math.ceil(to.frame.w * to.scale), height: Math.ceil(to.frame.h * to.scale) })
+  const paint = holes.getContext('2d')
+  paint.fillRect(0, 0, holes.width, holes.height)
+  for (const [, rb] of pairs) paint.clearRect(rb.x * to.scale, rb.y * to.scale, rb.w * to.scale, rb.h * to.scale)
+  to.view.style.maskImage = `url("${holes.toDataURL()}")`
+  to.view.style.maskSize = '100% 100%'
   const stage = to.view.parentElement
   const morph = el('div', { className: 'play-morph' })
   stage.append(morph)
   const box = stage.getBoundingClientRect()
   const a = from.view.getBoundingClientRect()
   const b = to.view.getBoundingClientRect()
-  const pieces = pairs.map(([ra, rb]) => {
-    const piece = el('div')
+  // Each piece is cut from the incoming render. Where another piece lands inside it,
+  // it is painted over with its own color, so a title is never drawn twice.
+  const ratio = to.image.naturalWidth / to.frame.w
+  const own = pairs.map(([, , layer]) => readyLayer(layer, to.scale))
+  const inside = (outer, inner) => inner.x >= outer.x && inner.y >= outer.y && inner.x + inner.w <= outer.x + outer.w && inner.y + inner.h <= outer.y + outer.h
+  const pieces = pairs.map(([ra, rb], index) => {
+    const piece = el('canvas', { width: Math.max(1, Math.round(rb.w * ratio)), height: Math.max(1, Math.round(rb.h * ratio)) })
+    const draw = piece.getContext('2d')
+    if (own[index]) draw.drawImage(own[index], 0, 0, piece.width, piece.height)
+    else draw.drawImage(to.image, rb.x * ratio, rb.y * ratio, rb.w * ratio, rb.h * ratio, 0, 0, piece.width, piece.height)
+    const nested = own[index] ? [] : pairs.slice(index + 1).map(([, child]) => child).filter(child => inside(rb, child))
+    if (nested.length) {
+      const [r, g, b, a] = draw.getImageData(Math.min(4, piece.width - 1), Math.floor(piece.height / 2), 1, 1).data
+      draw.fillStyle = `rgba(${r}, ${g}, ${b}, ${a / 255})`
+      for (const child of nested) draw.fillRect((child.x - rb.x) * ratio, (child.y - rb.y) * ratio, child.w * ratio, child.h * ratio)
+    }
     const left = b.left - box.left + rb.x * to.scale
     const top = b.top - box.top + rb.y * to.scale
-    Object.assign(piece.style, {
-      left: `${left}px`, top: `${top}px`, width: `${rb.w * to.scale}px`, height: `${rb.h * to.scale}px`,
-      backgroundImage: `url("${to.image.src}")`,
-      backgroundSize: `${to.frame.w * to.scale}px ${to.frame.h * to.scale}px`,
-      backgroundPosition: `${-rb.x * to.scale}px ${-rb.y * to.scale}px`,
-    })
+    Object.assign(piece.style, { left: `${left}px`, top: `${top}px`, width: `${rb.w * to.scale}px`, height: `${rb.h * to.scale}px` })
     morph.append(piece)
     const dx = a.left - box.left + ra.x * from.scale - left
     const dy = a.top - box.top + ra.y * from.scale - top
@@ -150,16 +197,28 @@ const smart = (from, to, motion) => {
     const sy = (ra.h * from.scale) / (rb.h * to.scale)
     return run(piece, [{ transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})` }, { transform: 'none' }], motion)
   })
-  return [...fades, Promise.all(pieces).finally(() => morph.remove())]
+  return [...fades, Promise.all(pieces).finally(() => {
+    to.view.style.maskImage = ''
+    morph.remove()
+  })]
+}
+
+// Push and slide move one screen's width, clipped to the screen, as on a device.
+const insideScreen = (to, start) => {
+  const stage = to.view.parentElement
+  const box = stage.getBoundingClientRect()
+  const rect = to.view.getBoundingClientRect()
+  stage.style.clipPath = `inset(${rect.top - box.top}px ${box.right - rect.right}px ${box.bottom - rect.bottom}px ${rect.left - box.left}px)`
+  return [Promise.all(start()).finally(() => (stage.style.clipPath = ''))]
 }
 
 const animate = (from, to, motion, direction) => {
-  const width = to.view.parentElement.clientWidth
+  const width = to.view.offsetWidth
   const slideIn = [{ transform: `translateX(${direction * width}px)` }, { transform: 'none' }]
   if (motion.transition === 'instant' || !motion.duration) return []
   if (motion.transition === 'dissolve') return [run(to.view, [{ opacity: 0 }, { opacity: 1 }], motion)]
-  if (motion.transition === 'slide') return [run(to.view, slideIn, motion)]
-  if (motion.transition === 'push') return [run(to.view, slideIn, motion), run(from.view, [{ transform: 'none' }, { transform: `translateX(${-direction * width}px)` }], motion)]
+  if (motion.transition === 'slide') return insideScreen(to, () => [run(to.view, slideIn, motion), run(from.view, [{ opacity: 1 }, { opacity: 0.6 }], motion)])
+  if (motion.transition === 'push') return insideScreen(to, () => [run(to.view, slideIn, motion), run(from.view, [{ transform: 'none' }, { transform: `translateX(${-direction * width}px)` }], motion)])
   return smart(from, to, motion)
 }
 
@@ -179,6 +238,7 @@ const go = async (frame, link, direction) => {
     from?.view.remove()
     next.view.getAnimations().forEach(animation => animation.cancel())
     play.current = next
+    prefetch(next).catch(() => {})
     play.view = next.view
     if (direction > 0 && from) play.stack.push({ frame: from.frame, link })
     renderBars()

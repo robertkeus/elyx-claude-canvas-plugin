@@ -1,0 +1,14 @@
+// How long things take, in milliseconds. Play uses these for prototype transitions.
+export motion = tokens {
+  fast: 150,
+  medium: 300,
+  slow: 500
+}
+
+// How things move. Standard settles calmly, emphasized starts fast and lands soft,
+// bounce overshoots a little before it settles.
+export easing = tokens {
+  standard: "cubic-bezier(0.2, 0, 0, 1)",
+  emphasized: "cubic-bezier(0.05, 0.7, 0.1, 1)",
+  bounce: "cubic-bezier(0.34, 1.56, 0.64, 1)"
+}

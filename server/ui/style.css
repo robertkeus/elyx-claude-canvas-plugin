@@ -440,7 +440,7 @@ body.rail-open #rail { display: flex }
 .play-screen.hint .hotspot { animation: hint .7s ease }
 @keyframes hint { 20%, 70% { background: color-mix(in srgb, var(--accent) 22%, transparent); box-shadow: 0 0 0 2px var(--accent) } }
 .play-morph { position: absolute; inset: 0; z-index: 2; pointer-events: none }
-.play-morph div { position: absolute; transform-origin: 0 0; background-repeat: no-repeat }
+.play-morph canvas { position: absolute; transform-origin: 0 0 }
 .play-foot { flex: none; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; min-height: 64px; padding: 12px }
 .play-link {
   display: flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border: 1px solid var(--line-strong); border-radius: var(--r-md);
