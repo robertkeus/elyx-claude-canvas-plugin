@@ -1,0 +1,1478 @@
+import "icons/chevron-left.svg" as backIcon
+import "icons/chevron-right.svg" as nextIcon
+import "icons/chevron-down.svg" as downIcon
+import "icons/x.svg" as closeIcon
+import "icons/play.svg" as playIcon
+import "sample/tokens.elyx" as Tokens
+
+// Motion, three of each: smart animate, push, slide in and dissolve, with instant for
+// the way back. Press Play on the canvas and start at the menu.
+
+// Every motion on this board, one row each.
+export hub = frame {
+  title: "Menu",
+  caption: "Every motion on this board, one row each.",
+  left: 0px,
+  top: 0px,
+  width: 390px,
+  height: 844px,
+  fill: Tokens.sample.paper,
+  children: [heading, lede, section0, openNote, switchTabs, expandPlayer, section1, onboarding, section2, settingsRow, shareRow, alertsRow, section3, galleryRow],
+
+  heading = text {
+    left: 24px,
+    top: 72px,
+    contents: "Motion",
+    font-size: 34,
+    font-style: "SemiBold",
+    fill: Tokens.sample.ink
+  }
+
+  lede = text {
+    left: 24px,
+    top: 118px,
+    contents: "Tap a row to play it.",
+    font-size: 15,
+    fill: Tokens.sample.soft
+  }
+
+  section0 = text {
+    left: 24px,
+    top: 168px,
+    contents: "SMART ANIMATE",
+    font-size: 12,
+    font-style: "SemiBold",
+    fill: Tokens.sample.soft
+  }
+
+  openNote = frame {
+    left: 16px,
+    top: 194px,
+    width: 358px,
+    height: 52px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 14px, 0px, 16px],
+    meta: {transition: "instant"},
+    connections: {target: ::noteList, label: "Open a note"},
+    children: [dot, label, gap, go],
+
+    dot = frame {width: 10px, height: 10px, corner-radius: 999px, fill: Tokens.sample.clay}
+    label = text {contents: "Open a note", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    go = asset {width: 18px, height: 18px, contents: nextIcon, fill: Tokens.sample.soft}
+  }
+
+  switchTabs = frame {
+    left: 16px,
+    top: 254px,
+    width: 358px,
+    height: 52px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 14px, 0px, 16px],
+    meta: {transition: "instant"},
+    connections: {target: ::tabsToday, label: "Switch tabs"},
+    children: [dot, label, gap, go],
+
+    dot = frame {width: 10px, height: 10px, corner-radius: 999px, fill: Tokens.sample.clay}
+    label = text {contents: "Switch tabs", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    go = asset {width: 18px, height: 18px, contents: nextIcon, fill: Tokens.sample.soft}
+  }
+
+  expandPlayer = frame {
+    left: 16px,
+    top: 314px,
+    width: 358px,
+    height: 52px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 14px, 0px, 16px],
+    meta: {transition: "instant"},
+    connections: {target: ::playerMini, label: "Expand the player"},
+    children: [dot, label, gap, go],
+
+    dot = frame {width: 10px, height: 10px, corner-radius: 999px, fill: Tokens.sample.clay}
+    label = text {contents: "Expand the player", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    go = asset {width: 18px, height: 18px, contents: nextIcon, fill: Tokens.sample.soft}
+  }
+
+  section1 = text {
+    left: 24px,
+    top: 386px,
+    contents: "PUSH",
+    font-size: 12,
+    font-style: "SemiBold",
+    fill: Tokens.sample.soft
+  }
+
+  onboarding = frame {
+    left: 16px,
+    top: 412px,
+    width: 358px,
+    height: 52px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 14px, 0px, 16px],
+    meta: {transition: "push", duration: "motion.medium", easing: "easing.standard"},
+    connections: {target: ::welcomeOne, label: "Walk through onboarding"},
+    children: [dot, label, gap, go],
+
+    dot = frame {width: 10px, height: 10px, corner-radius: 999px, fill: Tokens.sample.sky}
+    label = text {contents: "Walk through onboarding", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    go = asset {width: 18px, height: 18px, contents: nextIcon, fill: Tokens.sample.soft}
+  }
+
+  section2 = text {
+    left: 24px,
+    top: 484px,
+    contents: "SLIDE IN",
+    font-size: 12,
+    font-style: "SemiBold",
+    fill: Tokens.sample.soft
+  }
+
+  settingsRow = frame {
+    left: 16px,
+    top: 510px,
+    width: 358px,
+    height: 52px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 14px, 0px, 16px],
+    meta: {transition: "slide", duration: "motion.fast", easing: "easing.emphasized"},
+    connections: {target: ::settings, label: "Settings · fast"},
+    children: [dot, label, gap, go],
+
+    dot = frame {width: 10px, height: 10px, corner-radius: 999px, fill: Tokens.sample.moss}
+    label = text {contents: "Settings · fast", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    go = asset {width: 18px, height: 18px, contents: nextIcon, fill: Tokens.sample.soft}
+  }
+
+  shareRow = frame {
+    left: 16px,
+    top: 570px,
+    width: 358px,
+    height: 52px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 14px, 0px, 16px],
+    meta: {transition: "slide", duration: "motion.medium", easing: "easing.emphasized"},
+    connections: {target: ::share, label: "Share · medium"},
+    children: [dot, label, gap, go],
+
+    dot = frame {width: 10px, height: 10px, corner-radius: 999px, fill: Tokens.sample.moss}
+    label = text {contents: "Share · medium", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    go = asset {width: 18px, height: 18px, contents: nextIcon, fill: Tokens.sample.soft}
+  }
+
+  alertsRow = frame {
+    left: 16px,
+    top: 630px,
+    width: 358px,
+    height: 52px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 14px, 0px, 16px],
+    meta: {transition: "slide", duration: "motion.slow", easing: "easing.emphasized"},
+    connections: {target: ::alerts, label: "Notifications · slow"},
+    children: [dot, label, gap, go],
+
+    dot = frame {width: 10px, height: 10px, corner-radius: 999px, fill: Tokens.sample.moss}
+    label = text {contents: "Notifications · slow", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    go = asset {width: 18px, height: 18px, contents: nextIcon, fill: Tokens.sample.soft}
+  }
+
+  section3 = text {
+    left: 24px,
+    top: 702px,
+    contents: "DISSOLVE",
+    font-size: 12,
+    font-style: "SemiBold",
+    fill: Tokens.sample.soft
+  }
+
+  galleryRow = frame {
+    left: 16px,
+    top: 728px,
+    width: 358px,
+    height: 52px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 14px, 0px, 16px],
+    meta: {transition: "dissolve", duration: "motion.slow", easing: "easing.standard"},
+    connections: {target: ::photoOne, label: "Photo gallery"},
+    children: [dot, label, gap, go],
+
+    dot = frame {width: 10px, height: 10px, corner-radius: 999px, fill: Tokens.sample.sun}
+    label = text {contents: "Photo gallery", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    go = asset {width: 18px, height: 18px, contents: nextIcon, fill: Tokens.sample.soft}
+  }
+}
+
+// Tap the note: it grows into the page, and its title follows.
+export noteList = frame {
+  title: "Notes",
+  caption: "Tap the note: it grows into the page, and its title follows.",
+  left: 0px,
+  top: 1000px,
+  width: 390px,
+  height: 844px,
+  fill: Tokens.sample.paper,
+  children: [backBtn, heading, cardBg, cardTitle, cardText, rowTwo, rowThree],
+
+  backBtn = frame {
+    left: 16px,
+    top: 52px,
+    height: 36px,
+    corner-radius: 999px,
+    fill: #FFFFFF,
+    layout: {direction: .row, align-items: .center, item-gap: 2px},
+    padding: [0px, 14px, 0px, 8px],
+    meta: {transition: "instant"},
+    connections: {target: ::hub, label: "Back"},
+    children: [glyph, label],
+
+    glyph = asset {width: 18px, height: 18px, contents: backIcon, fill: Tokens.sample.ink}
+    label = text {contents: "Motion", font-size: 15, font-style: "Medium", fill: Tokens.sample.ink}
+  }
+
+  heading = text {
+    left: 24px,
+    top: 100px,
+    contents: "Notes",
+    font-size: 34,
+    font-style: "SemiBold",
+    fill: Tokens.sample.ink
+  }
+
+  cardBg = frame {
+    left: 16px,
+    top: 160px,
+    width: 358px,
+    height: 132px,
+    corner-radius: 16px,
+    fill: Tokens.sample.clay,
+    meta: {transition: "smart", duration: "motion.medium", easing: "easing.emphasized"},
+    connections: {target: ::noteOpen, label: "Open"},
+  }
+
+  cardTitle = text {
+    left: 36px,
+    top: 184px,
+    contents: "Harbour trip ideas",
+    font-size: 20,
+    font-style: "SemiBold",
+    fill: Tokens.sample.on-clay
+  }
+
+  cardText = text {
+    left: 36px,
+    top: 220px,
+    width: 318px,
+    contents: "Morning ferry, then the walk along the old sea wall.",
+    font-size: 14,
+    fill: Tokens.sample.on-clay
+  }
+
+  rowTwo = frame {
+    left: 16px,
+    top: 308px,
+    width: 358px,
+    height: 92px,
+    corner-radius: 16px,
+    fill: Tokens.sample.sand,
+    children: [title],
+    title = text {
+      left: 20px,
+      top: 20px,
+      contents: "Books to read",
+      font-size: 17,
+      font-style: "SemiBold",
+      fill: Tokens.sample.ink
+    }
+  }
+
+  rowThree = frame {
+    left: 16px,
+    top: 416px,
+    width: 358px,
+    height: 92px,
+    corner-radius: 16px,
+    fill: Tokens.sample.sand,
+    children: [title],
+    title = text {
+      left: 20px,
+      top: 20px,
+      contents: "Kitchen shelf sizes",
+      font-size: 17,
+      font-style: "SemiBold",
+      fill: Tokens.sample.ink
+    }
+  }
+}
+
+// The same note open. Done shrinks it back into the list.
+export noteOpen = frame {
+  title: "Note",
+  caption: "The same note open. Done shrinks it back into the list.",
+  left: 470px,
+  top: 1000px,
+  width: 390px,
+  height: 844px,
+  fill: Tokens.sample.paper,
+  children: [cardBg, cardTitle, cardText, body, doneBtn],
+
+  cardBg = frame {
+    left: 0px,
+    top: 0px,
+    width: 390px,
+    height: 380px,
+    corner-radius: 0px,
+    fill: Tokens.sample.clay,
+  }
+
+  cardTitle = text {
+    left: 24px,
+    top: 268px,
+    contents: "Harbour trip ideas",
+    font-size: 30,
+    font-style: "SemiBold",
+    fill: Tokens.sample.on-clay
+  }
+
+  cardText = text {
+    left: 24px,
+    top: 314px,
+    width: 342px,
+    contents: "Morning ferry, then the walk along the old sea wall.",
+    font-size: 15,
+    fill: Tokens.sample.on-clay
+  }
+
+  body = text {
+    left: 24px,
+    top: 412px,
+    width: 342px,
+    contents: "Book the small place by the slipway before the weekend, and pack a coat: the wind turns after four. Lunch at the harbour, then the long way back over the dunes.",
+    font-size: 17,
+    fill: Tokens.sample.ink
+  }
+
+  doneBtn = frame {
+    left: 16px,
+    top: 52px,
+    height: 36px,
+    corner-radius: 999px,
+    fill: opacity(Tokens.sample.paper, 16%),
+    layout: {direction: .row, align-items: .center, item-gap: 2px},
+    padding: [0px, 14px, 0px, 8px],
+    meta: {transition: "smart", duration: "motion.medium", easing: "easing.emphasized"},
+    connections: {target: ::noteList, label: "Back"},
+    children: [glyph, label],
+
+    glyph = asset {width: 18px, height: 18px, contents: downIcon, fill: Tokens.sample.paper}
+    label = text {contents: "Done", font-size: 15, font-style: "Medium", fill: Tokens.sample.paper}
+  }
+}
+
+// Tap This week: the white tab slides across, the list fades over.
+export tabsToday = frame {
+  title: "Today",
+  caption: "Tap This week: the white tab slides across, the list fades over.",
+  left: 940px,
+  top: 1000px,
+  width: 390px,
+  height: 844px,
+  fill: Tokens.sample.paper,
+  children: [backBtn, heading, tabs, panel],
+
+  backBtn = frame {
+    left: 16px,
+    top: 52px,
+    height: 36px,
+    corner-radius: 999px,
+    fill: #FFFFFF,
+    layout: {direction: .row, align-items: .center, item-gap: 2px},
+    padding: [0px, 14px, 0px, 8px],
+    meta: {transition: "instant"},
+    connections: {target: ::hub, label: "Back"},
+    children: [glyph, label],
+
+    glyph = asset {width: 18px, height: 18px, contents: backIcon, fill: Tokens.sample.ink}
+    label = text {contents: "Motion", font-size: 15, font-style: "Medium", fill: Tokens.sample.ink}
+  }
+
+  heading = text {
+    left: 24px,
+    top: 100px,
+    contents: "Plans",
+    font-size: 34,
+    font-style: "SemiBold",
+    fill: Tokens.sample.ink
+  }
+
+  tabs = frame {
+    left: 16px,
+    top: 160px,
+    width: 358px,
+    height: 44px,
+    corner-radius: 12px,
+    fill: Tokens.sample.sand,
+    children: [indicator, labelToday, labelWeek, weekHit],
+
+    indicator = frame {left: 4px, top: 4px, width: 171px, height: 36px, corner-radius: 9px, fill: #FFFFFF}
+    labelToday = text {left: 68px, top: 12px, contents: "Today", font-size: 15, font-style: "Medium", fill: Tokens.sample.ink}
+    labelWeek = text {left: 234px, top: 12px, contents: "This week", font-size: 15, font-style: "Medium", fill: Tokens.sample.soft}
+
+    weekHit = frame {
+      left: 179px,
+      top: 0px,
+      width: 179px,
+      height: 44px,
+      meta: {transition: "smart", duration: "motion.fast", easing: "easing.standard"},
+      connections: {target: ::tabsWeek, label: "This week"},
+    }
+  }
+
+  panel = frame {
+    left: 16px,
+    top: 224px,
+    width: 358px,
+    height: 560px,
+    children: [standup, lunch, walk],
+
+    standup = frame {
+      left: 0px,
+      top: 0px,
+      width: 358px,
+      height: 64px,
+      corner-radius: 14px,
+      fill: #FFFFFF,
+      border: {color: Tokens.sample.line, width: 1px},
+      children: [mark, task, time],
+
+      mark = frame {left: 16px, top: 22px, width: 20px, height: 20px, corner-radius: 6px, fill: Tokens.sample.sky}
+      task = text {left: 50px, top: 13px, contents: "Ferry to the island", font-size: 15, font-style: "Medium", fill: Tokens.sample.ink}
+      time = text {left: 50px, top: 34px, contents: "9:10", font-size: 13, fill: Tokens.sample.soft}
+    }
+
+    lunch = frame {
+      left: 0px,
+      top: 76px,
+      width: 358px,
+      height: 64px,
+      corner-radius: 14px,
+      fill: #FFFFFF,
+      border: {color: Tokens.sample.line, width: 1px},
+      children: [mark, task, time],
+
+      mark = frame {left: 16px, top: 22px, width: 20px, height: 20px, corner-radius: 6px, fill: Tokens.sample.sun}
+      task = text {left: 50px, top: 13px, contents: "Lunch at the harbour", font-size: 15, font-style: "Medium", fill: Tokens.sample.ink}
+      time = text {left: 50px, top: 34px, contents: "12:30", font-size: 13, fill: Tokens.sample.soft}
+    }
+
+    walk = frame {
+      left: 0px,
+      top: 152px,
+      width: 358px,
+      height: 64px,
+      corner-radius: 14px,
+      fill: #FFFFFF,
+      border: {color: Tokens.sample.line, width: 1px},
+      children: [mark, task, time],
+
+      mark = frame {left: 16px, top: 22px, width: 20px, height: 20px, corner-radius: 6px, fill: Tokens.sample.moss}
+      task = text {left: 50px, top: 13px, contents: "Dune walk", font-size: 15, font-style: "Medium", fill: Tokens.sample.ink}
+      time = text {left: 50px, top: 34px, contents: "15:00", font-size: 13, fill: Tokens.sample.soft}
+    }
+  }
+}
+
+// The other tab. Tap Today to slide back.
+export tabsWeek = frame {
+  title: "This week",
+  caption: "The other tab. Tap Today to slide back.",
+  left: 1410px,
+  top: 1000px,
+  width: 390px,
+  height: 844px,
+  fill: Tokens.sample.paper,
+  children: [backBtn, heading, tabs, panel],
+
+  backBtn = frame {
+    left: 16px,
+    top: 52px,
+    height: 36px,
+    corner-radius: 999px,
+    fill: #FFFFFF,
+    layout: {direction: .row, align-items: .center, item-gap: 2px},
+    padding: [0px, 14px, 0px, 8px],
+    meta: {transition: "instant"},
+    connections: {target: ::hub, label: "Back"},
+    children: [glyph, label],
+
+    glyph = asset {width: 18px, height: 18px, contents: backIcon, fill: Tokens.sample.ink}
+    label = text {contents: "Motion", font-size: 15, font-style: "Medium", fill: Tokens.sample.ink}
+  }
+
+  heading = text {
+    left: 24px,
+    top: 100px,
+    contents: "Plans",
+    font-size: 34,
+    font-style: "SemiBold",
+    fill: Tokens.sample.ink
+  }
+
+  tabs = frame {
+    left: 16px,
+    top: 160px,
+    width: 358px,
+    height: 44px,
+    corner-radius: 12px,
+    fill: Tokens.sample.sand,
+    children: [indicator, labelToday, labelWeek, todayHit],
+
+    indicator = frame {left: 183px, top: 4px, width: 171px, height: 36px, corner-radius: 9px, fill: #FFFFFF}
+    labelToday = text {left: 68px, top: 12px, contents: "Today", font-size: 15, font-style: "Medium", fill: Tokens.sample.soft}
+    labelWeek = text {left: 234px, top: 12px, contents: "This week", font-size: 15, font-style: "Medium", fill: Tokens.sample.ink}
+
+    todayHit = frame {
+      left: 0px,
+      top: 0px,
+      width: 179px,
+      height: 44px,
+      meta: {transition: "smart", duration: "motion.fast", easing: "easing.standard"},
+      connections: {target: ::tabsToday, label: "Today"},
+    }
+  }
+
+  panel = frame {
+    left: 16px,
+    top: 224px,
+    width: 358px,
+    height: 560px,
+    children: [tue, thu, sat, sun],
+
+    tue = frame {
+      left: 0px,
+      top: 0px,
+      width: 358px,
+      height: 64px,
+      corner-radius: 14px,
+      fill: #FFFFFF,
+      border: {color: Tokens.sample.line, width: 1px},
+      children: [mark, task, time],
+
+      mark = frame {left: 16px, top: 22px, width: 20px, height: 20px, corner-radius: 6px, fill: Tokens.sample.clay}
+      task = text {left: 50px, top: 13px, contents: "Pack for the trip", font-size: 15, font-style: "Medium", fill: Tokens.sample.ink}
+      time = text {left: 50px, top: 34px, contents: "Tuesday", font-size: 13, fill: Tokens.sample.soft}
+    }
+
+    thu = frame {
+      left: 0px,
+      top: 76px,
+      width: 358px,
+      height: 64px,
+      corner-radius: 14px,
+      fill: #FFFFFF,
+      border: {color: Tokens.sample.line, width: 1px},
+      children: [mark, task, time],
+
+      mark = frame {left: 16px, top: 22px, width: 20px, height: 20px, corner-radius: 6px, fill: Tokens.sample.sky}
+      task = text {left: 50px, top: 13px, contents: "Book the room", font-size: 15, font-style: "Medium", fill: Tokens.sample.ink}
+      time = text {left: 50px, top: 34px, contents: "Thursday", font-size: 13, fill: Tokens.sample.soft}
+    }
+
+    sat = frame {
+      left: 0px,
+      top: 152px,
+      width: 358px,
+      height: 64px,
+      corner-radius: 14px,
+      fill: #FFFFFF,
+      border: {color: Tokens.sample.line, width: 1px},
+      children: [mark, task, time],
+
+      mark = frame {left: 16px, top: 22px, width: 20px, height: 20px, corner-radius: 6px, fill: Tokens.sample.moss}
+      task = text {left: 50px, top: 13px, contents: "Harbour trip", font-size: 15, font-style: "Medium", fill: Tokens.sample.ink}
+      time = text {left: 50px, top: 34px, contents: "Saturday", font-size: 13, fill: Tokens.sample.soft}
+    }
+
+    sun = frame {
+      left: 0px,
+      top: 228px,
+      width: 358px,
+      height: 64px,
+      corner-radius: 14px,
+      fill: #FFFFFF,
+      border: {color: Tokens.sample.line, width: 1px},
+      children: [mark, task, time],
+
+      mark = frame {left: 16px, top: 22px, width: 20px, height: 20px, corner-radius: 6px, fill: Tokens.sample.sun}
+      task = text {left: 50px, top: 13px, contents: "Long way home", font-size: 15, font-style: "Medium", fill: Tokens.sample.ink}
+      time = text {left: 50px, top: 34px, contents: "Sunday", font-size: 13, fill: Tokens.sample.soft}
+    }
+  }
+}
+
+// Tap the player: the bar, the cover and the title each grow into place, with a little bounce.
+export playerMini = frame {
+  title: "Listen",
+  caption: "Tap the player: the bar, the cover and the title each grow into place, with a little bounce.",
+  left: 1880px,
+  top: 1000px,
+  width: 390px,
+  height: 844px,
+  fill: Tokens.sample.paper,
+  children: [backBtn, heading, queue, sheet, cover, song, artist, playBtn],
+
+  backBtn = frame {
+    left: 16px,
+    top: 52px,
+    height: 36px,
+    corner-radius: 999px,
+    fill: #FFFFFF,
+    layout: {direction: .row, align-items: .center, item-gap: 2px},
+    padding: [0px, 14px, 0px, 8px],
+    meta: {transition: "instant"},
+    connections: {target: ::hub, label: "Back"},
+    children: [glyph, label],
+
+    glyph = asset {width: 18px, height: 18px, contents: backIcon, fill: Tokens.sample.ink}
+    label = text {contents: "Motion", font-size: 15, font-style: "Medium", fill: Tokens.sample.ink}
+  }
+
+  heading = text {
+    left: 24px,
+    top: 100px,
+    contents: "Listen",
+    font-size: 34,
+    font-style: "SemiBold",
+    fill: Tokens.sample.ink
+  }
+
+  queue = frame {
+    left: 24px,
+    top: 168px,
+    width: 342px,
+    height: 300px,
+    children: [one, two, three, four, five],
+
+    one = text {left: 0px, top: 0px, contents: "Low tide", font-size: 17, fill: Tokens.sample.ink}
+    two = text {left: 0px, top: 56px, contents: "Salt on the window", font-size: 17, fill: Tokens.sample.ink}
+    three = text {left: 0px, top: 112px, contents: "Ferry at nine", font-size: 17, fill: Tokens.sample.ink}
+    four = text {left: 0px, top: 168px, contents: "Long way home", font-size: 17, fill: Tokens.sample.ink}
+    five = text {left: 0px, top: 224px, contents: "Sea wall", font-size: 17, fill: Tokens.sample.ink}
+  }
+
+  sheet = frame {
+    left: 12px,
+    top: 752px,
+    width: 366px,
+    height: 72px,
+    corner-radius: 18px,
+    fill: Tokens.sample.ink,
+    meta: {transition: "smart", duration: "motion.slow", easing: "easing.bounce"},
+    connections: {target: ::playerFull, label: "Expand"},
+  }
+
+  cover = frame {left: 24px, top: 764px, width: 48px, height: 48px, corner-radius: 10px, fill: {linear-gradient: {angle: 135deg, stops: [stop(0%, Tokens.sample.sun), stop(100%, Tokens.sample.clay)]}}}
+
+  song = text {
+    left: 86px,
+    top: 769px,
+    contents: "Low tide",
+    font-size: 15,
+    font-style: "SemiBold",
+    fill: Tokens.sample.paper
+  }
+
+  artist = text {
+    left: 86px,
+    top: 791px,
+    contents: "Harbour Lights",
+    font-size: 13,
+    fill: opacity(Tokens.sample.paper, 64%)
+  }
+
+  playBtn = frame {
+    left: 334px,
+    top: 774px,
+    width: 28px,
+    height: 28px,
+    corner-radius: 999px,
+    fill: Tokens.sample.paper,
+    layout: {direction: .row, justify-content: .center, align-items: .center},
+    children: glyph,
+
+    glyph = asset {width: 11px, height: 11px, contents: playIcon, fill: Tokens.sample.ink}
+  }
+}
+
+// The full player. The arrow folds it back into the bar.
+export playerFull = frame {
+  title: "Now playing",
+  caption: "The full player. The arrow folds it back into the bar.",
+  left: 2350px,
+  top: 1000px,
+  width: 390px,
+  height: 844px,
+  fill: Tokens.sample.ink,
+  children: [sheet, cover, song, artist, playBtn, collapse],
+
+  sheet = frame {
+    left: 0px,
+    top: 0px,
+    width: 390px,
+    height: 844px,
+    corner-radius: 0px,
+    fill: Tokens.sample.ink,
+  }
+
+  cover = frame {left: 40px, top: 150px, width: 310px, height: 310px, corner-radius: 28px, fill: {linear-gradient: {angle: 135deg, stops: [stop(0%, Tokens.sample.sun), stop(100%, Tokens.sample.clay)]}}}
+
+  song = text {
+    left: 40px,
+    top: 500px,
+    contents: "Low tide",
+    font-size: 28,
+    font-style: "SemiBold",
+    fill: Tokens.sample.paper
+  }
+
+  artist = text {
+    left: 40px,
+    top: 542px,
+    contents: "Harbour Lights",
+    font-size: 16,
+    fill: opacity(Tokens.sample.paper, 64%)
+  }
+
+  playBtn = frame {
+    left: 163px,
+    top: 640px,
+    width: 64px,
+    height: 64px,
+    corner-radius: 999px,
+    fill: Tokens.sample.paper,
+    layout: {direction: .row, justify-content: .center, align-items: .center},
+    children: glyph,
+
+    glyph = asset {width: 24px, height: 24px, contents: playIcon, fill: Tokens.sample.ink}
+  }
+
+  collapse = frame {
+    left: 16px,
+    top: 52px,
+    width: 40px,
+    height: 40px,
+    corner-radius: 999px,
+    fill: opacity(Tokens.sample.paper, 16%),
+    layout: {direction: .row, justify-content: .center, align-items: .center},
+    meta: {transition: "smart", duration: "motion.slow", easing: "easing.bounce"},
+    connections: {target: ::playerMini, label: "Collapse"},
+    children: glyph,
+
+    glyph = asset {width: 22px, height: 22px, contents: downIcon, fill: Tokens.sample.paper}
+  }
+}
+
+// Push: Next shoves this page out as the next one comes in.
+export welcomeOne = frame {
+  title: "Onboarding 1",
+  caption: "Push: Next shoves this page out as the next one comes in.",
+  left: 0px,
+  top: 2000px,
+  width: 390px,
+  height: 844px,
+  fill: Tokens.sample.paper,
+  children: [art, stepTitle, stepText, dots, nextBtn],
+
+  art = frame {left: 24px, top: 112px, width: 342px, height: 342px, corner-radius: 32px, fill: Tokens.sample.sky}
+
+  stepTitle = text {
+    left: 24px,
+    top: 494px,
+    contents: "Write it down once",
+    font-size: 30,
+    font-style: "SemiBold",
+    fill: Tokens.sample.ink
+  }
+
+  stepText = text {
+    left: 24px,
+    top: 540px,
+    width: 342px,
+    contents: "Driftwood keeps every note, list and plan in one quiet place.",
+    font-size: 17,
+    fill: Tokens.sample.soft
+  }
+
+  dots = frame {
+    left: 24px,
+    top: 690px,
+    layout: {direction: .row, item-gap: 6px},
+    children: [dot0, dot1, dot2],
+
+    dot0 = frame {width: 24px, height: 8px, corner-radius: 999px, fill: Tokens.sample.ink}
+    dot1 = frame {width: 8px, height: 8px, corner-radius: 999px, fill: Tokens.sample.line}
+    dot2 = frame {width: 8px, height: 8px, corner-radius: 999px, fill: Tokens.sample.line}
+  }
+
+  nextBtn = frame {
+    left: 24px,
+    top: 744px,
+    width: 342px,
+    height: 56px,
+    corner-radius: 16px,
+    fill: Tokens.sample.ink,
+    layout: {direction: .row, justify-content: .center, align-items: .center},
+    meta: {transition: "push", duration: "motion.medium", easing: "easing.standard"},
+    connections: {target: ::welcomeTwo, label: "Next"},
+    children: label,
+
+    label = text {contents: "Next", font-size: 17, font-style: "SemiBold", fill: Tokens.sample.paper}
+  }
+}
+
+// Push: Next shoves this page out as the next one comes in.
+export welcomeTwo = frame {
+  title: "Onboarding 2",
+  caption: "Push: Next shoves this page out as the next one comes in.",
+  left: 470px,
+  top: 2000px,
+  width: 390px,
+  height: 844px,
+  fill: Tokens.sample.paper,
+  children: [art, stepTitle, stepText, dots, nextBtn],
+
+  art = frame {left: 24px, top: 112px, width: 342px, height: 342px, corner-radius: 32px, fill: Tokens.sample.moss}
+
+  stepTitle = text {
+    left: 24px,
+    top: 494px,
+    contents: "Find it again",
+    font-size: 30,
+    font-style: "SemiBold",
+    fill: Tokens.sample.ink
+  }
+
+  stepText = text {
+    left: 24px,
+    top: 540px,
+    width: 342px,
+    contents: "Search the words inside every note, even the ones you forgot.",
+    font-size: 17,
+    fill: Tokens.sample.soft
+  }
+
+  dots = frame {
+    left: 24px,
+    top: 690px,
+    layout: {direction: .row, item-gap: 6px},
+    children: [dot0, dot1, dot2],
+
+    dot0 = frame {width: 8px, height: 8px, corner-radius: 999px, fill: Tokens.sample.line}
+    dot1 = frame {width: 24px, height: 8px, corner-radius: 999px, fill: Tokens.sample.ink}
+    dot2 = frame {width: 8px, height: 8px, corner-radius: 999px, fill: Tokens.sample.line}
+  }
+
+  nextBtn = frame {
+    left: 24px,
+    top: 744px,
+    width: 342px,
+    height: 56px,
+    corner-radius: 16px,
+    fill: Tokens.sample.ink,
+    layout: {direction: .row, justify-content: .center, align-items: .center},
+    meta: {transition: "push", duration: "motion.medium", easing: "easing.standard"},
+    connections: {target: ::welcomeThree, label: "Next"},
+    children: label,
+
+    label = text {contents: "Next", font-size: 17, font-style: "SemiBold", fill: Tokens.sample.paper}
+  }
+}
+
+// The last step. Get started jumps back to the menu.
+export welcomeThree = frame {
+  title: "Onboarding 3",
+  caption: "The last step. Get started jumps back to the menu.",
+  left: 940px,
+  top: 2000px,
+  width: 390px,
+  height: 844px,
+  fill: Tokens.sample.paper,
+  children: [art, stepTitle, stepText, dots, nextBtn],
+
+  art = frame {left: 24px, top: 112px, width: 342px, height: 342px, corner-radius: 32px, fill: Tokens.sample.clay}
+
+  stepTitle = text {
+    left: 24px,
+    top: 494px,
+    contents: "Take it anywhere",
+    font-size: 30,
+    font-style: "SemiBold",
+    fill: Tokens.sample.ink
+  }
+
+  stepText = text {
+    left: 24px,
+    top: 540px,
+    width: 342px,
+    contents: "Your notes follow you to the ferry, the shop and back.",
+    font-size: 17,
+    fill: Tokens.sample.soft
+  }
+
+  dots = frame {
+    left: 24px,
+    top: 690px,
+    layout: {direction: .row, item-gap: 6px},
+    children: [dot0, dot1, dot2],
+
+    dot0 = frame {width: 8px, height: 8px, corner-radius: 999px, fill: Tokens.sample.line}
+    dot1 = frame {width: 8px, height: 8px, corner-radius: 999px, fill: Tokens.sample.line}
+    dot2 = frame {width: 24px, height: 8px, corner-radius: 999px, fill: Tokens.sample.ink}
+  }
+
+  nextBtn = frame {
+    left: 24px,
+    top: 744px,
+    width: 342px,
+    height: 56px,
+    corner-radius: 16px,
+    fill: Tokens.sample.ink,
+    layout: {direction: .row, justify-content: .center, align-items: .center},
+    meta: {transition: "instant"},
+    connections: {target: ::hub, label: "Get started"},
+    children: label,
+
+    label = text {contents: "Get started", font-size: 17, font-style: "SemiBold", fill: Tokens.sample.paper}
+  }
+}
+
+// Slide in, fast: 150 ms with the emphasized curve.
+export settings = frame {
+  title: "Settings",
+  caption: "Slide in, fast: 150 ms with the emphasized curve.",
+  left: 1410px,
+  top: 2000px,
+  width: 390px,
+  height: 844px,
+  fill: Tokens.sample.paper,
+  children: [backBtn, heading, sync, digest, theme, sounds],
+
+  backBtn = frame {
+    left: 16px,
+    top: 52px,
+    height: 36px,
+    corner-radius: 999px,
+    fill: #FFFFFF,
+    layout: {direction: .row, align-items: .center, item-gap: 2px},
+    padding: [0px, 14px, 0px, 8px],
+    meta: {transition: "instant"},
+    connections: {target: ::hub, label: "Back"},
+    children: [glyph, label],
+
+    glyph = asset {width: 18px, height: 18px, contents: backIcon, fill: Tokens.sample.ink}
+    label = text {contents: "Motion", font-size: 15, font-style: "Medium", fill: Tokens.sample.ink}
+  }
+
+  heading = text {
+    left: 24px,
+    top: 100px,
+    contents: "Settings",
+    font-size: 34,
+    font-style: "SemiBold",
+    fill: Tokens.sample.ink
+  }
+
+  sync = frame {
+    left: 16px,
+    top: 168px,
+    width: 358px,
+    height: 56px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 16px],
+    children: [label, gap, note],
+
+    label = text {contents: "Sync across devices", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    note = text {contents: "On", font-size: 15, fill: Tokens.sample.soft}
+  }
+
+  digest = frame {
+    left: 16px,
+    top: 232px,
+    width: 358px,
+    height: 56px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 16px],
+    children: [label, gap, note],
+
+    label = text {contents: "Daily digest", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    note = text {contents: "8:00", font-size: 15, fill: Tokens.sample.soft}
+  }
+
+  theme = frame {
+    left: 16px,
+    top: 296px,
+    width: 358px,
+    height: 56px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 16px],
+    children: [label, gap, note],
+
+    label = text {contents: "Appearance", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    note = text {contents: "Light", font-size: 15, fill: Tokens.sample.soft}
+  }
+
+  sounds = frame {
+    left: 16px,
+    top: 360px,
+    width: 358px,
+    height: 56px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 16px],
+    children: [label, gap, note],
+
+    label = text {contents: "Sounds", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    note = text {contents: "Off", font-size: 15, fill: Tokens.sample.soft}
+  }
+}
+
+// Slide in, medium: 300 ms with the emphasized curve.
+export share = frame {
+  title: "Share",
+  caption: "Slide in, medium: 300 ms with the emphasized curve.",
+  left: 1880px,
+  top: 2000px,
+  width: 390px,
+  height: 844px,
+  fill: Tokens.sample.paper,
+  children: [backBtn, heading, copyLink, byEmail, printOut, asPdf],
+
+  backBtn = frame {
+    left: 16px,
+    top: 52px,
+    height: 36px,
+    corner-radius: 999px,
+    fill: #FFFFFF,
+    layout: {direction: .row, align-items: .center, item-gap: 2px},
+    padding: [0px, 14px, 0px, 8px],
+    meta: {transition: "instant"},
+    connections: {target: ::hub, label: "Back"},
+    children: [glyph, label],
+
+    glyph = asset {width: 18px, height: 18px, contents: backIcon, fill: Tokens.sample.ink}
+    label = text {contents: "Motion", font-size: 15, font-style: "Medium", fill: Tokens.sample.ink}
+  }
+
+  heading = text {
+    left: 24px,
+    top: 100px,
+    contents: "Share",
+    font-size: 34,
+    font-style: "SemiBold",
+    fill: Tokens.sample.ink
+  }
+
+  copyLink = frame {
+    left: 16px,
+    top: 168px,
+    width: 358px,
+    height: 56px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 16px],
+    children: [label, gap, note],
+
+    label = text {contents: "Copy link", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    note = text {contents: "driftwood.app/n/42", font-size: 15, fill: Tokens.sample.soft}
+  }
+
+  byEmail = frame {
+    left: 16px,
+    top: 232px,
+    width: 358px,
+    height: 56px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 16px],
+    children: [label, gap, note],
+
+    label = text {contents: "Send by email", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    note = text {contents: "", font-size: 15, fill: Tokens.sample.soft}
+  }
+
+  printOut = frame {
+    left: 16px,
+    top: 296px,
+    width: 358px,
+    height: 56px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 16px],
+    children: [label, gap, note],
+
+    label = text {contents: "Print", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    note = text {contents: "", font-size: 15, fill: Tokens.sample.soft}
+  }
+
+  asPdf = frame {
+    left: 16px,
+    top: 360px,
+    width: 358px,
+    height: 56px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 16px],
+    children: [label, gap, note],
+
+    label = text {contents: "Export as PDF", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    note = text {contents: "", font-size: 15, fill: Tokens.sample.soft}
+  }
+}
+
+// Slide in, slow: 500 ms with the emphasized curve.
+export alerts = frame {
+  title: "Notifications",
+  caption: "Slide in, slow: 500 ms with the emphasized curve.",
+  left: 2350px,
+  top: 2000px,
+  width: 390px,
+  height: 844px,
+  fill: Tokens.sample.paper,
+  children: [backBtn, heading, ferry, shared, packed, weekly],
+
+  backBtn = frame {
+    left: 16px,
+    top: 52px,
+    height: 36px,
+    corner-radius: 999px,
+    fill: #FFFFFF,
+    layout: {direction: .row, align-items: .center, item-gap: 2px},
+    padding: [0px, 14px, 0px, 8px],
+    meta: {transition: "instant"},
+    connections: {target: ::hub, label: "Back"},
+    children: [glyph, label],
+
+    glyph = asset {width: 18px, height: 18px, contents: backIcon, fill: Tokens.sample.ink}
+    label = text {contents: "Motion", font-size: 15, font-style: "Medium", fill: Tokens.sample.ink}
+  }
+
+  heading = text {
+    left: 24px,
+    top: 100px,
+    contents: "Notifications",
+    font-size: 34,
+    font-style: "SemiBold",
+    fill: Tokens.sample.ink
+  }
+
+  ferry = frame {
+    left: 16px,
+    top: 168px,
+    width: 358px,
+    height: 56px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 16px],
+    children: [label, gap, note],
+
+    label = text {contents: "Ferry leaves in 20 minutes", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    note = text {contents: "now", font-size: 15, fill: Tokens.sample.soft}
+  }
+
+  shared = frame {
+    left: 16px,
+    top: 232px,
+    width: 358px,
+    height: 56px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 16px],
+    children: [label, gap, note],
+
+    label = text {contents: "Sam shared Trip ideas", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    note = text {contents: "2h", font-size: 15, fill: Tokens.sample.soft}
+  }
+
+  packed = frame {
+    left: 16px,
+    top: 296px,
+    width: 358px,
+    height: 56px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 16px],
+    children: [label, gap, note],
+
+    label = text {contents: "Packing list is done", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    note = text {contents: "Fri", font-size: 15, fill: Tokens.sample.soft}
+  }
+
+  weekly = frame {
+    left: 16px,
+    top: 360px,
+    width: 358px,
+    height: 56px,
+    corner-radius: 14px,
+    fill: #FFFFFF,
+    border: {color: Tokens.sample.line, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 12px},
+    padding: [0px, 16px],
+    children: [label, gap, note],
+
+    label = text {contents: "Your week in notes", font-size: 15, fill: Tokens.sample.ink}
+    gap = frame {}
+    note = text {contents: "Mon", font-size: 15, fill: Tokens.sample.soft}
+  }
+}
+
+// Dissolve: tap the photo and the next one fades in, slowly.
+export photoOne = frame {
+  title: "Morning ferry",
+  caption: "Dissolve: tap the photo and the next one fades in, slowly.",
+  left: 0px,
+  top: 3000px,
+  width: 390px,
+  height: 844px,
+  fill: Tokens.sample.paper,
+  children: [photo, caption, place, counter, closeBtn],
+
+  photo = frame {
+    left: 0px,
+    top: 0px,
+    width: 390px,
+    height: 600px,
+    fill: {linear-gradient: {angle: 160deg, stops: [stop(0%, Tokens.sample.sky), stop(100%, Tokens.sample.sun)]}},
+    meta: {transition: "dissolve", duration: "motion.slow", easing: "easing.standard"},
+    connections: {target: ::photoTwo, label: "Next photo"},
+  }
+
+  caption = text {
+    left: 24px,
+    top: 628px,
+    contents: "Morning ferry",
+    font-size: 24,
+    font-style: "SemiBold",
+    fill: Tokens.sample.ink
+  }
+
+  place = text {
+    left: 24px,
+    top: 666px,
+    contents: "From the upper deck, 9:10",
+    font-size: 15,
+    fill: Tokens.sample.soft
+  }
+
+  counter = text {
+    left: 24px,
+    top: 780px,
+    contents: "1 of 3 · tap the photo",
+    font-size: 13,
+    fill: Tokens.sample.soft
+  }
+
+  closeBtn = frame {
+    left: 16px,
+    top: 52px,
+    width: 40px,
+    height: 40px,
+    corner-radius: 999px,
+    fill: opacity(Tokens.sample.paper, 24%),
+    layout: {direction: .row, justify-content: .center, align-items: .center},
+    meta: {transition: "instant"},
+    connections: {target: ::hub, label: "Close"},
+    children: glyph,
+
+    glyph = asset {width: 20px, height: 20px, contents: closeIcon, fill: Tokens.sample.paper}
+  }
+}
+
+// Dissolve: tap the photo and the next one fades in, slowly.
+export photoTwo = frame {
+  title: "Sea wall",
+  caption: "Dissolve: tap the photo and the next one fades in, slowly.",
+  left: 470px,
+  top: 3000px,
+  width: 390px,
+  height: 844px,
+  fill: Tokens.sample.paper,
+  children: [photo, caption, place, counter, closeBtn],
+
+  photo = frame {
+    left: 0px,
+    top: 0px,
+    width: 390px,
+    height: 600px,
+    fill: {linear-gradient: {angle: 160deg, stops: [stop(0%, Tokens.sample.moss), stop(100%, Tokens.sample.ink)]}},
+    meta: {transition: "dissolve", duration: "motion.slow", easing: "easing.standard"},
+    connections: {target: ::photoThree, label: "Next photo"},
+  }
+
+  caption = text {
+    left: 24px,
+    top: 628px,
+    contents: "Sea wall",
+    font-size: 24,
+    font-style: "SemiBold",
+    fill: Tokens.sample.ink
+  }
+
+  place = text {
+    left: 24px,
+    top: 666px,
+    contents: "The long walk, low tide",
+    font-size: 15,
+    fill: Tokens.sample.soft
+  }
+
+  counter = text {
+    left: 24px,
+    top: 780px,
+    contents: "2 of 3 · tap the photo",
+    font-size: 13,
+    fill: Tokens.sample.soft
+  }
+
+  closeBtn = frame {
+    left: 16px,
+    top: 52px,
+    width: 40px,
+    height: 40px,
+    corner-radius: 999px,
+    fill: opacity(Tokens.sample.paper, 24%),
+    layout: {direction: .row, justify-content: .center, align-items: .center},
+    meta: {transition: "instant"},
+    connections: {target: ::hub, label: "Close"},
+    children: glyph,
+
+    glyph = asset {width: 20px, height: 20px, contents: closeIcon, fill: Tokens.sample.paper}
+  }
+}
+
+// Dissolve: tap the photo and the next one fades in, slowly.
+export photoThree = frame {
+  title: "Harbour at dusk",
+  caption: "Dissolve: tap the photo and the next one fades in, slowly.",
+  left: 940px,
+  top: 3000px,
+  width: 390px,
+  height: 844px,
+  fill: Tokens.sample.paper,
+  children: [photo, caption, place, counter, closeBtn],
+
+  photo = frame {
+    left: 0px,
+    top: 0px,
+    width: 390px,
+    height: 600px,
+    fill: {linear-gradient: {angle: 160deg, stops: [stop(0%, Tokens.sample.clay), stop(100%, Tokens.sample.ink)]}},
+    meta: {transition: "dissolve", duration: "motion.slow", easing: "easing.standard"},
+    connections: {target: ::photoOne, label: "Next photo"},
+  }
+
+  caption = text {
+    left: 24px,
+    top: 628px,
+    contents: "Harbour at dusk",
+    font-size: 24,
+    font-style: "SemiBold",
+    fill: Tokens.sample.ink
+  }
+
+  place = text {
+    left: 24px,
+    top: 666px,
+    contents: "Last light over the slipway",
+    font-size: 15,
+    fill: Tokens.sample.soft
+  }
+
+  counter = text {
+    left: 24px,
+    top: 780px,
+    contents: "3 of 3 · tap the photo",
+    font-size: 13,
+    fill: Tokens.sample.soft
+  }
+
+  closeBtn = frame {
+    left: 16px,
+    top: 52px,
+    width: 40px,
+    height: 40px,
+    corner-radius: 999px,
+    fill: opacity(Tokens.sample.paper, 24%),
+    layout: {direction: .row, justify-content: .center, align-items: .center},
+    meta: {transition: "instant"},
+    connections: {target: ::hub, label: "Close"},
+    children: glyph,
+
+    glyph = asset {width: 20px, height: 20px, contents: closeIcon, fill: Tokens.sample.paper}
+  }
+}
