@@ -1,10 +1,11 @@
 // Routing, the bars around the stage, and live updates.
 import { exportControls } from './export.js'
+import { closePlay, loadLinks, openPlay } from './play.js'
 import { shareBoard } from './share.js'
 import { bounds, fit, focusOn, leaveRevision, loadBoard, paint, refine, select, trailOf, treeOf, zoomCenter, zoomToSelection } from './board.js'
 import { $, contextAxes, el, get, icon, needUsage, post, report, shortName, state, stored, toast, undo } from './lib.js'
 import { openRecent, renderNav } from './nav.js'
-import { assetsPage, colorsPage, componentPage, galleryPage, homePage, scalesPage } from './pages.js'
+import { assetsPage, colorsPage, componentPage, galleryPage, homePage, motionPage, scalesPage } from './pages.js'
 import { closePopover, popover, renderQuick } from './pickers.js'
 import { isNarrow, keepRail, openClaude, renderRail, restoreRail } from './rail.js'
 import { closeSearch, openSearch } from './search.js'
@@ -16,7 +17,7 @@ const crumbTitle = () => {
   if (kind === 'board') return focus ?? (shortName(file) === 'index' ? 'All screens' : shortName(file))
   if (kind === 'component') return shortName(file)
   if (kind === 'gallery') return 'Components'
-  if (kind === 'tokens') return first === 'scales' ? 'Scales' : 'Colors'
+  if (kind === 'tokens') return first === 'scales' ? 'Scales' : first === 'motion' ? 'Motion' : 'Colors'
   if (kind === 'assets') return 'Assets'
   return 'Home'
 }
@@ -69,6 +70,7 @@ const renderPage = () => {
   if (kind === 'gallery') galleryPage(first ?? 'all')
   else if (kind === 'component') componentPage(state.view.file)
   else if (kind === 'tokens' && first === 'scales') scalesPage(second)
+  else if (kind === 'tokens' && first === 'motion') motionPage()
   else if (kind === 'tokens') colorsPage(second)
   else if (kind === 'assets') assetsPage(first ?? 'all')
   else homePage(filter)
@@ -77,6 +79,7 @@ const renderPage = () => {
 const renderChrome = () => {
   $('crumb-title').textContent = crumbTitle()
   $('export').hidden = state.view.kind !== 'board'
+  $('play-button').hidden = state.view.kind !== 'board'
   renderNav()
   renderHud()
   renderRail()
@@ -90,6 +93,7 @@ const showBoard = () => {
 const route = async () => {
   closePopover()
   closeSearch()
+  closePlay()
   if (isNarrow() && !state.token) document.body.classList.remove('rail-open')
   const [kind = 'home', first, second, third] = decodeURIComponent(location.hash.slice(1)).split(':')
   const previous = state.view
@@ -105,7 +109,9 @@ const route = async () => {
       state.selection = null
       renderChrome()
       renderQuick()
+      state.links = []
       await loadBoard()
+      loadLinks().then(renderRail)
     }
     if (!state.frames.length && !isSameFile) {
       state.view = { kind: 'component', file: first }
@@ -179,6 +185,7 @@ const reloadBoard = async () => {
   const chosen = state.selection && { name: state.selection.frame.name, path: state.selection.path }
   const { scope } = state
   await loadBoard()
+  loadLinks().then(renderRail)
   paint()
   const frame = chosen && state.frames.find(item => item.name === chosen.name)
   if (frame) await treeOf(frame)
@@ -272,6 +279,7 @@ const wireBars = () => {
   $('canvas-mode').append(icon('maximize', 16))
   $('leave-canvas').append(icon('minimize', 16))
   $('ask').prepend(icon('sparkles', 14))
+  $('play-button').append(icon('play', 15))
 
   $('find').prepend(icon('search', 14))
   $('find').onclick = openSearch
@@ -300,6 +308,7 @@ const wireBars = () => {
     openClaude()
   }
   $('export').onclick = openExport
+  $('play-button').onclick = () => openPlay().catch(report)
   $('share').onclick = shareBoard
 }
 
@@ -322,7 +331,7 @@ addEventListener('keydown', event => {
     event.preventDefault()
     return openSearch()
   }
-  if (event.target.matches?.('input, textarea')) return
+  if (event.target.matches?.('input, textarea') || state.playing) return
   if (isCommand && event.key === 'z') {
     event.preventDefault()
     return undo()
@@ -344,6 +353,7 @@ addEventListener('keydown', event => {
     return setCanvasMode(false)
   }
   if (event.key === 'c' && !$('context').hidden) openContexts($('context'))
+  if (event.key === 'p') openPlay().catch(report)
 })
 
 document.addEventListener('fullscreenchange', () => {

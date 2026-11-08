@@ -187,3 +187,22 @@ export const importAlias = (source, file, tokenFile, root) => {
   const at = last ? last.index + last[0].length : 0
   return { source: splice(source, [at, at], `import "${spec}" as ${alias}\n`), alias }
 }
+
+// Every block that sets key, with the names that lead to it from the top of the file.
+export const blocksWith = (source, key) => {
+  const found = []
+  const walk = (body, names) => {
+    for (const entry of entries(source, body)) {
+      if (entry.block) walk(entry.block, [...names, entry.key])
+      else if (entry.key === key && names.length) found.push({ names, value: source.slice(...entry.value), body })
+    }
+  }
+  walk([0, source.length], [])
+  return found
+}
+
+// The value of one property set directly in body, as source text.
+export const propertyIn = (source, body, key) => {
+  const entry = entries(source, body).find(item => item.key === key && !item.block)
+  return entry ? source.slice(...entry.value) : null
+}

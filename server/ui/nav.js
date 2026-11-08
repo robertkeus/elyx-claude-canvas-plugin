@@ -1,6 +1,6 @@
 // The sidebar: four views of a project, with a body for each.
 import { popover } from './pickers.js'
-import { $, colorTokens, el, get, humanize, icon, isBase, query, ROLE_ORDER, roleOf, sectionOf, shortName, state, thumb } from './lib.js'
+import { $, colorTokens, durationTokens, easingTokens, el, get, humanize, icon, isBase, isMotionGroup, query, ROLE_ORDER, roleOf, sectionOf, shortName, state, thumb } from './lib.js'
 
 export const isScreenFile = file => !sectionOf(file) || sectionOf(file) === 'screens'
 
@@ -85,7 +85,8 @@ const SCALE_ICONS = [[/radius/i, 'corner'], [/font|letter|line/i, 'type'], [/spa
 const tokensBody = () => {
   const colors = colorTokens()
   const roles = Object.groupBy(colors, token => roleOf(token.name))
-  const numbers = Object.groupBy(state.project.tokens.filter(token => token.type === 'number'), token => token.rootScope[0])
+  const numbers = Object.groupBy(state.project.tokens.filter(token => token.type === 'number' && !isMotionGroup(token.rootScope[0])), token => token.rootScope[0])
+  const motion = durationTokens().length + easingTokens().length
   const contexts = Object.groupBy(state.project.tokens.filter(token => !isBase(token)), token => JSON.stringify(token.context))
   return [
     pill('#tokens:colors', 'palette', 'All tokens', state.project.tokens.length),
@@ -96,6 +97,7 @@ const tokensBody = () => {
     }),
     Object.keys(numbers).length ? head('Scales', Object.values(numbers).flat().length) : null,
     Object.entries(numbers).map(([group, tokens]) => row(`#tokens:scales:${group}`, SCALE_ICONS.find(([pattern]) => pattern.test(group))?.[1] ?? 'frame', humanize(group), tokens.length)),
+    motion ? [head('Motion', motion), row('#tokens:motion', 'play', 'Durations and easing', motion)] : null,
     Object.keys(contexts).length ? head('Contexts', Object.keys(contexts).length) : null,
     Object.entries(contexts).map(([key, tokens]) => {
       const label = Object.entries(JSON.parse(key)).map(([axis, value]) => `${axis}=${value}`).join(', ')

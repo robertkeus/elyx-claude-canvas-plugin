@@ -20,6 +20,7 @@
   <button id="toggle-rail" class="icon-button" aria-label="Toggle inspector" title="Inspector"></button>
   <span class="bar-rule"></span>
   <a id="shared" class="icon-button" target="_blank" rel="noopener" aria-label="Open the shared page" title="Open the shared page" hidden></a>
+  <button id="play-button" class="icon-button" aria-label="Play" title="Play (P)" hidden></button>
   <button id="export" class="button" hidden>Export</button>
   <button id="share" class="share-button" title="Publish this board as a Claude artifact you can share"><span class="label">Share</span></button>
 </header>
@@ -53,6 +54,7 @@
   </div>
 </main>
 <aside id="rail" aria-label="Inspector"></aside>
+<div id="play" role="dialog" aria-label="Play" hidden></div>
 <div id="floating"></div>
 <div id="toast" role="status" hidden></div>
 <script type="module" src="ui/app.js"></script>
