@@ -1,12 +1,12 @@
 // Routing, the bars around the stage, and live updates.
-import { openComposer } from './ask.js'
+import { exportControls } from './export.js'
 import { shareBoard } from './share.js'
-import { bounds, fit, focusOn, loadBoard, paint, refine, select, treeOf, zoomCenter } from './board.js'
-import { $, contextAxes, el, get, icon, needUsage, plural, post, report, shortName, state, stored, undo } from './lib.js'
-import { isScreenFile, openRecent, renderNav } from './nav.js'
+import { bounds, fit, focusOn, leaveRevision, loadBoard, paint, refine, select, trailOf, treeOf, zoomCenter, zoomToSelection } from './board.js'
+import { $, contextAxes, el, get, icon, needUsage, post, report, shortName, state, stored, toast, undo } from './lib.js'
+import { openRecent, renderNav } from './nav.js'
 import { assetsPage, colorsPage, componentPage, galleryPage, homePage, scalesPage } from './pages.js'
 import { closePopover, popover, renderQuick } from './pickers.js'
-import { isNarrow, keepRail, renderRail, restoreRail } from './rail.js'
+import { isNarrow, keepRail, openClaude, renderRail, restoreRail } from './rail.js'
 import { closeSearch, openSearch } from './search.js'
 
 const USES_USAGE = new Set(['gallery', 'component', 'tokens'])
@@ -19,11 +19,6 @@ const crumbTitle = () => {
   if (kind === 'tokens') return first === 'scales' ? 'Scales' : 'Colors'
   if (kind === 'assets') return 'Assets'
   return 'Home'
-}
-
-const stageChip = (id, label, key, onclick) => {
-  const chip = el('button', { className: 'stage-chip figure', onclick: () => onclick(chip) }, el('span', { id, textContent: label }), key ? el('kbd', { textContent: key }) : null)
-  return chip
 }
 
 const openContexts = anchor => {
@@ -42,32 +37,35 @@ const openContexts = anchor => {
     : el('div', { className: 'head', textContent: 'This project has no contexts.' }), { className: 'menu' })
 }
 
+const isMac = /Mac|iPhone|iPad/.test(navigator.platform)
+const command = isMac ? '⌘' : 'Ctrl+'
+
 const openZoom = anchor => popover(anchor, [
-  ['Zoom in', () => zoomCenter(1.4), '+'],
-  ['Zoom out', () => zoomCenter(1 / 1.4), '−'],
-  ['Zoom to 100%', () => zoomCenter(1 / state.camera.z)],
-  ['Zoom to fit', () => fit(bounds()), '0'],
+  ['Zoom in', () => zoomCenter(1.4), `${command}+`],
+  ['Zoom out', () => zoomCenter(1 / 1.4), `${command}−`],
+  ['Zoom to 100%', () => zoomCenter(1 / state.camera.z), `${command}0`],
+  ['Zoom to fit', () => fit(bounds()), '⇧1'],
+  ['Zoom to selection', zoomToSelection, '⇧2'],
+  ['Canvas mode', () => setCanvasMode(true), `${command}\\`],
 ].map(([label, run, key]) => el('button', { onclick: () => {
   closePopover()
   run()
-} }, label, key ? el('span', { textContent: key }) : null)), { className: 'menu' })
+} }, label, el('span', { textContent: key }))), { className: 'menu' })
 
+// The one floating toolbar. Pages keep only the theme and Claude.
 const renderHud = () => {
-  const hud = $('hud')
-  hud.hidden = state.view.kind !== 'board' || !state.frames.length
-  if (hud.hidden) return
-  const count = state.frames.length
-  const isBoard = isScreenFile(state.view.file) && count > 1
-  const chosen = Object.values(state.contexts).join(', ')
-  hud.replaceChildren(
-    stageChip('count-label', plural(count, isBoard ? 'Screen' : 'Frame'), 'S', () => fit(bounds())),
-    stageChip('context-label', chosen || 'Context', 'C', openContexts),
-    stageChip('level-label', `${Math.round(state.camera.z * 100)}%`, null, openZoom),
-  )
+  const isBoard = state.view.kind === 'board' && state.frames.length > 0
+  document.body.classList.toggle('on-board', isBoard)
+  if (!isBoard) return
+  const hasContexts = Object.keys(contextAxes()).length > 0
+  $('context').hidden = !hasContexts
+  $('context-label').textContent = Object.values(state.contexts).join(', ') || 'Context'
+  $('level-label').textContent = `${Math.round(state.camera.z * 100)}%`
 }
 
 const renderPage = () => {
   const { kind, first, second, filter } = state.view
+  $('page').dataset.kind = kind
   if (kind === 'gallery') galleryPage(first ?? 'all')
   else if (kind === 'component') componentPage(state.view.file)
   else if (kind === 'tokens' && first === 'scales') scalesPage(second)
@@ -78,6 +76,7 @@ const renderPage = () => {
 
 const renderChrome = () => {
   $('crumb-title').textContent = crumbTitle()
+  $('export').hidden = state.view.kind !== 'board'
   renderNav()
   renderHud()
   renderRail()
@@ -94,6 +93,9 @@ const route = async () => {
   if (isNarrow() && !state.token) document.body.classList.remove('rail-open')
   const [kind = 'home', first, second, third] = decodeURIComponent(location.hash.slice(1)).split(':')
   const previous = state.view
+  const isSameBoard = kind === 'board' && previous.kind === 'board' && previous.file === first
+  if (!isSameBoard) leaveRevision(false)
+  if (kind !== 'board') setCanvasMode(false)
   if (kind === 'board' && first) {
     const isSameFile = previous.kind === 'board' && previous.file === first
     state.view = { kind, file: first, focus: second }
@@ -198,7 +200,9 @@ const applyProject = () => {
   document.documentElement.style.setProperty('--canvas', project.canvas ?? 'var(--stage)')
   const canSwitch = projects.length > 1
   $('project').disabled = !canSwitch
-  $('project').replaceChildren(project.name, project.branch ? el('small', { textContent: project.branch }) : '', canSwitch ? el('span', { className: 'faint' }, icon('chevron-down', 13)) : '')
+  $('project').replaceChildren(el('span', { className: 'mark' }), el('span', { className: 'name', textContent: project.name }), canSwitch ? el('span', { className: 'faint' }, icon('chevron-down', 13)) : '')
+  $('branch').hidden = !project.branch
+  $('branch').textContent = project.branch ?? ''
 }
 
 const openProjects = () => popover($('project'), [
@@ -221,9 +225,29 @@ const setTheme = theme => {
 const setRail = isOpen => {
   document.body.classList.toggle('rail-open', isOpen)
   keepRail(isOpen)
+  renderRail()
   if (state.view.kind === 'board') paint()
 }
 
+// Canvas mode: the design and nothing else, full screen where the browser allows it.
+const setCanvasMode = isOn => {
+  if (isOn === document.body.classList.contains('canvas-mode')) return
+  if (isOn && state.view.kind !== 'board') return
+  document.body.classList.toggle('canvas-mode', isOn)
+  closePopover()
+  if (isOn) {
+    document.documentElement.requestFullscreen?.().catch(() => {})
+    toast(`Canvas mode. Press Esc or ${command}\\ to leave.`)
+  } else if (document.fullscreenElement) document.exitFullscreen().catch(() => {})
+  requestAnimationFrame(paint)
+}
+const toggleCanvasMode = () => setCanvasMode(!document.body.classList.contains('canvas-mode'))
+
+const openExport = () => {
+  const target = state.selection && trailOf(state.selection).at(-1)
+  const source = target ? { name: target.name, target: target.target } : { file: state.view.file, name: shortName(state.view.file) }
+  popover($('export'), [el('div', { className: 'section-head', textContent: target ? `Export ${target.name}` : `Export ${shortName(state.view.file)}` }), exportControls(source)], { className: 'export-popover' })
+}
 const toggleOverlays = async () => {
   state.overlays = !state.overlays
   document.body.classList.toggle('clean', !state.overlays)
@@ -234,17 +258,20 @@ const toggleOverlays = async () => {
 const wireBars = () => {
   $('recent').append(icon('history', 16))
   $('toggle-side').append(icon('columns', 16))
+  $('go-home').append(icon('house', 16))
+  $('go-back').append(icon('chevron-left', 16))
+  $('go-forward').append(icon('chevron-right', 16))
+  $('toggle-rail').append(icon('columns', 16))
+  $('shared').append(icon('link', 16))
+  $('share').prepend(icon('share', 15))
   $('inspect').append(icon('pointer', 16))
   $('overlays').append(icon('eye', 16))
   $('theme').append(icon('moon', 16))
-  $('go-home').append(icon('house', 15))
-  $('go-back').append(icon('chevron-left', 15))
-  $('go-forward').append(icon('chevron-right', 15))
-  $('crumb-close').append(icon('x', 13))
-  $('toggle-rail').append(icon('columns', 15))
-  $('orb').append(icon('sparkles', 16))
-  $('share').prepend(icon('share', 15))
-  $('shared').append(icon('link', 16))
+  $('context').append(icon('chevron-down', 12))
+  $('zoom').append(icon('chevron-down', 12))
+  $('canvas-mode').append(icon('maximize', 16))
+  $('leave-canvas').append(icon('minimize', 16))
+  $('ask').prepend(icon('sparkles', 14))
 
   $('find').prepend(icon('search', 14))
   $('find').onclick = openSearch
@@ -264,8 +291,29 @@ const wireBars = () => {
   $('go-back').onclick = () => history.back()
   $('go-forward').onclick = () => history.forward()
   $('toggle-rail').onclick = () => setRail(!document.body.classList.contains('rail-open'))
-  $('orb').onclick = openComposer
+  $('context').onclick = () => openContexts($('context'))
+  $('zoom').onclick = () => openZoom($('zoom'))
+  $('canvas-mode').onclick = () => setCanvasMode(true)
+  $('leave-canvas').onclick = () => setCanvasMode(false)
+  $('ask').onclick = () => {
+    setRail(true)
+    openClaude()
+  }
+  $('export').onclick = openExport
   $('share').onclick = shareBoard
+}
+
+// Zoom keys work with or without ⌘, as in other design tools: + and − step, 0 is
+// 100%, ⇧1 fits everything and ⇧2 the selection.
+const zoomFor = event => {
+  const isCommand = event.metaKey || event.ctrlKey
+  if (event.key === '+' || event.key === '=') return () => zoomCenter(1.4)
+  if (event.key === '-' || event.key === '_') return () => zoomCenter(1 / 1.4)
+  if (event.code === 'Digit0' && (isCommand || event.shiftKey)) return () => zoomCenter(1 / state.camera.z)
+  if (event.code === 'Digit1' && event.shiftKey) return () => fit(bounds())
+  if (event.code === 'Digit2' && event.shiftKey) return zoomToSelection
+  if (!isCommand && !event.shiftKey && (event.key === '0' || event.key === 's')) return () => fit(bounds())
+  return null
 }
 
 addEventListener('keydown', event => {
@@ -279,14 +327,28 @@ addEventListener('keydown', event => {
     event.preventDefault()
     return undo()
   }
-  if (isCommand || state.view.kind !== 'board') return
-  if (event.key === 'Escape' && state.selection) select(state.selection.path.length ? { frame: state.selection.frame, path: state.selection.path.slice(0, -1) } : null)
-  if (event.key === '+' || event.key === '=') zoomCenter(1.4)
-  if (event.key === '-') zoomCenter(1 / 1.4)
-  if (event.key === '0' || event.key === 's') fit(bounds())
-  if (event.key === 'c') openContexts($('context-label').parentElement)
+  if (isCommand && event.key === '\\') {
+    event.preventDefault()
+    return toggleCanvasMode()
+  }
+  if (state.view.kind !== 'board' || event.altKey) return
+  const zoom = zoomFor(event)
+  if (zoom) {
+    event.preventDefault()
+    return zoom()
+  }
+  if (isCommand) return
+  if (event.key === 'Escape') {
+    if (state.selection) return select(state.selection.path.length ? { frame: state.selection.frame, path: state.selection.path.slice(0, -1) } : null)
+    if (state.rev) return leaveRevision()
+    return setCanvasMode(false)
+  }
+  if (event.key === 'c' && !$('context').hidden) openContexts($('context'))
 })
 
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement) setCanvasMode(false)
+})
 addEventListener('hashchange', () => route().catch(report))
 let wasNarrow = isNarrow()
 addEventListener('resize', () => {

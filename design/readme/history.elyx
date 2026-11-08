@@ -1,0 +1,112 @@
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "blocks/inspector.elyx" as Inspector
+import "components/type.elyx" as Text
+import "readme/app.elyx" as App
+
+// Every commit that changed a board, and the board as each one left it.
+export history = frame {
+  left: 0px,
+  top: 0px,
+  width: 1280px,
+  height: 640px,
+  fill: Colors.colors.stage,
+  children: [window, banner],
+
+  window = frame : App.appWindow {
+    left: -272px,
+    top: 40px,
+    overrides: [remove(App.appWindow.rail), insert(revisions, after = App.appWindow.main)],
+
+    main {
+      stage {
+        world {
+          landingTitle {
+            display: .none
+          }
+
+          pricingTitle {
+            display: .none
+          }
+
+          signInTitle {
+            display: .none
+          }
+
+          todayTitle {
+            display: .none
+          }
+
+          hoverBox {
+            display: .none
+          }
+
+          selection {
+            display: .none
+          }
+
+          tag {
+            display: .none
+          }
+
+          bar {
+            display: .none
+          }
+        }
+      }
+    }
+
+    revisions = frame : Inspector.historyRail {}
+  }
+
+  // Over the stage, where the canvas shows which commit you are looking at.
+  banner = frame {
+    left: 0px,
+    top: 108px,
+    width: 888px,
+    layout: {direction: .row, justify-content: .center},
+    overflow: .visible,
+    children: bar,
+
+    bar = frame {
+      height: 40px,
+      corner-radius: Radius.radius.lg,
+      fill: Colors.colors.solid,
+      layout: {direction: .row, align-items: .center, item-gap: 12px},
+      padding: [0px, 6px, 0px, 14px],
+      shadow: [{drop-shadow: {color: #00000014, offset: point(0, 8), blur-radius: 24px}}, {drop-shadow: {color: #0000000F, offset: point(0, 1), blur-radius: 3px}}],
+      children: [what, back],
+
+      what = frame {
+        layout: {direction: .row, align-items: .center, item-gap: 6px},
+        children: [hash, subject],
+
+        hash = text : Text.figure {
+          contents: "a1c9e42",
+          font-style: "SemiBold",
+          fill: Colors.colors.on-solid
+        }
+
+        subject = text : Text.body {
+          contents: "Quieter pricing cards · 2 hours ago",
+          fill: Colors.colors.on-solid
+        }
+      }
+
+      back = frame {
+        height: 28px,
+        corner-radius: Radius.radius.md,
+        fill: opacity(Colors.colors.on-solid, 16%),
+        layout: {direction: .row, align-items: .center},
+        padding: [0px, 10px],
+        children: label,
+
+        label = text : Text.label {
+          contents: "Back to now",
+          font-style: "Medium",
+          fill: Colors.colors.on-solid
+        }
+      }
+    }
+  }
+}

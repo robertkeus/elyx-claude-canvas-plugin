@@ -12,11 +12,13 @@ import "icons/palette.svg" as paletteIcon
 import "icons/image.svg" as imageIcon
 import "icons/search.svg" as searchIcon
 import "icons/history.svg" as historyIcon
+import "icons/chevron-down.svg" as chevronIcon
 import "icons/grid.svg" as gridIcon
 import "icons/layers.svg" as layersIcon
 import "icons/type.svg" as typeIcon
 import "icons/corner.svg" as cornerIcon
 import "icons/gap.svg" as gapIcon
+import "sample/tokens.elyx" as Sample
 import "tokens/colors.elyx" as Colors
 import "tokens/radius.elyx" as Radius
 import "tokens/spacing.elyx" as Spacing
@@ -24,30 +26,106 @@ import "components/controls.elyx" as Controls
 import "components/nav.elyx" as Nav
 import "components/type.elyx" as Text
 
-// Search, the four views of a project, and a body per view.
+// The project, the four views of it, search, and a body per view.
 export sidebar = frame {
   left: 0px,
   top: 0px,
   width: Spacing.size.sidebar,
   height: 100%,
   fill: Colors.colors.surface,
-  border: {color: Colors.colors.line, width: 1px, sides: .right},
   layout: {direction: .column},
-  children: [head, tabs, body],
+  children: [head, tabs, find, body],
 
   head = frame {
     width: 100%,
     height: Spacing.size.top-bar,
+    border: {color: Colors.colors.line, width: 1px, sides: .bottom},
     layout: {direction: .row, align-items: .center, item-gap: 8px},
     padding: [0px, 12px],
-    children: [find, recent],
+    children: [project, spacer, recent],
 
-    find = frame : Controls.field {
-      width: 208px,
+    project = frame {
+      height: 32px,
+      corner-radius: Radius.radius.md,
+      fill: Colors.colors.surface,
+      border: {color: Colors.colors.line-strong, width: 1px},
+      layout: {direction: .row, align-items: .center, item-gap: 8px},
+      padding: [0px, 10px, 0px, 8px],
+      shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 2px}},
+      children: [mark, name, chevron],
+
+      mark = frame {
+        width: 16px,
+        height: 16px,
+        corner-radius: 5px,
+        fill: {linear-gradient: {angle: 135deg, stops: [stop(0%, Sample.sample.sun), stop(100%, Sample.sample.clay)]}}
+      }
+
+      name = text : Text.label {
+        contents: "driftwood"
+      }
+
+      chevron = asset {
+        width: 12px,
+        height: 12px,
+        contents: chevronIcon,
+        fill: Colors.colors.muted
+      }
+    }
+
+    spacer = frame {}
+
+    recent = frame : Controls.iconButton {
+      glyph {
+        contents: historyIcon
+      }
+    }
+  }
+
+  tabs = frame {
+    width: 100%,
+    layout: {direction: .row, align-items: .center, item-gap: 2px},
+    padding: [10px, 12px, 6px, 12px],
+    children: [screens, parts, tokens, assets],
+
+    screens = frame : Nav.tab {
+      label {
+        contents: "Screens"
+      }
+    }
+
+    parts = frame : Nav.tab {
+      label {
+        contents: "Components"
+      }
+    }
+
+    tokens = frame : Nav.tab {
+      label {
+        contents: "Tokens"
+      }
+    }
+
+    assets = frame : Nav.tab {
+      label {
+        contents: "Assets"
+      }
+    }
+  }
+
+  find = frame {
+    width: 100%,
+    border: {color: Colors.colors.line, width: 1px, sides: .bottom},
+    layout: {direction: .column},
+    padding: [4px, 12px, 12px, 12px],
+    children: field,
+
+    field = frame : Controls.field {
+      width: 100%,
       overrides: [insert(glyph, after = .nil), insert(spacer, after = Controls.field.value), insert(keys, after = spacer)],
 
       value {
-        contents: "Search",
+        contents: "Search…",
         fill[0].color: Colors.colors.muted
       }
 
@@ -61,50 +139,6 @@ export sidebar = frame {
       spacer = frame {}
 
       keys = frame : Controls.keycap {}
-    }
-
-    recent = frame : Controls.iconButtonSoft {
-      glyph {
-        contents: historyIcon
-      }
-    }
-  }
-
-  tabs = frame {
-    width: 100%,
-    height: Spacing.size.tab-bar,
-    border: {color: Colors.colors.line, width: 1px, sides: [.top, .bottom]},
-    layout: {direction: .row, align-items: .center},
-    children: [screens, dividerOne, parts, dividerTwo, tokens, dividerThree, assets],
-
-    screens = frame : Nav.tab {
-      glyph {
-        contents: frameIcon
-      }
-    }
-
-    dividerOne = frame : Nav.tabDivider {}
-
-    parts = frame : Nav.tab {
-      glyph {
-        contents: componentIcon
-      }
-    }
-
-    dividerTwo = frame : Nav.tabDivider {}
-
-    tokens = frame : Nav.tab {
-      glyph {
-        contents: paletteIcon
-      }
-    }
-
-    dividerThree = frame : Nav.tabDivider {}
-
-    assets = frame : Nav.tab {
-      glyph {
-        contents: imageIcon
-      }
     }
   }
 
@@ -127,8 +161,10 @@ export screensSidebar = frame : sidebar {
 
   tabs {
     screens {
-      glyph {
-        fill[0].color: Colors.colors.accent
+      fill: Colors.colors.chip,
+
+      label {
+        fill[0].color: Colors.colors.ink
       }
     }
   }
@@ -269,13 +305,18 @@ export partsSidebar = frame : sidebar {
 
   tabs {
     parts {
-      glyph {
-        fill[0].color: Colors.colors.accent
+      fill: Colors.colors.chip,
+
+      label {
+        fill[0].color: Colors.colors.ink
       }
     }
   }
 
   componentsHead = frame : Nav.navHead {
+    height: 28px,
+    padding-top: 0px,
+
     label {
       contents: "Components"
     }
@@ -433,8 +474,10 @@ export tokensSidebar = frame : sidebar {
 
   tabs {
     tokens {
-      glyph {
-        fill[0].color: Colors.colors.accent
+      fill: Colors.colors.chip,
+
+      label {
+        fill[0].color: Colors.colors.ink
       }
     }
   }
@@ -659,13 +702,18 @@ export assetsSidebar = frame : sidebar {
 
   tabs {
     assets {
-      glyph {
-        fill[0].color: Colors.colors.accent
+      fill: Colors.colors.chip,
+
+      label {
+        fill[0].color: Colors.colors.ink
       }
     }
   }
 
   assetsHead = frame : Nav.navHead {
+    height: 28px,
+    padding-top: 0px,
+
     label {
       contents: "Assets"
     }

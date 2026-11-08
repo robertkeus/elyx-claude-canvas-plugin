@@ -1,7 +1,7 @@
 // The overview pages: home, the component library, tokens and assets.
 import { isScreenFile } from './nav.js'
 import { selectToken } from './rail.js'
-import { $, colorTokens, el, humanize, icon, isBase, plural, query, renderUrl, ROLE_ORDER, roleOf, sectionOf, shortName, state } from './lib.js'
+import { $, ago, colorTokens, el, humanize, icon, isBase, plural, query, renderUrl, ROLE_ORDER, roleOf, sectionOf, shortName, state } from './lib.js'
 
 const show = (...content) => {
   const page = $('page')
@@ -26,60 +26,32 @@ const kindOf = file => {
   return state.project.files.some(item => item.file === file) ? 'Components' : 'Tokens'
 }
 
-const STATUS = { A: 'New', M: 'Updated', D: 'Removed', R: 'Moved' }
-const expanded = new Set()
+const STATUS = { A: 'New', M: 'Updated', R: 'Moved' }
 
-const change = ({ file, status }) => {
-  const isDrawn = status !== 'D' && state.project.files.some(item => item.file === file)
-  const shot = el('div', { className: 'change-shot' }, isDrawn
+// A file in the grid: its drawing, its name, when it changed, and what git says about it.
+const fileCard = (file, time, status) => {
+  const isDrawn = state.project.files.some(item => item.file === file)
+  const shot = el('div', { className: 'card-shot' }, isDrawn
     ? el('img', { src: renderUrl(file, null, 0.25), alt: '', loading: 'lazy', onerror: event => event.target.replaceWith(icon('file', 20)) })
-    : icon('file', 20))
-  const parts = [shot, el('strong', { textContent: `${shortName(file)}.elyx`, title: file }), el('div', { className: 'change-foot' }, el('span', { textContent: isDrawn ? 'Open' : ' ' }), el('span', { className: `status-${status}`, textContent: STATUS[status] ?? status }))]
-  return isDrawn ? el('a', { className: 'change', href: `#board:${file}` }, parts) : el('div', { className: 'change' }, parts)
+    : icon(kindOf(file) === 'Tokens' ? 'palette' : 'file', 20))
+  return el('a', { className: 'card', href: isDrawn ? `#board:${file}` : '#tokens:colors' }, shot,
+    el('div', { className: 'card-text' },
+      el('div', {}, el('strong', { textContent: `${shortName(file)}.elyx`, title: file }), el('span', { textContent: `Changed ${ago(time)}` })),
+      STATUS[status] ? el('span', { className: 'badge', textContent: STATUS[status] }) : null))
 }
-
-const commit = (entry, files) => {
-  const isOpen = expanded.has(entry.hash)
-  const counts = Object.groupBy(files, ({ status }) => status)
-  const summary = [counts.A && `${counts.A.length} new`, counts.M && `${counts.M.length} updated`, counts.D && `${counts.D.length} removed`].filter(Boolean).join(', ')
-  return el('div', { className: 'commit-row' }, el('div', { className: 'timeline' }),
-    el('div', { className: 'sheet commit' },
-      el('div', { className: 'commit-head' },
-        el('div', {}, el('strong', { textContent: entry.subject, title: entry.subject }), el('span', { textContent: `${entry.author} committed to ${state.project.branch || 'this branch'}` })),
-        el('span', { className: 'added', textContent: summary })),
-      el('div', { className: 'change-grid' }, (isOpen ? files : files.slice(0, 4)).map(change)),
-      files.length > 4 && el('button', {
-        className: 'outline-button',
-        textContent: isOpen ? 'Show fewer' : `Show all ${files.length} files`,
-        onclick: () => {
-          if (isOpen) expanded.delete(entry.hash)
-          else expanded.add(entry.hash)
-          homePage(state.view.filter)
-        },
-      })))
-}
-
-const dayOf = date => new Date(date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }).replace(',', '')
 
 export const homePage = filter => {
-  const { tokens, images, fonts } = state.project
+  const { tokens, images, fonts, modified } = state.project
   const components = library().reduce((sum, item) => sum + item.exports.length, 0)
-  const shown = state.activity.flatMap(entry => {
-    const files = entry.files.filter(({ file }) => !filter || kindOf(file) === filter)
-    return files.length ? [{ entry, files }] : []
-  })
-  const changed = shown.reduce((sum, { files }) => sum + files.length, 0)
-  const days = Object.entries(Object.groupBy(shown, ({ entry }) => dayOf(entry.date)))
+  const status = new Map()
+  for (const entry of state.activity) for (const change of entry.files) if (!status.has(change.file)) status.set(change.file, change.status)
+  const files = Object.entries(modified).filter(([file]) => !filter || kindOf(file) === filter).sort(([, a], [, b]) => b - a)
   show(
-    head('Overview', `Everything in ${state.project.name}, at a glance`),
+    head(humanize(state.project.name), `${plural(screenCount(), 'screen')}, ${plural(components, 'component')}, ${plural(tokens.length, 'token')} and ${plural(images.length + fonts.length, 'asset')}`),
     chips([['All', '#home'], ['Screens', '#home:Screens'], ['Components', '#home:Components'], ['Tokens', '#home:Tokens']], filter ?? 'All'),
-    rule(),
-    el('div', { className: 'stats' },
-      [[screenCount(), 'Screens', state.project.opened ? `#board:${state.project.opened}` : '#home'], [components, 'Components', '#gallery:all'], [tokens.length, 'Tokens', '#tokens:colors'], [images.length + fonts.length, 'Assets', '#assets:all']].map(([count, label, href]) =>
-        el('a', { className: 'stat', href }, el('strong', { textContent: count }), el('span', { textContent: label })))),
-    shown.length
-      ? [el('p', { className: 'muted', textContent: `${plural(changed, 'file change')} across ${plural(shown.length, 'commit')}` }), days.map(([day, entries]) => [el('h2', { textContent: day }), entries.map(({ entry, files }) => commit(entry, files))])]
-      : el('div', { className: 'empty', textContent: state.project.branch ? 'No design changes in this history yet.' : 'Recent changes appear here once this project is in git.' }),
+    files.length
+      ? el('div', { className: 'cards' }, files.map(([file, time]) => fileCard(file, time, status.get(file))))
+      : el('div', { className: 'empty', textContent: 'Nothing here yet.' }),
   )
 }
 
@@ -132,7 +104,7 @@ export const componentPage = file => {
     head(humanize(shortName(file)), state.usage ? `${plural(item.exports.length, 'variant')}, used in ${plural(screens.length, 'screen')}` : plural(item.exports.length, 'variant')),
     el('div', { className: 'variants' }, item.exports.map(({ name }) =>
       el('a', { className: 'variant', href: `#board:${file}:${name}` },
-        el('span', { className: 'frame-title' }, el('span', { textContent: name }), el('i'), el('i')),
+        el('span', { className: 'frame-title' }, icon('frame', 11), el('span', { textContent: name })),
         el('img', { srcset: `${renderUrl(file, name, 2)} 2x`, alt: `${name} preview`, loading: 'lazy', onerror: event => event.target.remove() })))),
     el('h3', { textContent: 'Where it is used' }),
     !state.usage

@@ -1,7 +1,6 @@
 // Ask Claude: the page hands a request to the session that opened it.
 import { trailOf } from './board.js'
-import { closePopover, popover } from './pickers.js'
-import { $, el, post, report, state, toast } from './lib.js'
+import { el, icon, post, report, state, toast } from './lib.js'
 
 const layerPath = () => (state.selection ? trailOf(state.selection).map(layer => layer.name).join(' › ') : '')
 
@@ -20,28 +19,38 @@ const send = async text => {
   toast('Copied. Paste it into Claude.')
 }
 
-export const openComposer = () => {
+// What you were writing survives the tab being redrawn, as it is on every click.
+let draft = ''
+
+// The Claude tab: an empty space, and the composer at the bottom.
+export const claudeBody = () => {
   const about = layerPath() || (fileInView() ? fileInView() : state.project.name)
   const input = el('textarea', {
-    className: 'field-area',
     placeholder: 'Ask Claude to change something bigger',
     ariaLabel: 'Ask Claude',
+    value: draft,
+    oninput: () => (draft = input.value),
     onkeydown: event => {
       if (event.key !== 'Enter' || event.shiftKey) return
       event.preventDefault()
       submit()
     },
   })
+  const button = el('button', { className: 'send', ariaLabel: state.project.canAsk ? 'Send' : 'Copy for Claude', title: state.project.canAsk ? 'Send' : 'Copy for Claude' }, icon('arrow-up', 14))
   const submit = async () => {
     const text = input.value.trim()
     if (!text) return
-    closePopover()
-    await send(text).catch(report)
+    button.disabled = true
+    try {
+      await send(text)
+      input.value = draft = ''
+    } catch (cause) {
+      report(cause)
+    }
+    button.disabled = false
   }
-  popover($('orb'), [
-    el('div', { className: 'about', textContent: `About ${about}` }),
-    input,
-    el('button', { className: 'send', textContent: state.project.canAsk ? 'Send' : 'Copy for Claude', onclick: submit }),
-  ], { className: 'composer' })
-  input.focus()
+  button.onclick = submit
+  return el('div', { className: 'rail-body claude' },
+    el('div', { className: 'composer-card' }, input, el('div', { className: 'composer-foot' }, icon('file', 13), el('span', { className: 'about', textContent: about, title: about }), button)),
+    el('p', { className: 'note', textContent: state.project.canAsk ? 'Goes to the Claude session that opened this canvas.' : 'Copied for you to paste into Claude.' }))
 }

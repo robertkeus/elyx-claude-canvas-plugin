@@ -12,7 +12,7 @@ export tile = frame {
   fill: Colors.colors.surface,
   layout: {direction: .column},
   padding: 8px,
-  shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+  border: {color: Colors.colors.line-strong, width: 1px},
   children: [well, caption],
 
   well = frame {
@@ -53,7 +53,7 @@ export tile = frame {
   }
 }
 
-// A white rounded surface on the stage.
+// A white rounded surface on a page, ruled off by its border.
 export sheet = frame {
   left: 280px,
   top: 0px,
@@ -61,7 +61,7 @@ export sheet = frame {
   corner-radius: Radius.radius.lg,
   fill: Colors.colors.surface,
   layout: {direction: .column},
-  shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}}
+  border: {color: Colors.colors.line-strong, width: 1px}
 }
 
 // A color token on the tokens page.
@@ -73,7 +73,7 @@ export swatchTile = frame {
   fill: Colors.colors.surface,
   layout: {direction: .column},
   padding: 5px,
-  shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+  border: {color: Colors.colors.line-strong, width: 1px},
   children: [chipColor, caption],
 
   chipColor = frame {
@@ -115,7 +115,7 @@ export stat = frame {
   fill: Colors.colors.surface,
   layout: {direction: .column, justify-content: .center, item-gap: 3px},
   padding: [0px, 16px],
-  shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+  border: {color: Colors.colors.line-strong, width: 1px},
   children: [number, label],
 
   number = text : Text.sectionTitle {
@@ -164,6 +164,63 @@ export changeTile = frame {
       contents: "New",
       font-size: Type.fontSize.xs,
       fill: Colors.colors.positive
+    }
+  }
+}
+
+// A file in the project grid: its preview, its name, and when it changed.
+export fileCard = frame {
+  left: 0px,
+  top: 400px,
+  width: 248px,
+  layout: {direction: .column, item-gap: 12px},
+  children: [shot, caption],
+
+  shot = frame {
+    width: 100%,
+    height: 160px,
+    corner-radius: Radius.radius.lg,
+    fill: Colors.colors.well,
+    border: {color: Colors.colors.line-strong, width: 1px}
+  }
+
+  caption = frame {
+    width: 100%,
+    layout: {direction: .row, align-items: .start, item-gap: 8px},
+    padding: [0px, 2px],
+    children: [names, spacer, badge],
+
+    names = frame {
+      layout: {direction: .column, item-gap: 3px},
+      children: [name, detail],
+
+      name = text : Text.body {
+        contents: "landing.elyx",
+        font-style: "Medium",
+        fill: Colors.colors.ink
+      }
+
+      detail = text : Text.meta {
+        contents: "Changed 2h ago"
+      }
+    }
+
+    spacer = frame {}
+
+    badge = frame {
+      height: 20px,
+      corner-radius: Radius.radius.xs,
+      fill: Colors.colors.chip,
+      layout: {direction: .row, align-items: .center},
+      padding: [0px, 6px],
+      children: label,
+
+      label = text : Text.figure {
+        contents: "Updated",
+        font-size: Type.fontSize.xs,
+        font-style: "Regular",
+        fill: Colors.colors.body
+      }
     }
   }
 }

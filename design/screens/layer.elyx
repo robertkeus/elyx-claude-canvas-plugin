@@ -4,5 +4,6 @@ import "readme/app.elyx" as App
 export layerSelected = frame : App.appWindow {
   title: "Layer selected",
   caption: "Click anything, however small. The quick-edit bar opens right there, and the rail holds the rest.",
-  corner-radius: 0px
+  corner-radius: 0px,
+  border: []
 }

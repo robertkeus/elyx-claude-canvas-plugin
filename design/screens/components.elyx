@@ -27,6 +27,7 @@ export components = frame {
 
   main = frame : Center.center {
     stage {
+      fill: Colors.colors.surface,
       overrides: [insert(page, after = .nil)],
 
       hud {
@@ -34,22 +35,24 @@ export components = frame {
       }
     }
 
-    crumbBar {
-      name {
-        contents: "Components"
+    topBar {
+      title {
+        page {
+          contents: "Components"
+        }
       }
     }
 
     page = frame {
       left: 48px,
-      top: 36px,
+      top: 40px,
       width: Spacing.size.page-width,
       layout: {direction: .column, item-gap: 16px},
       children: [head, chips, rule, grid],
 
       head = frame {
         width: 100%,
-        layout: {direction: .column, item-gap: 3px},
+        layout: {direction: .column, item-gap: 4px},
         children: [name, note],
 
         name = text : Text.pageTitle {

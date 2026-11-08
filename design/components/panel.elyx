@@ -34,7 +34,7 @@ export chipPair = frame {
   left: 0px,
   top: 40px,
   width: 248px,
-  min-height: 28px,
+  min-height: 34px,
   layout: {direction: .row, align-items: .center, item-gap: 8px},
   children: [key, spacer, value],
 
@@ -45,7 +45,16 @@ export chipPair = frame {
 
   spacer = frame {}
 
-  value = frame : Controls.chip {}
+  value = frame : Controls.chip {
+    width: 140px,
+    height: 30px,
+    corner-radius: Radius.radius.md,
+    padding: [0px, 10px],
+
+    label {
+      fill[0].color: Colors.colors.ink
+    }
+  }
 }
 
 // A file or layer that leads somewhere, as under Imported By in the editor.

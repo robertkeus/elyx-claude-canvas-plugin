@@ -6,50 +6,51 @@
 <title>Elyx overview</title>
 <link rel="stylesheet" href="ui/style.css">
 <body>
-<aside id="sidebar" aria-label="Project">
-  <div class="side-head">
-    <button id="find" class="find"><span class="find-label">Search</span><kbd>⌘K</kbd></button>
-    <button id="recent" class="icon-button soft" aria-label="Recent files"></button>
+<header id="topbar">
+  <div class="bar-start">
+    <button id="project" class="project"></button>
+    <button id="recent" class="icon-button" aria-label="Recent files" title="Recent files"></button>
   </div>
+  <button id="toggle-side" class="icon-button" aria-label="Toggle sidebar" title="Sidebar"></button>
+  <a id="go-home" class="icon-button" href="#home" aria-label="Home" title="Home"></a>
+  <button id="go-back" class="icon-button" aria-label="Back" title="Back"></button>
+  <button id="go-forward" class="icon-button" aria-label="Forward" title="Forward"></button>
+  <div id="crumb"><span id="crumb-title"></span><span id="branch" class="branch figure" hidden></span></div>
+  <span class="grow"></span>
+  <button id="toggle-rail" class="icon-button" aria-label="Toggle inspector" title="Inspector"></button>
+  <span class="bar-rule"></span>
+  <a id="shared" class="icon-button" target="_blank" rel="noopener" aria-label="Open the shared page" title="Open the shared page" hidden></a>
+  <button id="export" class="button" hidden>Export</button>
+  <button id="share" class="share-button" title="Publish this board as a Claude artifact you can share"><span class="label">Share</span></button>
+</header>
+<aside id="sidebar" aria-label="Project">
   <nav id="tabs" aria-label="Views"></nav>
+  <div class="side-find"><button id="find" class="find"><span class="find-label">Search…</span><kbd>⌘K</kbd></button></div>
   <nav id="links" aria-label="Contents"></nav>
 </aside>
-<main id="center">
-  <header id="topbar">
-    <button id="toggle-side" class="icon-button" aria-label="Toggle sidebar"></button>
-    <button id="project" class="project"></button>
-    <span class="grow"></span>
-    <button id="inspect" class="icon-button" aria-label="Inspect layers" aria-pressed="true"></button>
-    <button id="overlays" class="icon-button" aria-label="Show titles and connections" aria-pressed="true"></button>
-    <button id="theme" class="icon-button" aria-label="Switch light and dark"></button>
-    <a id="shared" class="icon-button" target="_blank" rel="noopener" aria-label="Open the shared page" title="Open the shared page" hidden></a>
-    <button id="share" class="share-button" title="Publish this board as a Claude artifact you can share"><span class="label">Share</span></button>
-  </header>
-  <div id="crumbs">
-    <div class="crumb-nav">
-      <a id="go-home" href="#home" aria-label="Home"></a>
-      <button id="go-back" aria-label="Back"></button>
-      <button id="go-forward" aria-label="Forward"></button>
+<main id="stage">
+  <div id="board" hidden>
+    <div id="world"><div id="slots"></div><img id="base" alt=""><div id="lift"></div><div id="sharp"></div></div>
+    <div id="marks">
+      <div id="titles"></div>
+      <div id="hovered" class="box" hidden><span></span></div>
+      <div id="selected" class="box" hidden><span></span></div>
     </div>
-    <span id="crumb-title"></span>
-    <span class="grow"></span>
-    <a id="crumb-close" href="#home" aria-label="Close"></a>
-    <button id="toggle-rail" aria-label="Toggle inspector"></button>
+    <div id="quick" role="toolbar" aria-label="Quick edit" hidden></div>
   </div>
-  <section id="stage">
-    <div id="board" hidden>
-      <div id="world"><div id="slots"></div><img id="base" alt=""><div id="lift"></div><div id="sharp"></div></div>
-      <div id="marks">
-        <div id="titles"></div>
-        <div id="hovered" class="box" hidden><span></span></div>
-        <div id="selected" class="box" hidden><span></span></div>
-      </div>
-      <div id="quick" role="toolbar" aria-label="Quick edit" hidden></div>
-    </div>
-    <div id="page" hidden></div>
-    <div id="hud" hidden></div>
-    <button id="orb" aria-label="Ask Claude"></button>
-  </section>
+  <div id="page" hidden></div>
+  <div id="revision-bar" role="status" hidden></div>
+  <button id="leave-canvas" class="icon-button" aria-label="Leave canvas mode" title="Leave canvas mode (Esc)"></button>
+  <div id="hud" role="toolbar" aria-label="Canvas">
+    <button id="inspect" class="icon-button board-only" aria-label="Inspect layers" title="Inspect layers" aria-pressed="true"></button>
+    <button id="overlays" class="icon-button board-only" aria-label="Show titles and connections" title="Titles and connections" aria-pressed="true"></button>
+    <button id="theme" class="icon-button" aria-label="Switch light and dark" title="Light or dark"></button>
+    <span class="hud-rule board-only"></span>
+    <button id="context" class="hud-chip board-only" hidden><span id="context-label">Context</span></button>
+    <button id="zoom" class="hud-chip figure board-only" aria-label="Zoom"><span id="level-label">100%</span></button>
+    <button id="canvas-mode" class="icon-button board-only" aria-label="Canvas mode" title="Canvas mode (⌘\)"></button>
+    <button id="ask" class="ask-button"><span class="label">Ask Claude</span></button>
+  </div>
 </main>
 <aside id="rail" aria-label="Inspector"></aside>
 <div id="floating"></div>

@@ -21,6 +21,8 @@ export const state = {
   overlays: true,
   inspecting: true,
   railTab: 'inspect',
+  // The commit the board shows instead of now, if any.
+  rev: null,
   token: null,
   tokenContext: '{}',
   filter: {},
@@ -64,6 +66,15 @@ export const humanize = name => {
 export const sectionOf = file => (file.includes('/') ? file.split('/')[0] : '')
 export const local = file => file.replace(`${state.project.root}/`, '')
 export const plural = (count, word) => `${count} ${word}${count === 1 ? '' : 's'}`
+
+const UNITS = [['year', 31536e6], ['month', 2592e6], ['week', 6048e5], ['day', 864e5], ['hour', 36e5], ['minute', 6e4]]
+const relative = new Intl.RelativeTimeFormat('en', { numeric: 'auto' })
+// "2 hours ago", from a date or a time in milliseconds.
+export const ago = when => {
+  const elapsed = Date.now() - new Date(when).getTime()
+  const [unit, size] = UNITS.find(([, length]) => elapsed >= length) ?? ['minute', 6e4]
+  return elapsed < 6e4 ? 'just now' : relative.format(-Math.floor(elapsed / size), unit)
+}
 
 const contextParams = () => Object.entries(state.contexts).map(([axis, value]) => `${axis}=${value}`)
 

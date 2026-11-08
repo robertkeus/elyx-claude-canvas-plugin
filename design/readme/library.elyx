@@ -22,13 +22,18 @@ export partsSide = frame : Sidebar.sidebar {
 
   tabs {
     parts {
-      glyph {
-        fill[0].color: Colors.colors.accent
+      fill: Colors.colors.chip,
+
+      label {
+        fill[0].color: Colors.colors.ink
       }
     }
   }
 
   head = frame : Nav.navHead {
+    height: 28px,
+    padding-top: 0px,
+
     label {
       contents: "Components"
     }
@@ -149,20 +154,15 @@ export library = frame {
 
     main = frame : Center.center {
       topBar {
-        project {
-          label {
-            contents: "driftwood"
+        title {
+          page {
+            contents: "Components"
           }
         }
       }
 
-      crumbBar {
-        name {
-          contents: "Components"
-        }
-      }
-
       stage {
+        fill: Colors.colors.surface,
         overrides: [insert(page, after = .nil)],
 
         hud {

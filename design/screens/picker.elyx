@@ -22,7 +22,7 @@ export colorPicker = frame {
   }
 
   saved = frame : Popover.toast {
-    left: 572px,
-    top: 800px
+    left: 586px,
+    top: 782px
   }
 }
