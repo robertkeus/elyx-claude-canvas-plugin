@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { frameIds, sharePage, shareRequest, shareScale } from './share.mjs'
+import { frameIds, sharedLink, sharePage, shareRequest, shareScale } from './share.mjs'
 
 test('frame ids are ASCII, unique, and never a hash claude.ai reserves', () => {
   assert.deepEqual(frameIds(['Home', 'Résumé page', 'home', 'pricingCard_v2', '✦', 'settings', 'comment-1']), [
@@ -27,8 +27,17 @@ test('a first share asks for a new artifact, a later one for the same page', () 
   const first = shareRequest({ folder: '/p/exports/share/home', files, title: 'p · home' })
   assert.match(first, /new artifact with publish_files: title "p · home"/)
   assert.match(first, /`index.html`, `frames\/home.png`/)
-  assert.match(first, /\/p\/exports\/share\/home\/artifact\.json/)
+  assert.match(first, /"url": "<its claude\.ai link>"\} to \/p\/exports\/share\/home\/artifact\.json/)
   const again = shareRequest({ folder: '/p/exports/share/home', files, title: 'p · home', slug: 'abc' })
   assert.match(again, /shared before as the artifact abc: republish to it/)
   assert.doesNotMatch(again, /new artifact with/)
+})
+
+test('the canvas links only to a claude.ai page', () => {
+  assert.equal(sharedLink('{"slug": "a", "url": "https://claude.ai/artifact/Ng1ov"}'), 'https://claude.ai/artifact/Ng1ov')
+  assert.equal(sharedLink('{"slug": "a"}'), undefined)
+  assert.equal(sharedLink('{"url": "javascript:alert(1)"}'), undefined)
+  assert.equal(sharedLink('{"url": "https://claude.ai.evil.example/x"}'), undefined)
+  assert.equal(sharedLink('{"url": "https://claude.ai/artifact/x?next=https://evil"}'), undefined)
+  assert.equal(sharedLink('not json'), undefined)
 })

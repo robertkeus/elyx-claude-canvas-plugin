@@ -244,6 +244,7 @@ const wireBars = () => {
   $('toggle-rail').append(icon('columns', 15))
   $('orb').append(icon('sparkles', 16))
   $('share').prepend(icon('share', 15))
+  $('shared').append(icon('link', 16))
 
   $('find').prepend(icon('search', 14))
   $('find').onclick = openSearch
