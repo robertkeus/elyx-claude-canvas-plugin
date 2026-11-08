@@ -1,5 +1,6 @@
 // Routing, the bars around the stage, and live updates.
 import { openComposer } from './ask.js'
+import { shareBoard } from './share.js'
 import { bounds, fit, focusOn, loadBoard, paint, refine, select, treeOf, zoomCenter } from './board.js'
 import { $, contextAxes, el, get, icon, needUsage, plural, post, report, shortName, state, stored, undo } from './lib.js'
 import { isScreenFile, openRecent, renderNav } from './nav.js'
@@ -242,6 +243,7 @@ const wireBars = () => {
   $('crumb-close').append(icon('x', 13))
   $('toggle-rail').append(icon('columns', 15))
   $('orb').append(icon('sparkles', 16))
+  $('share').prepend(icon('share', 15))
 
   $('find').prepend(icon('search', 14))
   $('find').onclick = openSearch
@@ -262,6 +264,7 @@ const wireBars = () => {
   $('go-forward').onclick = () => history.forward()
   $('toggle-rail').onclick = () => setRail(!document.body.classList.contains('rail-open'))
   $('orb').onclick = openComposer
+  $('share').onclick = shareBoard
 }
 
 addEventListener('keydown', event => {

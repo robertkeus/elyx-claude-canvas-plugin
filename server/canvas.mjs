@@ -4,6 +4,8 @@
 // for the plugin's hook to submit.
 // Usage: node canvas.mjs <file.elyx>. Prints the URL, then serves until killed.
 // With --app first, opens the file's project in the Elyx app instead and exits.
+// With --share first, packs the file as a page for a Claude artifact, prints what
+// Claude should do with it, and exits.
 import { execFile, execFileSync } from 'node:child_process'
 import { randomBytes } from 'node:crypto'
 import { watch } from 'node:fs'
@@ -14,6 +16,7 @@ import path from 'node:path'
 import { promisify } from 'node:util'
 import { blockSource, importAlias, setProperty, setToken, tokenLiteral } from './edit.mjs'
 import { fileVersions, hash, indexTree, LOG_FORMAT, mergeIndexes, parseLog } from './insight.mjs'
+import { frameIds, sharePage, shareRequest, shareScale } from './share.mjs'
 import { treeToSvg } from './svg.mjs'
 
 const IMAGES = { '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp' }
@@ -52,9 +55,10 @@ const projectRoot = async file => {
   }
 }
 
-const isApp = process.argv[2] === '--app'
-const target = process.argv[isApp ? 3 : 2]
-if (!target) fail('Usage: canvas.mjs [--app] <file.elyx>')
+const mode = ['--app', '--share'].includes(process.argv[2]) ? process.argv[2] : null
+const isApp = mode === '--app'
+const target = process.argv[mode ? 3 : 2]
+if (!target) fail('Usage: canvas.mjs [--app | --share] <file.elyx>')
 let opened = path.resolve(target)
 if (!opened.endsWith('.elyx') || !(await isFile(opened))) fail(`Not an .elyx file: ${opened}`)
 let root = await realpath(await projectRoot(opened))
@@ -529,6 +533,41 @@ const ask = async ({ text, file, layer }) => {
   return {}
 }
 
+// Packs the board in view as a page for a Claude artifact, then asks Claude to publish
+// it, or to update the page an earlier share made. Opened by hand, the request goes back
+// to the page to copy.
+const share = async ({ file }, { canAsk = Boolean(process.env.ELYX_CANVAS_BRIDGE) } = {}) => {
+  const absolute = await elyxFile(file || relative(opened))
+  const name = relative(absolute)
+  const [{ frames }, { tokens }] = await Promise.all([board(name), project()])
+  if (!frames.length) throw new Error(`${name} has no frames to share.`)
+  const folder = path.join(exportsFolder(), 'share', safeName(name.replace(/\.elyx$/, '')))
+  await rm(path.join(folder, 'frames'), { recursive: true, force: true })
+  await mkdir(path.join(folder, 'frames'), { recursive: true })
+  const ids = frameIds(frames.map(frame => frame.name))
+  const shots = await Promise.all(frames.map(async (frame, index) => {
+    const image = `frames/${ids[index]}.png`
+    const bytes = await inTurn(() => renderTo(path.join(root, frame.source.file), shareScale(frame), [`--ref=${frame.source.ref}`]))
+    await writeFile(path.join(folder, image), bytes)
+    return { id: ids[index], name: frame.name, w: frame.w, h: frame.h, image }
+  }))
+  const title = `${projectName(root)} · ${path.basename(name, '.elyx')}`
+  const page = sharePage(await readFile(new URL('share.html', import.meta.url), 'utf8'), {
+    title,
+    project: projectName(root),
+    board: name,
+    sharedAt: new Date().toISOString(),
+    frames: shots,
+    tokens: tokens.map(({ scope, name: member, type, value, literal, context }) => ({ group: scope.join('.'), name: member, type, value, literal, context })),
+  })
+  await writeFile(path.join(folder, 'index.html'), page)
+  const { slug } = JSON.parse(await readFile(path.join(folder, 'artifact.json'), 'utf8').catch(() => '{}'))
+  const text = shareRequest({ folder, files: ['index.html', ...shots.map(shot => shot.image)], title, slug })
+  const sent = canAsk
+  if (sent) process.stdout.write(`ask ${JSON.stringify({ text })}\n`)
+  return { folder: relative(folder), frames: shots.length, isUpdate: Boolean(slug), sent, text }
+}
+
 const token = randomBytes(16).toString('hex')
 const listeners = new Set()
 let announced = ''
@@ -578,7 +617,7 @@ const getters = {
   layers: query => layers(query.get('file'), query.get('ref'), query.getAll('context')),
   source: query => source(query.get('file'), query.get('ref'), query.get('path')),
 }
-const posters = { edit, token: editToken, move: moveFrame, undo, ask, export: exportLayer, reveal: revealExports, 'switch-project': switchProject }
+const posters = { edit, token: editToken, move: moveFrame, undo, ask, share, export: exportLayer, reveal: revealExports, 'switch-project': switchProject }
 
 const server = createServer(async (request, response) => {
   const respond = (status, type, body, headers = {}) => {
@@ -661,6 +700,12 @@ const stop = async () => {
 }
 process.on('SIGTERM', stop)
 process.on('SIGINT', stop)
+
+if (mode === '--share') {
+  const { text } = await share({ file: relative(opened) }, { canAsk: false }).catch(cause => fail(reasonFor(cause)))
+  process.stdout.write(`${text}\n`)
+  await stop()
+}
 
 server.listen(0, '127.0.0.1', () => {
   process.stdout.write(`http://127.0.0.1:${server.address().port}/${token}/\n`)
