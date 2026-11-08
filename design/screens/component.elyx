@@ -28,19 +28,19 @@ export componentDetail = frame {
   side = frame : Sidebar.partsSidebar {
     body {
       button {
-        fill: Colors.colors.accent-soft,
+        fill: Colors.colors.chip,
 
         glyph {
-          fill[0].color: Colors.colors.accent
+          fill[0].color: Colors.colors.ink
         }
 
         label {
           font-style: "Medium",
-          fill[0].color: Colors.colors.accent
+          fill[0].color: Colors.colors.ink
         }
 
         count {
-          fill[0].color: Colors.colors.accent
+          fill[0].color: Colors.colors.muted
         }
       }
     }
@@ -65,9 +65,11 @@ export componentDetail = frame {
       }
     }
 
-    crumbBar {
-      name {
-        contents: "button"
+    topBar {
+      title {
+        page {
+          contents: "button"
+        }
       }
     }
 
@@ -80,8 +82,8 @@ export componentDetail = frame {
 
       head = frame {
         left: 48px,
-        top: 36px,
-        layout: {direction: .column, item-gap: 3px},
+        top: 40px,
+        layout: {direction: .column, item-gap: 4px},
         children: [name, note],
 
         name = text : Text.pageTitle {

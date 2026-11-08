@@ -1,5 +1,6 @@
 import "readme/drag.elyx" as Drag
 import "readme/hero.elyx" as Hero
+import "readme/history.elyx" as History
 import "readme/library.elyx" as Library
 import "readme/quick-edit.elyx" as Quick
 import "readme/zoom.elyx" as Zoom
@@ -31,6 +32,11 @@ dragScreens = frame : Drag.dragScreens {
   top: 0px
 }
 
+history = frame : History.history {
+  left: 7600px,
+  top: 0px
+}
+
 @context(theme=dark)
 heroDark = frame : Hero.hero {
   left: 0px,
@@ -58,5 +64,11 @@ sharpZoomDark = frame : Zoom.sharpZoom {
 @context(theme=dark)
 dragScreensDark = frame : Drag.dragScreens {
   left: 6080px,
+  top: 960px
+}
+
+@context(theme=dark)
+historyDark = frame : History.history {
+  left: 7600px,
   top: 960px
 }

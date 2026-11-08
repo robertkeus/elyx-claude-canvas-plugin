@@ -18,7 +18,7 @@ export size = tokens {
   inspector: 280px,
   top-bar: 52px,
   tab-bar: 38px,
-  stage-height: 810px,
+  stage-height: 848px,
   page-width: 792px,
   control: 32px,
   row: 30px

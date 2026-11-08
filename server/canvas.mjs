@@ -15,7 +15,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { promisify } from 'node:util'
 import { blockSource, importAlias, setProperty, setToken, tokenLiteral } from './edit.mjs'
-import { fileVersions, hash, indexTree, LOG_FORMAT, mergeIndexes, parseLog } from './insight.mjs'
+import { fileVersions, hash, indexTree, LOG_FORMAT, mergeIndexes, parseLog, reachOf } from './insight.mjs'
 import { frameIds, sharedLink, sharePage, shareRequest, shareScale } from './share.mjs'
 import { treeToSvg } from './svg.mjs'
 
@@ -28,6 +28,7 @@ const EDITABLE = new Set(['contents', 'fill', 'font-size', 'font-style', 'corner
 const LITERAL = /^(-?\d+(\.\d+)?(px|%)?|#[\da-f]{3,8}|\.(visible|hidden))$/i
 const TOKEN_VALUE = /^[\w#.%(), -]+$/
 const CONTEXT = /^[\w-]+=[\w-]+$/
+const REVISION = /^[\da-f]{7,40}$/
 const MEMORY_LIMIT = 2 ** 28
 const RENDER_SLOTS = 4
 const MAX_PIXELS = 4e7
@@ -253,6 +254,22 @@ const activity = async () => {
 
 const versionOf = async file => (await snapshot()).versions[relative(file)] ?? ''
 
+const gitLines = async args => (await run('git', ['-C', root, ...args], { maxBuffer: 2 ** 26 }).catch(() => ({ stdout: '' }))).stdout.split('\n').filter(Boolean)
+
+// The commits that changed a board or anything it imports, newest first, and whether
+// it has changes since the last one.
+const revisions = async file => {
+  const absolute = await elyxFile(file)
+  const reached = new Set(reachOf((await snapshot()).sources, relative(absolute)))
+  const log = await run('git', ['-C', root, 'log', '-n', '200', '--relative', '--name-status', `--format=${LOG_FORMAT}`, '--', '.'], { maxBuffer: 2 ** 26 }).catch(() => ({ stdout: '' }))
+  const commits = parseLog(log.stdout)
+    .filter(entry => entry.files.some(({ file: name }) => reached.has(name)))
+    .slice(0, 40)
+    .map(({ hash: id, author, date, subject }) => ({ hash: id, author, date, subject }))
+  const changed = [...await gitLines(['diff', '--name-only', '--relative', 'HEAD', '--', '.']), ...await gitLines(['ls-files', '--others', '--exclude-standard', '--', '.'])]
+  return { commits, isDirty: changed.some(name => reached.has(name)) }
+}
+
 // Reads every screen once, so counts mean "as drawn", through nested components. Only
 // screens an edit reached are read again.
 const usage = async () => {
@@ -324,11 +341,14 @@ const renderTo = async (file, scale, options) => {
   return bytes
 }
 
-const render = async (file, ref, scale, contexts, connections, isLater) => {
+// A revision draws the file and its imports as that commit left them.
+const render = async (file, ref, scale, contexts, connections, isLater, revision) => {
   if (!(scale > 0 && scale <= 16)) throw new Error(`Scale ${scale} is out of range.`)
+  if (revision && !REVISION.test(revision)) throw new Error('That is not a revision.')
   const absolute = await elyxFile(file)
-  const options = [...(ref ? [`--ref=${ref}`] : []), ...contextArgs(contexts), ...(connections ? [] : ['--no-connections'])]
-  return remember(`render:${await versionOf(absolute)}:${file}:${scale}:${options}`, () => inTurn(() => renderTo(absolute, scale, options), isLater))
+  const options = [...(ref ? [`--ref=${ref}`] : []), ...contextArgs(contexts), ...(connections ? [] : ['--no-connections']), ...(revision ? [`--git-ref=${revision}`] : [])]
+  const version = revision ? 'revision' : await versionOf(absolute)
+  return remember(`render:${version}:${file}:${scale}:${options}`, () => inTurn(() => renderTo(absolute, scale, options), isLater))
 }
 
 // A file's own @with-context, which an import of it does not carry over.
@@ -626,6 +646,7 @@ const getters = {
     return board(query.get('file'))
   },
   layers: query => layers(query.get('file'), query.get('ref'), query.getAll('context')),
+  revisions: query => revisions(query.get('file')),
   source: query => source(query.get('file'), query.get('ref'), query.get('path')),
   'share-status': query => shareStatus(query.get('file')),
 }
@@ -656,7 +677,7 @@ const server = createServer(async (request, response) => {
       return
     }
     if (isGet && route === 'render') {
-      const bytes = await render(query.get('file'), query.get('ref'), Number(query.get('scale')), query.getAll('context'), query.get('connections') !== '0', query.has('later'))
+      const bytes = await render(query.get('file'), query.get('ref'), Number(query.get('scale')), query.getAll('context'), query.get('connections') !== '0', query.has('later'), query.get('revision'))
       return respond(200, 'image/png', bytes, FOREVER)
     }
     if (isGet && route === 'view') {

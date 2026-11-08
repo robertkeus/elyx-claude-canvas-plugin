@@ -1,6 +1,5 @@
 // Popovers, the color and number pickers, and the quick-edit bar beside a selection.
 import { editLayer, select, trailOf } from './board.js'
-import { openComposer } from './ask.js'
 import { exportControls } from './export.js'
 import { $, clamp, colorTokens, edit, el, icon, isBase, local, report, ROLE_ORDER, roleOf, state, stored, tokenOf, tokenPath, tokenValue, unwrap } from './lib.js'
 
@@ -206,7 +205,7 @@ const moreMenu = anchor => {
     } }),
     el('button', { textContent: 'Ask Claude', onclick: () => {
       closePopover()
-      openComposer()
+      $('ask').click()
     } }),
   ].filter(Boolean), { className: 'menu' })
 }
@@ -236,6 +235,6 @@ export const placeQuick = rect => {
   const { height } = area
   const size = box.getBoundingClientRect()
   const below = rect.y + rect.h + 12
-  const top = below + size.height > height - 56 ? rect.y - size.height - 30 : below
-  box.style.transform = `translate(${clamp(rect.x + rect.w / 2 - size.width / 2, 12, Math.max(12, width - size.width - 12))}px,${clamp(top, 12, Math.max(12, height - size.height - 56))}px)`
+  const top = below + size.height > height - 80 ? rect.y - size.height - 36 : below
+  box.style.transform = `translate(${clamp(rect.x + rect.w / 2 - size.width / 2, 12, Math.max(12, width - size.width - 12))}px,${clamp(top, 12, Math.max(12, height - size.height - 80))}px)`
 }

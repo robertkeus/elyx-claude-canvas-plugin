@@ -7,65 +7,102 @@ import "tokens/colors.elyx" as Colors
 import "tokens/radius.elyx" as Radius
 import "tokens/spacing.elyx" as Spacing
 import "components/controls.elyx" as Controls
+import "components/nav.elyx" as Nav
 import "components/panel.elyx" as Panel
 import "components/type.elyx" as Text
 
-// The right rail. Insert sections into `body`.
+// The right rail: sharing on top, then the tabs. Insert sections into `body`.
 export rail = frame {
   left: 0px,
   top: 0px,
   width: Spacing.size.inspector,
   height: 100%,
   fill: Colors.colors.surface,
-  border: {color: Colors.colors.line, width: 1px, sides: .left},
   layout: {direction: .column},
-  children: [tabs, body],
+  children: [head, tabs, body],
+
+  head = frame {
+    width: 100%,
+    height: Spacing.size.top-bar,
+    border: {color: Colors.colors.line, width: 1px, sides: .bottom},
+    layout: {direction: .row, justify-content: .end, align-items: .center, item-gap: 8px},
+    padding: [0px, 12px],
+    children: [exporter, share],
+
+    exporter = frame : Controls.button {
+      label {
+        contents: "Export"
+      }
+    }
+
+    share = frame : Controls.button {
+      fill: Colors.colors.accent,
+
+      label {
+        contents: "Share",
+        fill[0].color: Colors.colors.on-accent
+      }
+    }
+  }
 
   tabs = frame {
     width: 100%,
-    height: Spacing.size.top-bar,
-    layout: {direction: .row, justify-content: .end, align-items: .center, item-gap: 4px},
-    padding: [0px, 10px],
-    children: [layer, source, file],
+    layout: {direction: .row, align-items: .center, item-gap: 2px},
+    padding: [10px, 12px, 4px, 12px],
+    children: [claude, layer, source, file, history],
 
-    layer = frame : Controls.iconButtonActive {
-      glyph {
-        contents: pointerIcon
+    claude = frame : Nav.tab {
+      label {
+        contents: "Claude"
       }
     }
 
-    source = frame : Controls.iconButtonSoft {
-      glyph {
-        contents: codeIcon
+    layer = frame : Nav.tabActive {
+      label {
+        contents: "Inspect"
       }
     }
 
-    file = frame : Controls.iconButtonSoft {
-      glyph {
-        contents: fileIcon
+    source = frame : Nav.tab {
+      label {
+        contents: "Source"
+      }
+    }
+
+    file = frame : Nav.tab {
+      label {
+        contents: "File"
+      }
+    }
+
+    history = frame : Nav.tab {
+      label {
+        contents: "History"
       }
     }
   }
 
   body = frame {
     width: 100%,
-    layout: {direction: .column, item-gap: 20px},
-    padding: [6px, 16px],
+    layout: {direction: .column},
+    padding: [0px, 12px],
     slot: .true
   }
 }
 
-// A titled group in the rail.
+// A titled group in the rail, ruled off from the next.
 export section = frame {
   left: 320px,
   top: 0px,
   width: 100%,
-  layout: {direction: .column, item-gap: 6px},
+  border: {color: Colors.colors.line, width: 1px, sides: .bottom},
+  layout: {direction: .column, item-gap: 4px},
+  padding: [14px, 4px],
   children: [head],
 
   head = frame {
     width: 100%,
-    height: 22px,
+    height: 24px,
     layout: {direction: .row, align-items: .center, item-gap: 6px},
     children: [name, spacer],
 
@@ -81,6 +118,24 @@ export section = frame {
 export fileRail = frame : rail {
   left: 640px,
   top: 0px,
+
+  tabs {
+    layer {
+      fill: #FFFFFF00,
+
+      label {
+        fill[0].color: Colors.colors.muted
+      }
+    }
+
+    file {
+      fill: Colors.colors.chip,
+
+      label {
+        fill[0].color: Colors.colors.ink
+      }
+    }
+  }
 
   body {
     overrides: [insert(file, after = .nil), insert(context, after = file), insert(canvas, after = context), insert(library, after = canvas)]
@@ -231,6 +286,8 @@ export layerRail = frame : rail {
 
   identity = frame {
     width: 100%,
+    border: {color: Colors.colors.line, width: 1px, sides: .bottom},
+    padding: [14px, 4px],
     layout: {direction: .column, item-gap: 2px},
     children: [name, path],
 
@@ -287,7 +344,7 @@ export layerRail = frame : rail {
       width: 100%
     }
 
-    note = text : Text.hint {
+    note = text : Text.meta {
       width: 100%,
       contents: "Writes to screens/landing.elyx"
     }
@@ -407,7 +464,6 @@ export recentRail = frame : rail {
   }
 
   body {
-    padding-top: 18px,
     overrides: [insert(recent, after = .nil)]
   }
 
@@ -605,6 +661,8 @@ export tokenRail = frame : rail {
 
   identity = frame {
     width: 100%,
+    border: {color: Colors.colors.line, width: 1px, sides: .bottom},
+    padding: [14px, 4px],
     layout: {direction: .column, item-gap: 10px},
     children: [preview, names],
 
@@ -699,6 +757,282 @@ export tokenRail = frame : rail {
     three = frame : Panel.linkPair {
       name {
         contents: "mark / dot"
+      }
+    }
+  }
+}
+
+// The Claude tab: bigger requests go to the session that opened the canvas.
+export claudeRail = frame : rail {
+  left: 2240px,
+  top: 0px,
+
+  tabs {
+    claude {
+      fill: Colors.colors.chip,
+
+      label {
+        fill[0].color: Colors.colors.ink
+      }
+    }
+
+    layer {
+      fill: #FFFFFF00,
+
+      label {
+        fill[0].color: Colors.colors.muted
+      }
+    }
+  }
+
+  body {
+    height: 806px,
+    layout: {direction: .column, item-gap: 10px},
+    padding: 12px,
+    overrides: [insert(space, after = .nil), insert(composer, after = space), insert(note, after = composer)]
+  }
+
+  space = frame {}
+
+  composer = frame {
+    width: 100%,
+    corner-radius: Radius.radius.lg,
+    fill: Colors.colors.surface,
+    border: {color: Colors.colors.line-strong, width: 1px},
+    layout: {direction: .column, item-gap: 8px},
+    padding: [12px, 12px, 10px, 12px],
+    shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 3px}},
+    children: [prompt, foot],
+
+    prompt = frame {
+      width: 100%,
+      height: 56px,
+      layout: {direction: .column},
+      children: words,
+
+      words = text : Text.body {
+        width: 100%,
+        contents: "Ask Claude to change something bigger",
+        fill: Colors.colors.muted
+      }
+    }
+
+    foot = frame {
+      width: 100%,
+      layout: {direction: .row, align-items: .center, item-gap: 6px},
+      children: [glyph, about, spacer, send],
+
+      glyph = asset {
+        width: 13px,
+        height: 13px,
+        contents: fileIcon,
+        fill: Colors.colors.muted
+      }
+
+      about = text : Text.meta {
+        contents: "All screens"
+      }
+
+      spacer = frame {}
+
+      send = frame {
+        width: 28px,
+        height: 28px,
+        corner-radius: Radius.radius.md,
+        fill: Colors.colors.accent,
+        layout: {direction: .row, justify-content: .center, align-items: .center},
+        children: glyph,
+
+        glyph = asset {
+          width: 14px,
+          height: 14px,
+          contents: arrowIcon,
+          fill: Colors.colors.on-accent
+        }
+      }
+    }
+  }
+
+  note = text : Text.meta {
+    width: 100%,
+    contents: "Goes to the Claude session that opened this canvas."
+  }
+}
+
+// One commit in the History tab: what changed, who, when.
+export revisionRow = frame {
+  left: 2560px,
+  top: 0px,
+  width: 256px,
+  corner-radius: Radius.radius.md,
+  layout: {direction: .row, align-items: .start, item-gap: 10px},
+  padding: [8px, 6px],
+  children: [mark, names, spacer, hash],
+
+  mark = frame {
+    width: 11px,
+    height: 18px,
+    layout: {direction: .column, justify-content: .center},
+    children: dot,
+
+    dot = frame {
+      width: 11px,
+      height: 11px,
+      corner-radius: Radius.radius.full,
+      fill: Colors.colors.surface,
+      border: {color: Colors.colors.dash, width: 1.5px}
+    }
+  }
+
+  names = frame {
+    layout: {direction: .column, item-gap: 2px},
+    children: [subject, detail],
+
+    subject = text : Text.body {
+      contents: "Add the welcome flow",
+      font-style: "Medium",
+      fill: Colors.colors.ink
+    }
+
+    detail = text : Text.meta {
+      contents: "Mara Oakes, yesterday"
+    }
+  }
+
+  spacer = frame {}
+
+  hash = text : Text.figure {
+    contents: "7d02b18",
+    font-size: 11,
+    font-style: "Regular",
+    fill: Colors.colors.muted
+  }
+}
+
+// The commit on screen.
+@variant
+export revisionRowActive = frame : revisionRow {
+  left: 2560px,
+  top: 80px,
+  fill: Colors.colors.chip,
+
+  mark {
+    dot {
+      fill[0].color: Colors.colors.accent,
+      border[0].color: Colors.colors.accent
+    }
+  }
+}
+
+// The History tab: the commits that changed this board, newest first.
+export historyRail = frame : rail {
+  left: 2880px,
+  top: 0px,
+
+  tabs {
+    layer {
+      fill: #FFFFFF00,
+
+      label {
+        fill[0].color: Colors.colors.muted
+      }
+    }
+
+    history {
+      fill: Colors.colors.chip,
+
+      label {
+        fill[0].color: Colors.colors.ink
+      }
+    }
+  }
+
+  body {
+    overrides: [insert(revisions, after = .nil)]
+  }
+
+  revisions = frame : section {
+    overrides: [insert(now, after = section.head), insert(quieter, after = now), insert(welcome, after = quieter), insert(signIn, after = welcome), insert(start, after = signIn)],
+
+    head {
+      name {
+        contents: "Revisions"
+      }
+    }
+
+    now = frame : revisionRow {
+      width: 100%,
+
+      names {
+        subject {
+          contents: "Now"
+        }
+
+        detail {
+          contents: "With changes not yet committed"
+        }
+      }
+
+      hash {
+        contents: ""
+      }
+    }
+
+    quieter = frame : revisionRowActive {
+      width: 100%,
+
+      names {
+        subject {
+          contents: "Quieter pricing cards"
+        }
+
+        detail {
+          contents: "Mara Oakes, 2 hours ago"
+        }
+      }
+
+      hash {
+        contents: "a1c9e42"
+      }
+    }
+
+    welcome = frame : revisionRow {
+      width: 100%
+    }
+
+    signIn = frame : revisionRow {
+      width: 100%,
+
+      names {
+        subject {
+          contents: "Draw the sign-in screen"
+        }
+
+        detail {
+          contents: "Sam Lee, 3 days ago"
+        }
+      }
+
+      hash {
+        contents: "3f6e0aa"
+      }
+    }
+
+    start = frame : revisionRow {
+      width: 100%,
+
+      names {
+        subject {
+          contents: "Start Driftwood"
+        }
+
+        detail {
+          contents: "Sam Lee, last week"
+        }
+      }
+
+      hash {
+        contents: "0b51c7d"
       }
     }
   }

@@ -1,8 +1,9 @@
 // The inspector on the right: what you selected, or where you are.
-import { editLayer, select, trailOf } from './board.js'
+import { claudeBody } from './ask.js'
+import { editLayer, leaveRevision, select, showRevision, trailOf } from './board.js'
 import { exportControls } from './export.js'
 import { canColor, colorOf, FIELDS, openColors, openNumbers, openWeights, renderQuick, swatch } from './pickers.js'
-import { $, contextAxes, edit, el, get, hex, icon, isBase, local, plural, post, query, report, saved, shortName, state, stored, tokenOf, tokenPath, unwrap } from './lib.js'
+import { $, ago, contextAxes, edit, el, get, hex, icon, isBase, local, plural, post, query, report, saved, shortName, state, stored, tokenOf, tokenPath, unwrap } from './lib.js'
 
 const section = (title, ...kids) => el('div', { className: 'section' }, el('div', { className: 'section-head' }, title), kids)
 const pair = (key, value) => el('div', { className: 'pair' }, el('span', { textContent: key }), typeof value === 'string' ? el('span', { textContent: value, title: value }) : value)
@@ -13,21 +14,21 @@ const boardLink = file => (state.project.files.some(item => item.file === file) 
 const recentFiles = count => Object.entries(state.project.modified).sort(([, a], [, b]) => b - a).slice(0, count).map(([file]) => file)
 
 const recentRail = () => [
-  el('div', { className: 'rail-body top' }, section('Recent files', recentFiles(6).map(file => linkPair(`${shortName(file)}.elyx`, boardLink(file))))),
+  el('div', { className: 'rail-body' }, section('Recent files', recentFiles(6).map(file => linkPair(`${shortName(file)}.elyx`, boardLink(file))))),
 ]
 
-const tabs = () => {
-  const button = (tab, glyph, label) => el('button', {
-    className: `icon-button ${state.railTab === tab ? 'on' : 'soft'}`,
-    ariaLabel: label,
-    title: label,
-    onclick: () => {
-      state.railTab = tab
-      renderRail()
-    },
-  }, icon(glyph, 16))
-  return el('div', { className: 'rail-tabs' }, button('inspect', 'pointer', 'Inspect'), button('source', 'braces', 'Source'), button('file', 'file', 'File'))
-}
+const TAB_NAMES = { claude: 'Claude', inspect: 'Inspect', source: 'Source', file: 'File', history: 'History', details: 'Details' }
+
+const tabs = ids => el('div', { className: 'rail-tabs', role: 'tablist' }, ids.map(id => el('button', {
+  className: 'tab',
+  role: 'tab',
+  ariaPressed: String(state.railTab === id),
+  textContent: TAB_NAMES[id],
+  onclick: () => {
+    state.railTab = id
+    renderRail()
+  },
+})))
 
 const contextRows = () => Object.entries(contextAxes()).map(([axis, values]) => {
   const options = [undefined, ...values]
@@ -160,9 +161,36 @@ const sourceBody = () => {
   return el('div', { className: 'rail-body' }, section(target ? 'Source' : `${shortName(state.view.file)}.elyx`, code))
 }
 
-const boardRail = () => {
-  const body = state.railTab === 'source' ? sourceBody() : state.railTab === 'file' || !state.selection ? fileBody() : layerBody()
-  return [tabs(), body]
+// The commits that changed this board or anything it draws, newest first. Pick one to
+// see the board as it was; Now comes back.
+const revisionRow = (commit, label, detail) => el('button', {
+  className: 'revision',
+  ariaPressed: String((state.rev?.hash ?? null) === (commit?.hash ?? null)),
+  onclick: () => (commit ? showRevision(commit) : leaveRevision()),
+}, el('i'), el('div', {}, el('strong', { textContent: label, title: label }), el('span', { textContent: detail })), commit ? el('span', { className: 'hash', textContent: commit.hash.slice(0, 7) }) : el('span'))
+
+const historyBody = () => {
+  const list = el('div', { className: 'revisions' }, el('p', { className: 'note', textContent: 'Reading the history…' }))
+  const { file } = state.view
+  get(`revisions?${query({ file })}`).then(({ commits, isDirty }) => {
+    if (state.view.file !== file) return
+    list.replaceChildren(
+      revisionRow(null, 'Now', isDirty ? 'With changes not yet committed' : 'As committed last'),
+      ...commits.map(commit => revisionRow(commit, commit.subject, `${commit.author}, ${ago(commit.date)}`)))
+    if (!commits.length) list.append(el('p', { className: 'note', textContent: state.project.branch ? 'No commits have changed this board yet.' : 'Revisions appear once this project is in git.' }))
+  }, report)
+  return el('div', { className: 'rail-body' }, section('Revisions', list))
+}
+
+const boardBody = () => {
+  if (state.railTab === 'history') return historyBody()
+  if (state.railTab === 'source') return sourceBody()
+  return state.railTab === 'file' || !state.selection ? fileBody() : layerBody()
+}
+
+const pageBody = () => {
+  const { kind } = state.view
+  return kind === 'component' ? componentRail() : kind === 'tokens' && state.token ? tokenBody(state.token) : recentRail()
 }
 
 const usesOf = (file, symbol) => state.usage?.components[`${file}#${symbol}`] ?? []
@@ -172,7 +200,7 @@ const componentRail = () => {
   const { exports } = state.project.files.find(item => item.file === file)
   const uses = exports.flatMap(({ name }) => usesOf(file, name))
   const screens = [...new Set(uses.map(use => use.file))]
-  return [el('div', { className: 'rail-body top' },
+  return [el('div', { className: 'rail-body' },
     section('Component',
       pair('Name', el('span', { className: 'chip figure', textContent: `${shortName(file)}.elyx` })),
       pair('Path', file)),
@@ -207,7 +235,7 @@ const tokenBody = token => {
   const reference = `${local(base.file)}#${[...base.rootScope, base.name].join('.')}`
   const used = state.usage?.tokens[reference]
   const files = Object.entries(used?.files ?? {}).sort(([, a], [, b]) => b - a).slice(0, 5)
-  return [el('div', { className: 'rail-body top' },
+  return [el('div', { className: 'rail-body' },
     preview,
     el('div', { className: 'identity' }, el('h2', { textContent: tokenPath(base) }), el('div', { className: 'path', textContent: local(base.file) })),
     section('Value', input),
@@ -222,15 +250,30 @@ const tokenBody = token => {
 
 export const selectToken = token => {
   state.token = token
+  state.railTab = 'details'
   document.body.classList.add('rail-open')
   dispatchEvent(new Event('token'))
 }
 
 export const renderRail = () => {
-  const { kind } = state.view
-  const content = kind === 'board' ? boardRail() : kind === 'component' ? componentRail() : kind === 'tokens' && state.token ? tokenBody(state.token) : recentRail()
-  $('rail').replaceChildren(...content)
+  const isBoard = state.view.kind === 'board'
+  const ids = isBoard ? ['claude', 'inspect', 'source', 'file', 'history'] : ['claude', 'details']
+  if (!ids.includes(state.railTab)) state.railTab = isBoard ? 'inspect' : 'details'
+  const body = state.railTab === 'claude' ? claudeBody() : isBoard ? boardBody() : pageBody()
+  $('ask').ariaPressed = String(state.railTab === 'claude' && document.body.classList.contains('rail-open'))
+  $('rail').replaceChildren(tabs(ids), ...[body].flat())
 }
+
+// Ask Claude opens its tab, ready to type.
+export const openClaude = () => {
+  state.railTab = 'claude'
+  renderRail()
+  $('rail').querySelector('textarea')?.focus()
+}
+
+addEventListener('revision', () => {
+  if (state.railTab === 'history') renderRail()
+})
 
 // A narrow pane has no room to spare, so there the rail opens only on request.
 export const isNarrow = () => innerWidth < 1180

@@ -3,7 +3,7 @@
 // it stays sharp however far you go in.
 import { placeQuick, renderQuick } from './pickers.js'
 import { renderRail } from './rail.js'
-import { $, clamp, el, get, local, post, query, renderUrl, report, saved, state, viewUrl, withContext } from './lib.js'
+import { $, ago, clamp, el, get, icon, local, post, query, renderUrl, report, saved, state, viewUrl, withContext } from './lib.js'
 
 const MAX_ZOOM = 64
 const REFINE_DELAY = 80
@@ -56,10 +56,11 @@ let refineTimer
 export const paint = () => {
   $('world').style.transform = `translate(${camera.x}px,${camera.y}px) scale(${camera.z})`
   for (const frame of state.frames) {
-    frame.title.style.transform = `translate(${frame.x * camera.z + camera.x - 3}px,${frame.y * camera.z + camera.y - 21}px)`
-    frame.title.style.maxWidth = `${Math.max(frame.w * camera.z, 60)}px`
+    frame.title.style.transform = `translate(${frame.x * camera.z + camera.x}px,${frame.y * camera.z + camera.y - 28}px)`
+    frame.title.style.width = `${Math.max(frame.w * camera.z, 56)}px`
+    frame.title.classList.toggle('on', state.selection?.frame === frame && !state.selection.path.length)
   }
-  $('level-label')?.replaceChildren(`${Math.round(camera.z * 100)}%`)
+  $('level-label').textContent = `${Math.round(camera.z * 100)}%`
   drawBox($('hovered'), state.hover)
   const selected = state.selection && { frame: state.selection.frame, trail: trailOf(state.selection) }
   placeQuick(drawBox($('selected'), selected))
@@ -97,6 +98,11 @@ export const zoomCenter = factor => {
   const { width, height } = board.getBoundingClientRect()
   zoomBy(factor, width / 2, height / 2)
   paint()
+}
+
+export const zoomToSelection = () => {
+  if (!state.selection) return fit(bounds())
+  fit(rectOf({ frame: state.selection.frame, trail: trailOf(state.selection) }), MAX_ZOOM)
 }
 
 // Sharp detail
@@ -177,7 +183,7 @@ const draw = (frame, area, scale, key) => {
 
 export const refine = () => {
   clearTimeout(refineTimer)
-  if (board.hidden || drag?.mode === 'move') return
+  if (board.hidden || state.rev || drag?.mode === 'move') return
   const density = camera.z * devicePixelRatio
   const { width, height } = board.getBoundingClientRect()
   for (const frame of state.frames) {
@@ -282,7 +288,7 @@ const titleFor = (frame, next) =>
       await treeOf(next)
       select({ frame: next, path: [] })
     },
-  }, el('span', { textContent: frame.name }), el('i'), el('i'))
+  }, icon('frame', 11), el('span', { textContent: frame.name }))
 
 // Each frame's outline, so the board has its shape before any image arrives.
 const drawSlots = () => {
@@ -294,6 +300,7 @@ const drawSlots = () => {
 }
 
 const showBase = (url, size) => {
+  if (state.rev) return
   const base = $('base')
   Object.assign(base.style, { width: `${size.w}px`, height: `${size.h}px` })
   base.src = url
@@ -386,7 +393,7 @@ const lift = frame => {
   return ghost
 }
 
-const canMove = frame => frame && state.frames.length > 1 && state.inspecting && !isSpaceDown
+const canMove = frame => frame && state.frames.length > 1 && state.inspecting && !state.rev && !isSpaceDown
 
 const startDrag = (event, frame, isTitle) => {
   if (event.button) return
@@ -450,7 +457,7 @@ board.addEventListener('pointermove', event => {
     }
     return queuePaint()
   }
-  if (!state.inspecting || isSpaceDown || event.target.closest('#quick')) return
+  if (!state.inspecting || state.rev || isSpaceDown || event.target.closest('#quick')) return
   const at = toWorld(point(event))
   const frame = frameAt(at)
   if (frame) treeOf(frame)
@@ -467,7 +474,7 @@ board.addEventListener('pointerup', async event => {
     if (finished.mode === 'move') await saveMove(finished.frame)
     return refine()
   }
-  if (!state.inspecting) return
+  if (!state.inspecting || state.rev) return
   if (finished.isTitle) {
     await treeOf(finished.frame)
     return select({ frame: finished.frame, path: [] })
@@ -501,3 +508,58 @@ addEventListener('keydown', event => {
 })
 addEventListener('keyup', event => event.code === 'Space' && setSpace(false))
 addEventListener('blur', () => setSpace(false))
+
+// Revisions: the whole board as a commit left it, drawn by the engine from git. It only
+// looks; nothing on it can be picked or moved.
+
+const revisionBar = commit => {
+  const bar = $('revision-bar')
+  bar.hidden = !commit
+  if (!commit) return
+  bar.replaceChildren(
+    el('span', { className: 'what' }, el('b', { textContent: commit.hash.slice(0, 7) }), ` ${commit.subject} · ${ago(commit.date)}`),
+    el('button', { textContent: 'Back to now', onclick: () => leaveRevision() }))
+}
+
+export const showRevision = async commit => {
+  const file = state.view.file
+  select(null)
+  state.rev = commit
+  document.body.classList.add('in-revision')
+  revisionBar(commit)
+  dispatchEvent(new Event('revision'))
+  const scale = Math.min(4, state.baseScale * 2)
+  const url = `render?${withContext({ file, scale, revision: commit.hash, ...(state.overlays ? {} : { connections: 0 }) })}`
+  const image = new Image()
+  $('stage').classList.add('busy')
+  try {
+    await new Promise((resolve, reject) => {
+      image.onload = resolve
+      image.onerror = () => reject(new Error('This board could not be drawn as it was in that commit.'))
+      image.src = url
+    })
+  } catch (cause) {
+    if (state.rev === commit) leaveRevision()
+    return report(cause)
+  } finally {
+    $('stage').classList.remove('busy')
+  }
+  if (state.rev !== commit || state.view.file !== file) return
+  const size = { x: 0, y: 0, w: image.naturalWidth / scale, h: image.naturalHeight / scale }
+  const base = $('base')
+  Object.assign(base.style, { width: `${size.w}px`, height: `${size.h}px`, opacity: 1 })
+  base.src = url
+  $('lift').replaceChildren()
+  fit(size)
+}
+
+export const leaveRevision = (isRedrawn = true) => {
+  if (!state.rev) return
+  state.rev = null
+  document.body.classList.remove('in-revision')
+  revisionBar(null)
+  dispatchEvent(new Event('revision'))
+  if (!isRedrawn || !state.frames.length) return
+  showBase(renderUrl(state.view.file, null, state.baseScale), bounds())
+  paint()
+}

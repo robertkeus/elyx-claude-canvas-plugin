@@ -1,0 +1,246 @@
+import "sample/images/landing.png" as landingShot
+import "sample/images/pricing.png" as pricingShot
+import "sample/images/signIn.png" as signInShot
+import "sample/images/welcome.png" as welcomeShot
+import "sample/images/today.png" as todayShot
+import "sample/images/notes.png" as notesShot
+import "sample/images/note.png" as noteShot
+import "sample/images/settings.png" as settingsShot
+import "tokens/colors.elyx" as Colors
+import "tokens/spacing.elyx" as Spacing
+import "blocks/inspector.elyx" as Inspector
+import "blocks/focus.elyx" as Focus
+import "screens/board.elyx" as Board
+
+// The canvas on its own: a slim bar on top, one floating toolbar below, and the
+// whole board in between. The panel buttons in the top bar bring the panels back.
+export focus = frame {
+  title: "Canvas first",
+  caption: "The board fills the window. The top bar keeps the project, the page and Share; the panel buttons bring the panels back.",
+  left: 0px,
+  top: 0px,
+  width: Spacing.size.screen,
+  height: Spacing.size.screen-height,
+  fill: Colors.colors.stage,
+  children: [landing, pricing, signIn, welcome, today, notes, note, settings, plansFlow, joinFlow, openFlow, top, dock],
+
+  landing = frame : Focus.screen {
+    left: 96px,
+    top: 208px,
+    width: 264px,
+
+    head {
+      name {
+        contents: "landing"
+      }
+    }
+
+    shot {
+      height: 170px,
+      fill: {image: {ref: landingShot}}
+    }
+  }
+
+  pricing = frame : Focus.screen {
+    left: 424px,
+    top: 208px,
+    width: 264px,
+
+    head {
+      name {
+        contents: "pricing"
+      }
+    }
+
+    shot {
+      height: 170px,
+      fill: {image: {ref: pricingShot}}
+    }
+  }
+
+  signIn = frame : Focus.screen {
+    left: 752px,
+    top: 208px,
+    width: 264px,
+
+    head {
+      name {
+        contents: "signIn"
+      }
+    }
+
+    shot {
+      height: 170px,
+      fill: {image: {ref: signInShot}}
+    }
+  }
+
+  welcome = frame : Focus.screen {
+    left: 1080px,
+    top: 208px,
+    width: 264px,
+
+    head {
+      name {
+        contents: "welcome"
+      }
+    }
+
+    shot {
+      height: 170px,
+      fill: {image: {ref: welcomeShot}}
+    }
+  }
+
+  today = frame : Focus.screen {
+    left: 96px,
+    top: 474px,
+    width: 264px,
+
+    head {
+      name {
+        contents: "today"
+      }
+    }
+
+    shot {
+      height: 170px,
+      fill: {image: {ref: todayShot}}
+    }
+  }
+
+  notes = frame : Focus.screen {
+    left: 424px,
+    top: 474px,
+    width: 264px,
+
+    head {
+      name {
+        contents: "notes"
+      }
+    }
+
+    shot {
+      height: 170px,
+      fill: {image: {ref: notesShot}}
+    }
+  }
+
+  note = frame : Focus.screen {
+    left: 752px,
+    top: 474px,
+    width: 264px,
+
+    head {
+      name {
+        contents: "note"
+      }
+    }
+
+    shot {
+      height: 170px,
+      fill: {image: {ref: noteShot}}
+    }
+  }
+
+  settings = frame : Focus.screen {
+    left: 1080px,
+    top: 474px,
+    width: 264px,
+
+    head {
+      name {
+        contents: "settings"
+      }
+    }
+
+    shot {
+      height: 170px,
+      fill: {image: {ref: settingsShot}}
+    }
+  }
+
+  plansFlow = frame : Focus.flow {
+    left: 332px,
+    top: 317px,
+
+    tag {
+      label {
+        contents: "See plans"
+      }
+    }
+  }
+
+  joinFlow = frame : Focus.flow {
+    left: 988px,
+    top: 317px,
+
+    tag {
+      label {
+        contents: "Sign up"
+      }
+    }
+  }
+
+  openFlow = frame : Focus.flow {
+    left: 660px,
+    top: 583px,
+
+    tag {
+      label {
+        contents: "Open"
+      }
+    }
+  }
+
+  top = frame : Focus.topBar {
+    left: 0px,
+    top: 0px
+  }
+
+  dock = frame {
+    left: 0px,
+    bottom: 20px,
+    width: 1440px,
+    layout: {direction: .row, justify-content: .center},
+    overflow: .visible,
+    children: bar,
+
+    bar = frame : Focus.toolbar {
+      zoom {
+        level {
+          contents: "62%"
+        }
+      }
+    }
+  }
+}
+
+// The board with the Claude tab open: bigger requests go to the session.
+export focusPanels = frame : Board.allScreens {
+  title: "Ask Claude",
+  caption: "Ask Claude opens its tab in the inspector. What you write goes to the session that opened the canvas.",
+  left: 1520px,
+  top: 0px,
+  overrides: [remove(Board.allScreens.rail), insert(claude, after = Board.allScreens.main)],
+
+  main {
+    stage {
+      hud {
+        claude {
+          fill: Colors.colors.accent,
+
+          glyph {
+            fill[0].color: Colors.colors.on-accent
+          }
+
+          label {
+            fill[0].color: Colors.colors.on-accent
+          }
+        }
+      }
+    }
+  }
+
+  claude = frame : Inspector.claudeRail {}
+}

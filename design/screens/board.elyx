@@ -32,8 +32,7 @@ export allScreens = frame {
   side = frame : Sidebar.screensSidebar {
     body {
       all {
-        fill: Colors.colors.accent-soft,
-        border[0].color: Colors.colors.accent-line
+        fill: Colors.colors.chip
       }
     }
   }
@@ -51,6 +50,8 @@ export allScreens = frame {
       }
     }
 
+    // Smaller frames with wide gaps, so the board has room and the flow tags sit
+    // in the gaps instead of on the frames.
     world = frame {
       left: 0px,
       top: 0px,
@@ -59,9 +60,9 @@ export allScreens = frame {
       children: [landing, pricing, signIn, welcome, today, notes, note, settings, plansFlowLine, plansFlowTag, joinFlowLine, joinFlowTag, openFlowLine, openFlowTag, hoverBox],
 
       landing = frame : Canvas.artboard {
-        left: 30px,
-        top: 60px,
-        width: 190px,
+        left: 44px,
+        top: 232px,
+        width: 152px,
 
         title {
           name {
@@ -70,15 +71,15 @@ export allScreens = frame {
         }
 
         shot {
-          height: 122px,
+          height: 98px,
           fill: {image: {ref: landingShot}}
         }
       }
 
       pricing = frame : Canvas.artboard {
-        left: 242px,
-        top: 60px,
-        width: 190px,
+        left: 260px,
+        top: 232px,
+        width: 152px,
 
         title {
           name {
@@ -87,15 +88,15 @@ export allScreens = frame {
         }
 
         shot {
-          height: 122px,
+          height: 98px,
           fill: {image: {ref: pricingShot}}
         }
       }
 
       signIn = frame : Canvas.artboard {
-        left: 454px,
-        top: 60px,
-        width: 190px,
+        left: 476px,
+        top: 232px,
+        width: 152px,
 
         title {
           name {
@@ -104,15 +105,15 @@ export allScreens = frame {
         }
 
         shot {
-          height: 122px,
+          height: 98px,
           fill: {image: {ref: signInShot}}
         }
       }
 
       welcome = frame : Canvas.artboard {
-        left: 666px,
-        top: 60px,
-        width: 190px,
+        left: 692px,
+        top: 232px,
+        width: 152px,
 
         title {
           name {
@@ -121,15 +122,15 @@ export allScreens = frame {
         }
 
         shot {
-          height: 122px,
+          height: 98px,
           fill: {image: {ref: welcomeShot}}
         }
       }
 
       today = frame : Canvas.artboard {
-        left: 30px,
-        top: 250px,
-        width: 190px,
+        left: 44px,
+        top: 422px,
+        width: 152px,
 
         title {
           name {
@@ -138,15 +139,15 @@ export allScreens = frame {
         }
 
         shot {
-          height: 122px,
+          height: 98px,
           fill: {image: {ref: todayShot}}
         }
       }
 
       notes = frame : Canvas.artboard {
-        left: 242px,
-        top: 250px,
-        width: 190px,
+        left: 260px,
+        top: 422px,
+        width: 152px,
 
         title {
           name {
@@ -155,15 +156,15 @@ export allScreens = frame {
         }
 
         shot {
-          height: 122px,
+          height: 98px,
           fill: {image: {ref: notesShot}}
         }
       }
 
       note = frame : Canvas.artboard {
-        left: 454px,
-        top: 250px,
-        width: 190px,
+        left: 476px,
+        top: 422px,
+        width: 152px,
 
         title {
           name {
@@ -172,15 +173,15 @@ export allScreens = frame {
         }
 
         shot {
-          height: 122px,
+          height: 98px,
           fill: {image: {ref: noteShot}}
         }
       }
 
       settings = frame : Canvas.artboard {
-        left: 666px,
-        top: 250px,
-        width: 190px,
+        left: 692px,
+        top: 422px,
+        width: 152px,
 
         title {
           name {
@@ -189,20 +190,20 @@ export allScreens = frame {
         }
 
         shot {
-          height: 122px,
+          height: 98px,
           fill: {image: {ref: settingsShot}}
         }
       }
 
       plansFlowLine = frame : Canvas.flowLine {
-        left: 212px,
-        top: 144px,
-        width: 38px
+        left: 196px,
+        top: 308.25px,
+        width: 64px
       }
 
       plansFlowTag = frame : Canvas.flowTag {
-        left: 200px,
-        top: 137px,
+        left: 199.5px,
+        top: 301px,
 
         label {
           contents: "See plans"
@@ -210,14 +211,14 @@ export allScreens = frame {
       }
 
       joinFlowLine = frame : Canvas.flowLine {
-        left: 636px,
-        top: 144px,
-        width: 38px
+        left: 628px,
+        top: 308.25px,
+        width: 64px
       }
 
       joinFlowTag = frame : Canvas.flowTag {
-        left: 624px,
-        top: 137px,
+        left: 636.5px,
+        top: 301px,
 
         label {
           contents: "Sign up"
@@ -225,14 +226,14 @@ export allScreens = frame {
       }
 
       openFlowLine = frame : Canvas.flowLine {
-        left: 424px,
-        top: 334px,
-        width: 38px
+        left: 412px,
+        top: 498.25px,
+        width: 64px
       }
 
       openFlowTag = frame : Canvas.flowTag {
-        left: 412px,
-        top: 327px,
+        left: 425px,
+        top: 491px,
 
         label {
           contents: "Open"
@@ -240,10 +241,10 @@ export allScreens = frame {
       }
 
       hoverBox = frame {
-        left: 241px,
-        top: 272px,
-        width: 192px,
-        height: 124px,
+        left: 259px,
+        top: 449px,
+        width: 154px,
+        height: 100px,
         corner-radius: Radius.radius.xs,
         border: {color: Colors.colors.accent, width: 1.5px}
       }

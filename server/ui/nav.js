@@ -16,10 +16,10 @@ export const tabOf = view => {
 }
 
 const TABS = [
-  ['screens', 'frame', 'Screens', () => (state.project.files.some(item => !sectionOf(item.file)) ? `#board:${state.project.files.find(item => !sectionOf(item.file)).file}` : '#home')],
-  ['parts', 'component', 'Components', () => '#gallery:all'],
-  ['tokens', 'palette', 'Tokens', () => '#tokens:colors'],
-  ['assets', 'image', 'Assets', () => '#assets:all'],
+  ['screens', 'Screens', () => (state.project.files.some(item => !sectionOf(item.file)) ? `#board:${state.project.files.find(item => !sectionOf(item.file)).file}` : '#home')],
+  ['parts', 'Components', () => '#gallery:all'],
+  ['tokens', 'Tokens', () => '#tokens:colors'],
+  ['assets', 'Assets', () => '#assets:all'],
 ]
 
 const isCurrent = href => {
@@ -41,7 +41,7 @@ const warm = file => get(`board?${query({ file })}`).catch(() => {})
 
 const thumbRow = (file, label) => {
   const href = `#board:${file}`
-  return el('a', { href, className: 'nav-row thumb-row', onpointerenter: () => warm(file), ...current(href) },
+  return el('a', { href, className: 'nav-row', onpointerenter: () => warm(file), ...current(href) },
     thumb(file, { className: 'thumb', alt: '' }),
     el('span', { className: 'label', textContent: label, title: label }))
 }
@@ -126,8 +126,8 @@ const BODIES = { screens: screensBody, parts: partsBody, tokens: tokensBody, ass
 
 export const renderNav = () => {
   const tab = tabOf(state.view)
-  $('tabs').replaceChildren(...TABS.map(([id, glyph, label, href]) =>
-    el('a', { href: href(), title: label, ariaLabel: label, ariaCurrent: String(id === tab) }, icon(glyph, 17))))
+  $('tabs').replaceChildren(...TABS.map(([id, label, href]) =>
+    el('a', { className: 'tab', href: href(), ariaCurrent: String(id === tab), textContent: label })))
   $('links').replaceChildren(...[BODIES[tab]()].flat(Infinity).filter(Boolean))
   $('links').querySelector('[aria-current="page"]')?.scrollIntoView({ block: 'nearest' })
 }

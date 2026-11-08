@@ -7,13 +7,14 @@ import "tokens/typography.elyx" as Type
 import "components/type.elyx" as Text
 
 // Section title in the sidebar, with a count or a menu on the right.
+// The space above sets one group off from the last; drop it on a list's first head.
 export navHead = frame {
   left: 0px,
   top: 0px,
   width: 248px,
-  height: 28px,
+  height: 36px,
   layout: {direction: .row, align-items: .center, item-gap: 6px},
-  padding: [0px, 8px],
+  padding: [10px, 8px, 0px, 8px],
   children: [label, spacer, count],
 
   label = text : Text.label {
@@ -25,7 +26,7 @@ export navHead = frame {
   count = text : Text.figure {
     contents: "12",
     font-style: "Regular",
-    fill: Colors.colors.faint
+    fill: Colors.colors.muted
   }
 }
 
@@ -55,7 +56,7 @@ export navRow = frame {
   count = text : Text.figure {
     contents: "",
     font-style: "Regular",
-    fill: Colors.colors.faint
+    fill: Colors.colors.muted
   }
 }
 
@@ -63,19 +64,19 @@ export navRow = frame {
 export navRowActive = frame : navRow {
   left: 280px,
   top: 40px,
-  fill: Colors.colors.accent-soft,
+  fill: Colors.colors.chip,
 
   glyph {
-    fill[0].color: Colors.colors.accent
+    fill[0].color: Colors.colors.ink
   }
 
   label {
     font-style: "Medium",
-    fill[0].color: Colors.colors.accent
+    fill[0].color: Colors.colors.ink
   }
 
   count {
-    fill[0].color: Colors.colors.accent
+    fill[0].color: Colors.colors.muted
   }
 }
 
@@ -84,15 +85,15 @@ export thumbRow = frame {
   left: 0px,
   top: 88px,
   width: 248px,
-  height: 34px,
+  height: Spacing.size.row,
   corner-radius: Radius.radius.sm,
-  layout: {direction: .row, align-items: .center, item-gap: 10px},
-  padding: [0px, 6px],
+  layout: {direction: .row, align-items: .center, item-gap: 9px},
+  padding: [0px, 8px],
   children: [shot, label],
 
   shot = frame {
-    width: 38px,
-    height: 24px,
+    width: 22px,
+    height: 15px,
     corner-radius: Radius.radius.xs,
     fill: Colors.colors.well,
     border: {color: Colors.colors.line, width: 1px}
@@ -107,43 +108,40 @@ export thumbRow = frame {
 export thumbRowActive = frame : thumbRow {
   left: 280px,
   top: 88px,
-  fill: Colors.colors.accent-soft,
+  fill: Colors.colors.chip,
 
   shot {
-    border[0].color: Colors.colors.accent-line
+    border[0].color: Colors.colors.line-strong
   }
 
   label {
     font-style: "Medium",
-    fill[0].color: Colors.colors.accent
+    fill[0].color: Colors.colors.ink
   }
 }
 
-// The outlined blue row the editor uses for its Elyx actions.
+// The row for everything in a view, above its groups. Set the open one on a chip.
 export pillRow = frame {
   left: 0px,
   top: 136px,
   width: 248px,
   height: Spacing.size.row,
-  corner-radius: Radius.radius.md,
-  border: {color: Colors.colors.line-strong, width: 1px},
-  fill: Colors.colors.surface,
+  corner-radius: Radius.radius.sm,
   layout: {direction: .row, align-items: .center, item-gap: 9px},
-  padding: [0px, 9px],
-  shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 2px}},
+  padding: [0px, 8px],
   children: [glyph, label, spacer, count],
 
   glyph = asset {
     width: 15px,
     height: 15px,
     contents: frameIcon,
-    fill: Colors.colors.accent
+    fill: Colors.colors.ink
   }
 
   label = text : Text.body {
     contents: "Action",
     font-style: "Medium",
-    fill: Colors.colors.accent
+    fill: Colors.colors.ink
   }
 
   spacer = frame {}
@@ -151,33 +149,35 @@ export pillRow = frame {
   count = text : Text.figure {
     contents: "",
     font-style: "Regular",
-    fill: Colors.colors.accent
+    fill: Colors.colors.muted
   }
 }
 
+// A text tab at the top of a panel.
 export tab = frame {
   left: 0px,
   top: 184px,
-  width: 67px,
-  height: 37px,
-  layout: {direction: .row, justify-content: .center, align-items: .center},
-  children: glyph,
+  height: 28px,
+  corner-radius: Radius.radius.md,
+  layout: {direction: .row, align-items: .center},
+  padding: [0px, 5px],
+  children: label,
 
-  glyph = asset {
-    width: 17px,
-    height: 17px,
-    contents: frameIcon,
-    fill: Colors.colors.faint
+  label = text : Text.meta {
+    contents: "Tab",
+    font-style: "Medium"
   }
 }
 
+// The open tab sits on a grey chip.
 @variant
 export tabActive = frame : tab {
   left: 80px,
   top: 184px,
+  fill: Colors.colors.chip,
 
-  glyph {
-    fill[0].color: Colors.colors.accent
+  label {
+    fill[0].color: Colors.colors.ink
   }
 }
 

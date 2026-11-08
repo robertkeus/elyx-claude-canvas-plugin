@@ -1,0 +1,306 @@
+import "icons/columns.svg" as panelIcon
+import "icons/history.svg" as historyIcon
+import "icons/house.svg" as homeIcon
+import "icons/chevron-left.svg" as backIcon
+import "icons/chevron-right.svg" as forwardIcon
+import "icons/chevron-down.svg" as chevronIcon
+import "icons/pointer.svg" as pointerIcon
+import "icons/eye.svg" as eyeIcon
+import "icons/moon.svg" as moonIcon
+import "icons/sparkles.svg" as sparkIcon
+import "icons/frame.svg" as frameIcon
+import "sample/tokens.elyx" as Sample
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "tokens/spacing.elyx" as Spacing
+import "tokens/typography.elyx" as Type
+import "components/canvas.elyx" as Canvas
+import "components/controls.elyx" as Controls
+import "components/type.elyx" as Text
+
+// The bar across the top: the project and the way back on the left, the page in
+// the middle, the panels and sharing on the right.
+export topBar = frame {
+  left: 0px,
+  top: 120px,
+  width: Spacing.size.screen,
+  height: Spacing.size.top-bar,
+  fill: Colors.colors.surface,
+  border: {color: Colors.colors.line, width: 1px, sides: .bottom},
+  layout: {direction: .row, align-items: .center, item-gap: 2px},
+  padding: [0px, 12px],
+  children: [title, project, recent, ruleOne, side, home, back, forward, spacer, rail, ruleTwo, exporter, pad, share],
+
+  title = frame {
+    ignore-stack: .true,
+    left: 0px,
+    top: 0px,
+    width: Spacing.size.screen,
+    height: Spacing.size.top-bar,
+    layout: {direction: .row, justify-content: .center, align-items: .center, item-gap: 8px},
+    children: [page, branch],
+
+    page = text : Text.body {
+      contents: "All screens",
+      font-style: "Medium",
+      fill: Colors.colors.ink
+    }
+
+    branch = frame {
+      height: 20px,
+      corner-radius: Radius.radius.xs,
+      fill: Colors.colors.chip,
+      layout: {direction: .row, align-items: .center},
+      padding: [0px, 6px],
+      children: label,
+
+      label = text : Text.figure {
+        contents: "main",
+        font-size: Type.fontSize.xs,
+        font-style: "Regular",
+        fill: Colors.colors.body
+      }
+    }
+  }
+
+  project = frame {
+    height: 32px,
+    corner-radius: Radius.radius.md,
+    fill: Colors.colors.surface,
+    border: {color: Colors.colors.line-strong, width: 1px},
+    layout: {direction: .row, align-items: .center, item-gap: 8px},
+    padding: [0px, 10px, 0px, 8px],
+    shadow: {drop-shadow: {color: #0000000A, offset: point(0, 1), blur-radius: 2px}},
+    children: [mark, name, chevron],
+
+    mark = frame {
+      width: 16px,
+      height: 16px,
+      corner-radius: 5px,
+      fill: {linear-gradient: {angle: 135deg, stops: [stop(0%, Sample.sample.sun), stop(100%, Sample.sample.clay)]}}
+    }
+
+    name = text : Text.label {
+      contents: "driftwood"
+    }
+
+    chevron = asset {
+      width: 12px,
+      height: 12px,
+      contents: chevronIcon,
+      fill: Colors.colors.muted
+    }
+  }
+
+  // Version history, beside the project as in the full window.
+  recent = frame : Controls.iconButton {
+    glyph {
+      contents: historyIcon
+    }
+  }
+
+  ruleOne = frame : Controls.divider {}
+
+  side = frame : Controls.iconButton {
+    glyph {
+      contents: panelIcon,
+      transform: [-1, 0, 16, 0, 1, 0]
+    }
+  }
+
+  home = frame : Controls.iconButton {
+    glyph {
+      contents: homeIcon
+    }
+  }
+
+  back = frame : Controls.iconButton {
+    glyph {
+      contents: backIcon
+    }
+  }
+
+  forward = frame : Controls.iconButton {
+    glyph {
+      contents: forwardIcon,
+      fill[0].color: Colors.colors.faint
+    }
+  }
+
+  spacer = frame {}
+
+  rail = frame : Controls.iconButton {
+    glyph {
+      contents: panelIcon
+    }
+  }
+
+  ruleTwo = frame : Controls.divider {}
+
+  exporter = frame : Controls.button {
+    label {
+      contents: "Export"
+    }
+  }
+
+  pad = frame {
+    width: 4px,
+    height: 1px
+  }
+
+  share = frame : Controls.button {
+    fill: Colors.colors.accent,
+
+    label {
+      contents: "Share",
+      fill[0].color: Colors.colors.on-accent
+    }
+  }
+}
+
+// The one floating bar: how the board is drawn, the zoom, and Claude.
+export toolbar = frame {
+  left: 0px,
+  top: 1080px,
+  height: 44px,
+  corner-radius: Radius.radius.lg,
+  fill: Colors.colors.surface,
+  border: {color: Colors.colors.line-strong, width: 1px},
+  layout: {direction: .row, align-items: .center, item-gap: 2px},
+  padding: 5px,
+  shadow: [{drop-shadow: {color: #00000014, offset: point(0, 8), blur-radius: 24px}}, {drop-shadow: {color: #0000000F, offset: point(0, 1), blur-radius: 3px}}],
+  children: [inspect, overlays, theme, ruleOne, zoom, pad, ask],
+
+  inspect = frame : Controls.iconButtonActive {
+    glyph {
+      contents: pointerIcon
+    }
+  }
+
+  overlays = frame : Controls.iconButton {
+    glyph {
+      contents: eyeIcon
+    }
+  }
+
+  theme = frame : Controls.iconButton {
+    glyph {
+      contents: moonIcon
+    }
+  }
+
+  ruleOne = frame : Controls.divider {}
+
+  zoom = frame {
+    height: 32px,
+    corner-radius: Radius.radius.md,
+    fill: Colors.colors.chip,
+    layout: {direction: .row, align-items: .center, item-gap: 6px},
+    padding: [0px, 8px, 0px, 10px],
+    children: [level, chevron],
+
+    level = text : Text.figure {
+      contents: "62%"
+    }
+
+    chevron = asset {
+      width: 12px,
+      height: 12px,
+      contents: chevronIcon,
+      fill: Colors.colors.muted
+    }
+  }
+
+  pad = frame {
+    width: 4px,
+    height: 1px
+  }
+
+  ask = frame {
+    height: 32px,
+    corner-radius: Radius.radius.md,
+    fill: Colors.colors.accent-soft,
+    layout: {direction: .row, align-items: .center, item-gap: 6px},
+    padding: [0px, 10px],
+    children: [glyph, label],
+
+    glyph = asset {
+      width: 14px,
+      height: 14px,
+      contents: sparkIcon,
+      fill: Colors.colors.accent
+    }
+
+    label = text : Text.label {
+      contents: "Ask Claude",
+      font-style: "Medium",
+      fill: Colors.colors.accent
+    }
+  }
+}
+
+// One screen on the board, under a bar with its name and size.
+export screen = frame {
+  left: 0px,
+  top: 1160px,
+  width: 264px,
+  overflow: .visible,
+  layout: {direction: .column, item-gap: 8px},
+  children: [head, shot],
+
+  head = frame {
+    width: 100%,
+    height: 24px,
+    corner-radius: Radius.radius.sm,
+    fill: Colors.colors.chip,
+    layout: {direction: .row, align-items: .center, item-gap: 6px},
+    padding: [0px, 8px],
+    children: [glyph, name, size],
+
+    glyph = asset {
+      width: 11px,
+      height: 11px,
+      contents: frameIcon,
+      fill: Colors.colors.muted
+    }
+
+    name = text : Text.figure {
+      contents: "landing",
+      font-size: Type.fontSize.xs
+    }
+
+    size = text : Text.figure {
+      contents: "1280 × 820",
+      font-size: Type.fontSize.xs,
+      font-style: "Regular",
+      fill: Colors.colors.faint
+    }
+  }
+
+  shot = frame {
+    width: 100%,
+    height: 170px,
+    fill: Colors.colors.surface,
+    border: {color: Colors.colors.line-strong, width: 1px}
+  }
+}
+
+// A connection, centered on the gap between two screens. Set the line to the gap.
+export flow = frame {
+  left: 320px,
+  top: 1160px,
+  width: 120px,
+  height: 16px,
+  overflow: .visible,
+  layout: {direction: .row, justify-content: .center, align-items: .center},
+  children: [line, tag],
+
+  line = frame : Canvas.flowLine {
+    ignore-stack: .true,
+    left: 28px,
+    top: 7px,
+    width: 64px
+  }
+
+  tag = frame : Canvas.flowTag {}
+}

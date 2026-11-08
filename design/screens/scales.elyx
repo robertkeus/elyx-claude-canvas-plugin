@@ -25,6 +25,7 @@ export scales = frame {
 
   main = frame : Center.center {
     stage {
+      fill: Colors.colors.surface,
       overrides: [insert(page, after = .nil)],
 
       hud {
@@ -32,22 +33,24 @@ export scales = frame {
       }
     }
 
-    crumbBar {
-      name {
-        contents: "Scales"
+    topBar {
+      title {
+        page {
+          contents: "Scales"
+        }
       }
     }
 
     page = frame {
       left: 48px,
-      top: 36px,
+      top: 40px,
       width: Spacing.size.page-width,
       layout: {direction: .column, item-gap: 16px},
       children: [head, chips, rule, typeHead, specimens, lower],
 
       head = frame {
         width: 100%,
-        layout: {direction: .column, item-gap: 3px},
+        layout: {direction: .column, item-gap: 4px},
         children: [name, note],
 
         name = text : Text.pageTitle {
@@ -128,7 +131,7 @@ export scales = frame {
 
             value = text : Text.figure {
               contents: "48",
-              fill: Colors.colors.faint
+              fill: Colors.colors.muted
             }
           }
 
@@ -156,7 +159,7 @@ export scales = frame {
 
             value = text : Text.figure {
               contents: "36",
-              fill: Colors.colors.faint
+              fill: Colors.colors.muted
             }
           }
 
@@ -184,7 +187,7 @@ export scales = frame {
 
             value = text : Text.figure {
               contents: "24",
-              fill: Colors.colors.faint
+              fill: Colors.colors.muted
             }
           }
 
@@ -212,7 +215,7 @@ export scales = frame {
 
             value = text : Text.figure {
               contents: "20",
-              fill: Colors.colors.faint
+              fill: Colors.colors.muted
             }
           }
 
@@ -240,7 +243,7 @@ export scales = frame {
 
             value = text : Text.figure {
               contents: "16",
-              fill: Colors.colors.faint
+              fill: Colors.colors.muted
             }
           }
 
@@ -268,7 +271,7 @@ export scales = frame {
 
             value = text : Text.figure {
               contents: "14",
-              fill: Colors.colors.faint
+              fill: Colors.colors.muted
             }
           }
 
@@ -296,13 +299,14 @@ export scales = frame {
 
             value = text : Text.figure {
               contents: "12",
-              fill: Colors.colors.faint
+              fill: Colors.colors.muted
             }
           }
       }
 
       lower = frame {
         width: 100%,
+        padding-top: 8px,
         layout: {direction: .row, item-gap: 12px},
         children: [spaceColumn, radiusColumn],
 
@@ -336,14 +340,14 @@ export scales = frame {
               width: 6px,
               height: 10px,
               corner-radius: 2px,
-              fill: Colors.colors.accent
+              fill: Colors.colors.muted
             }
 
             spacer = frame {}
 
             value = text : Text.figure {
               contents: "2",
-              fill: Colors.colors.faint
+              fill: Colors.colors.muted
             }
           }
 
@@ -363,14 +367,14 @@ export scales = frame {
               width: 12px,
               height: 10px,
               corner-radius: 2px,
-              fill: Colors.colors.accent
+              fill: Colors.colors.muted
             }
 
             spacer = frame {}
 
             value = text : Text.figure {
               contents: "4",
-              fill: Colors.colors.faint
+              fill: Colors.colors.muted
             }
           }
 
@@ -390,14 +394,14 @@ export scales = frame {
               width: 24px,
               height: 10px,
               corner-radius: 2px,
-              fill: Colors.colors.accent
+              fill: Colors.colors.muted
             }
 
             spacer = frame {}
 
             value = text : Text.figure {
               contents: "8",
-              fill: Colors.colors.faint
+              fill: Colors.colors.muted
             }
           }
 
@@ -417,14 +421,14 @@ export scales = frame {
               width: 36px,
               height: 10px,
               corner-radius: 2px,
-              fill: Colors.colors.accent
+              fill: Colors.colors.muted
             }
 
             spacer = frame {}
 
             value = text : Text.figure {
               contents: "12",
-              fill: Colors.colors.faint
+              fill: Colors.colors.muted
             }
           }
 
@@ -444,14 +448,14 @@ export scales = frame {
               width: 48px,
               height: 10px,
               corner-radius: 2px,
-              fill: Colors.colors.accent
+              fill: Colors.colors.muted
             }
 
             spacer = frame {}
 
             value = text : Text.figure {
               contents: "16",
-              fill: Colors.colors.faint
+              fill: Colors.colors.muted
             }
           }
 
@@ -471,14 +475,14 @@ export scales = frame {
               width: 60px,
               height: 10px,
               corner-radius: 2px,
-              fill: Colors.colors.accent
+              fill: Colors.colors.muted
             }
 
             spacer = frame {}
 
             value = text : Text.figure {
               contents: "20",
-              fill: Colors.colors.faint
+              fill: Colors.colors.muted
             }
           }
 
@@ -498,14 +502,14 @@ export scales = frame {
               width: 72px,
               height: 10px,
               corner-radius: 2px,
-              fill: Colors.colors.accent
+              fill: Colors.colors.muted
             }
 
             spacer = frame {}
 
             value = text : Text.figure {
               contents: "24",
-              fill: Colors.colors.faint
+              fill: Colors.colors.muted
             }
           }
 
@@ -525,14 +529,14 @@ export scales = frame {
               width: 96px,
               height: 10px,
               corner-radius: 2px,
-              fill: Colors.colors.accent
+              fill: Colors.colors.muted
             }
 
             spacer = frame {}
 
             value = text : Text.figure {
               contents: "32",
-              fill: Colors.colors.faint
+              fill: Colors.colors.muted
             }
           }
 
@@ -552,14 +556,14 @@ export scales = frame {
               width: 132px,
               height: 10px,
               corner-radius: 2px,
-              fill: Colors.colors.accent
+              fill: Colors.colors.muted
             }
 
             spacer = frame {}
 
             value = text : Text.figure {
               contents: "44",
-              fill: Colors.colors.faint
+              fill: Colors.colors.muted
             }
           }
         }
@@ -590,8 +594,8 @@ export scales = frame {
               width: 56px,
               height: 56px,
               corner-radius: 1px,
-              fill: Colors.colors.accent-soft,
-              border: {color: Colors.colors.accent, width: 1.5px}
+              fill: Colors.colors.chip,
+              border: {color: Colors.colors.muted, width: 1.5px}
             }
 
             name = text : Text.figure {
@@ -608,8 +612,8 @@ export scales = frame {
               width: 56px,
               height: 56px,
               corner-radius: 8px,
-              fill: Colors.colors.accent-soft,
-              border: {color: Colors.colors.accent, width: 1.5px}
+              fill: Colors.colors.chip,
+              border: {color: Colors.colors.muted, width: 1.5px}
             }
 
             name = text : Text.figure {
@@ -626,8 +630,8 @@ export scales = frame {
               width: 56px,
               height: 56px,
               corner-radius: 11px,
-              fill: Colors.colors.accent-soft,
-              border: {color: Colors.colors.accent, width: 1.5px}
+              fill: Colors.colors.chip,
+              border: {color: Colors.colors.muted, width: 1.5px}
             }
 
             name = text : Text.figure {
@@ -644,8 +648,8 @@ export scales = frame {
               width: 56px,
               height: 56px,
               corner-radius: 12px,
-              fill: Colors.colors.accent-soft,
-              border: {color: Colors.colors.accent, width: 1.5px}
+              fill: Colors.colors.chip,
+              border: {color: Colors.colors.muted, width: 1.5px}
             }
 
             name = text : Text.figure {
@@ -662,8 +666,8 @@ export scales = frame {
               width: 56px,
               height: 56px,
               corner-radius: 16px,
-              fill: Colors.colors.accent-soft,
-              border: {color: Colors.colors.accent, width: 1.5px}
+              fill: Colors.colors.chip,
+              border: {color: Colors.colors.muted, width: 1.5px}
             }
 
             name = text : Text.figure {
@@ -680,8 +684,8 @@ export scales = frame {
               width: 56px,
               height: 56px,
               corner-radius: 28px,
-              fill: Colors.colors.accent-soft,
-              border: {color: Colors.colors.accent, width: 1.5px}
+              fill: Colors.colors.chip,
+              border: {color: Colors.colors.muted, width: 1.5px}
             }
 
             name = text : Text.figure {

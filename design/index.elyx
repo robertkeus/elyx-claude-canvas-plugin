@@ -2,6 +2,7 @@ import "screens/assets.elyx" as Assets
 import "screens/board.elyx" as Board
 import "screens/component.elyx" as Component
 import "screens/components.elyx" as Components
+import "screens/focus.elyx" as Focus
 import "screens/home.elyx" as Home
 import "screens/layer.elyx" as Layer
 import "screens/layer-dark.elyx" as LayerDark
@@ -10,7 +11,8 @@ import "screens/scales.elyx" as Scales
 import "screens/search.elyx" as Search
 import "screens/tokens.elyx" as Tokens
 
-// The whole overview at a glance: top row is the canvas, then the library.
+// The whole overview at a glance: top row is the canvas, then the library,
+// then the canvas with its panels closed.
 file {
   draw-connections: .true
 }
@@ -22,8 +24,8 @@ home = frame : Home.home {
 }
 
 allScreens = frame : Board.allScreens {
-  left: 1760px,
-  top: 0px,
+  left: 1896px,
+  top: -9px,
   connections: [{target: layer, label: "Click a layer"}]
 }
 
@@ -75,4 +77,22 @@ search = frame : Search.search {
 layerDark = frame : LayerDark.layerDark {
   left: 3520px,
   top: 2520px
+}
+
+// The canvas on its own, with the panels closed, and the Claude tab.
+focus = frame : Focus.focus {
+  left: 0px,
+  top: 3780px,
+  connections: [{target: focusPanels, label: "Ask Claude"}]
+}
+
+focusPanels = frame : Focus.focusPanels {
+  left: 1760px,
+  top: 3780px
+}
+
+@context(theme=dark)
+focusDark = frame : Focus.focus {
+  left: 3520px,
+  top: 3780px
 }

@@ -11,21 +11,27 @@ const importsOf = (source, file) =>
 
 // A version per file, over its own text and everything it imports, however deep. A
 // render stays valid until its version changes, so an edit only redraws what it reaches.
+const graphOf = sources => new Map([...sources].map(([file, text]) => [file, importsOf(text, file)]))
+
+const reachIn = (graph, file) => {
+  const seen = new Set()
+  const pending = [file]
+  while (pending.length) {
+    const next = pending.pop()
+    if (seen.has(next)) continue
+    seen.add(next)
+    pending.push(...(graph.get(next) ?? []))
+  }
+  return [...seen].sort()
+}
+
+// A file and everything it imports, however deep: what a change to it can reach.
+export const reachOf = (sources, file) => reachIn(graphOf(sources), file)
+
 export const fileVersions = (sources, assets = new Map()) => {
   const own = new Map([...sources].map(([file, text]) => [file, hash(text)]))
-  const graph = new Map([...sources].map(([file, text]) => [file, importsOf(text, file)]))
-  const reach = file => {
-    const seen = new Set()
-    const pending = [file]
-    while (pending.length) {
-      const next = pending.pop()
-      if (seen.has(next)) continue
-      seen.add(next)
-      pending.push(...(graph.get(next) ?? []))
-    }
-    return [...seen].sort()
-  }
-  return Object.fromEntries([...sources.keys()].map(file => [file, hash(reach(file).map(name => `${name}:${own.get(name) ?? assets.get(name) ?? ''}`).join('\n'))]))
+  const graph = graphOf(sources)
+  return Object.fromEntries([...sources.keys()].map(file => [file, hash(reachIn(graph, file).map(name => `${name}:${own.get(name) ?? assets.get(name) ?? ''}`).join('\n'))]))
 }
 
 const tokensIn = (value, found = new Set()) => {

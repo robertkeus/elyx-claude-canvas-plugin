@@ -35,10 +35,10 @@ export iconButtonSoft = frame : iconButton {
 export iconButtonActive = frame : iconButton {
   left: 96px,
   top: 0px,
-  fill: Colors.colors.accent-soft,
+  fill: Colors.colors.chip,
 
   glyph {
-    fill[0].color: Colors.colors.accent
+    fill[0].color: Colors.colors.ink
   }
 }
 
@@ -64,8 +64,7 @@ export filter = frame {
   left: 80px,
   top: 48px,
   height: 28px,
-  corner-radius: Radius.radius.sm,
-  fill: Colors.colors.chip,
+  corner-radius: Radius.radius.md,
   layout: {direction: .row, align-items: .center, item-gap: 6px},
   padding: [0px, 10px],
   children: label,
@@ -74,7 +73,7 @@ export filter = frame {
     contents: "Filter",
     font-size: Type.fontSize.md,
     font-style: "Medium",
-    fill: Colors.colors.body
+    fill: Colors.colors.muted
   }
 }
 
@@ -82,10 +81,10 @@ export filter = frame {
 export filterActive = frame : filter {
   left: 160px,
   top: 48px,
-  fill: Colors.colors.accent-soft,
+  fill: Colors.colors.chip,
 
   label {
-    fill[0].color: Colors.colors.accent
+    fill[0].color: Colors.colors.ink
   }
 }
 
@@ -316,5 +315,21 @@ export keycap = frame {
     font-size: Type.fontSize.xs,
     font-style: "Medium",
     fill: Colors.colors.muted
+  }
+}
+
+// A hairline between groups in a bar, with even space on both sides.
+export divider = frame {
+  left: 200px,
+  top: 368px,
+  width: 17px,
+  height: 16px,
+  layout: {direction: .row, justify-content: .center},
+  children: line,
+
+  line = frame {
+    width: 1px,
+    height: 100%,
+    fill: Colors.colors.line-strong
   }
 }

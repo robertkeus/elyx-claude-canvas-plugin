@@ -25,6 +25,7 @@ export tokens = frame {
 
   main = frame : Center.center {
     stage {
+      fill: Colors.colors.surface,
       overrides: [insert(page, after = .nil)],
 
       hud {
@@ -32,22 +33,24 @@ export tokens = frame {
       }
     }
 
-    crumbBar {
-      name {
-        contents: "Colors"
+    topBar {
+      title {
+        page {
+          contents: "Colors"
+        }
       }
     }
 
     page = frame {
       left: 48px,
-      top: 36px,
+      top: 40px,
       width: Spacing.size.page-width,
       layout: {direction: .column, item-gap: 16px},
       children: [head, chips, rule, section0, section1, section2],
 
       head = frame {
         width: 100%,
-        layout: {direction: .column, item-gap: 3px},
+        layout: {direction: .column, item-gap: 4px},
         children: [name, note],
 
         name = text : Text.pageTitle {
@@ -197,6 +200,7 @@ export tokens = frame {
 
       section1 = frame {
         width: 100%,
+        padding-top: 8px,
         layout: {direction: .column, item-gap: 10px},
         children: [title, row],
 
@@ -309,6 +313,7 @@ export tokens = frame {
 
       section2 = frame {
         width: 100%,
+        padding-top: 8px,
         layout: {direction: .column, item-gap: 10px},
         children: [title, row],
 

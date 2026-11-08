@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/readme/hero-dark.png">
-    <img src="docs/readme/hero-light.png" alt="The Elyx canvas in Claude: a board of screens with a small label selected and a quick-edit bar beside it.">
+    <img src="docs/readme/hero-light.png" alt="The Elyx canvas in Claude: a top bar, the screens list, a board of screens with a small label selected and its quick-edit bar, and the inspector.">
   </picture>
 </p>
 
@@ -93,6 +93,31 @@ Whatever is in view is redrawn by the Elyx engine at the exact zoom when you sto
   </picture>
 </p>
 
+### Just the canvas
+
+Close either panel from the top bar, or press **⌘\\** for canvas mode: the bars and panels go, the window goes full screen where the browser allows it, and only your design is left. **Esc** brings everything back.
+
+| Keys | Zoom |
+| --- | --- |
+| **⌘+** or **+** | In |
+| **⌘−** or **−** | Out |
+| **⌘0** | 100% |
+| **⇧1** | Fit the whole board |
+| **⇧2** | Fit the selection |
+
+Pinch or ⌘-scroll zooms around the pointer, and the zoom menu in the toolbar lists the same keys.
+
+### Go back to any commit
+
+The **History** tab lists every commit that changed the board or anything it imports, newest first. Pick one and the board is drawn as that commit left it, straight from git, so you can compare before you change something. **Back to now** returns to the files on disk.
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/readme/history-dark.png">
+    <img src="docs/readme/history-light.png" alt="The History tab listing five commits, one selected, with the board drawn as that commit left it and a Back to now bar above it.">
+  </picture>
+</p>
+
 ### Share it with anyone
 
 **Share**, top right, turns the board into a page Claude publishes as an artifact: every frame at 2×, with zoom, a link per frame, and the design's tokens. It starts private; share it from its page on claude.ai with people, your organization or anyone with the link. Sharing again updates the same page, and the link button beside Share opens it. Without the canvas, `/elyx share a.elyx` does the same.
@@ -113,8 +138,8 @@ Drag a screen and the new position is saved to the file. Drag empty canvas, or h
 - **Export** any layer or a whole board as PNG at any size (`@2x`, `@3x`), JPG, WebP, vector SVG or CSS. Files land in an `exports` folder in your project.
 - **Switch projects** from the top bar when a repository holds more than one Elyx project.
 - **Search** the whole project with ⌘K, including the text inside layers.
-- **Context** switches a design between themes and surfaces.
-- **Ask Claude** sends bigger changes to the session that opened the canvas, with the selected layer as context.
+- **Context**, in the toolbar, switches a design between themes and surfaces.
+- **Ask Claude**, in the toolbar, opens the Claude tab: bigger changes go to the session that opened the canvas, with the selected layer as context.
 
 ## Your files stay yours
 

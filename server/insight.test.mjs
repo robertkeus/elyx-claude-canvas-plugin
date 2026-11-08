@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { fileVersions, indexTree, LOG_FORMAT, mergeIndexes, parseLog } from './insight.mjs'
+import { fileVersions, indexTree, LOG_FORMAT, mergeIndexes, parseLog, reachOf } from './insight.mjs'
 
 const tree = {
   children: [
@@ -111,4 +111,16 @@ test('an imported asset counts towards the version', () => {
   const before = fileVersions(design(), new Map([['icons/x.svg', '1']]))
   const after = fileVersions(design(), new Map([['icons/x.svg', '2']]))
   assert.equal(before['screens/b.elyx'], after['screens/b.elyx'])
+})
+
+test('reachOf follows imports however deep, and only them', () => {
+  const sources = new Map([
+    ['screens/home.elyx', 'import "blocks/nav.elyx" as Nav\nimport "./parts.elyx" as Parts'],
+    ['screens/parts.elyx', 'import "tokens/colors.elyx" as Colors'],
+    ['blocks/nav.elyx', 'use "fonts/Inter.ttf"'],
+    ['tokens/colors.elyx', ''],
+    ['screens/other.elyx', 'import "tokens/colors.elyx" as Colors'],
+  ])
+  assert.deepEqual(reachOf(sources, 'screens/home.elyx'), ['blocks/nav.elyx', 'fonts/Inter.ttf', 'screens/home.elyx', 'screens/parts.elyx', 'tokens/colors.elyx'])
+  assert.deepEqual(reachOf(sources, 'tokens/colors.elyx'), ['tokens/colors.elyx'])
 })

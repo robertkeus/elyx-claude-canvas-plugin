@@ -26,8 +26,10 @@ export side = frame : Sidebar.sidebar {
 
   tabs {
     screens {
-      glyph {
-        fill[0].color: Colors.colors.accent
+      fill: Colors.colors.chip,
+
+      label {
+        fill[0].color: Colors.colors.ink
       }
     }
   }
@@ -113,16 +115,10 @@ export appWindow = frame {
 
   main = frame : Center.center {
     topBar {
-      project {
-        label {
-          contents: "driftwood"
+      title {
+        page {
+          contents: "landing"
         }
-      }
-    }
-
-    crumbBar {
-      name {
-        contents: "landing"
       }
     }
 
@@ -153,7 +149,8 @@ export appWindow = frame {
 
       landingTitle = frame : Canvas.artboardTitle {
         left: 40px,
-        top: 32px,
+        top: 28px,
+        width: 361px,
 
         name {
           contents: "landing"
@@ -168,7 +165,8 @@ export appWindow = frame {
 
       pricingTitle = frame : Canvas.artboardTitle {
         left: 445px,
-        top: 32px,
+        top: 28px,
+        width: 361px,
 
         name {
           contents: "pricing"
@@ -183,7 +181,8 @@ export appWindow = frame {
 
       signInTitle = frame : Canvas.artboardTitle {
         left: 40px,
-        top: 322px,
+        top: 318px,
+        width: 361px,
 
         name {
           contents: "signIn"
@@ -198,7 +197,8 @@ export appWindow = frame {
 
       todayTitle = frame : Canvas.artboardTitle {
         left: 445px,
-        top: 322px,
+        top: 318px,
+        width: 361px,
 
         name {
           contents: "today"
