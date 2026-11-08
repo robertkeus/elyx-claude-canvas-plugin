@@ -305,7 +305,8 @@ export layerRail = frame : rail {
       }
 
       sepOne = text : Text.hint {
-        contents: "›"
+        contents: "›",
+        fill: Colors.colors.faint
       }
 
       two = text : Text.meta {
@@ -313,7 +314,8 @@ export layerRail = frame : rail {
       }
 
       sepTwo = text : Text.hint {
-        contents: "›"
+        contents: "›",
+        fill: Colors.colors.faint
       }
 
       three = text : Text.meta {
@@ -321,7 +323,8 @@ export layerRail = frame : rail {
       }
 
       sepThree = text : Text.hint {
-        contents: "›"
+        contents: "›",
+        fill: Colors.colors.faint
       }
 
       four = text : Text.meta {

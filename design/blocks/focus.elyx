@@ -273,7 +273,7 @@ export screen = frame {
       contents: "1280 × 820",
       font-size: Type.fontSize.xs,
       font-style: "Regular",
-      fill: Colors.colors.faint
+      fill: Colors.colors.muted
     }
   }
 
