@@ -1,0 +1,61 @@
+// Editorial CTA: a full-bleed ink page with a paper-colored serif headline, a sign-up bar that joins a paper field to the oxblood button, and a mono reassurance.
+// Motion: the ink panel wipes up 24px over 600ms ease-out; headline lines follow 120ms apart; the field's caret blinks once on focus.
+import "editorial/tokens.elyx" as T
+import "editorial/parts.elyx" as P
+import "icons/check.svg" as checkIcon
+
+export cta = frame {
+  left: 0px, top: 0px, width: 1440px,
+  fill: T.colors.deep,
+  padding: [T.space.section, T.space.gutter],
+  layout: {direction: .column, item-gap: T.space.block},
+  children: [folio, headline, signup]
+
+  folio = frame : P.folio {
+    border[0].color: T.colors.deep-muted,
+    section {contents: "THE LAST PAGE", fill: T.colors.on-deep},
+    page {contents: "MARLOW · NO. 48 · P. 05", fill: T.colors.deep-muted}
+  }
+
+  headline = text {
+    contents: "Start the magazine you keep talking about.",
+    width: 100%,
+    font-family: T.fonts.display, font-size: T.size.display, line-height: T.leading.display, letter-spacing: T.tracking.display, fill: T.colors.on-deep,
+    subrange: [{range: [28, 42], font-style: T.weights.italic}]
+  }
+
+  signup = frame {
+    width: 100%,
+    layout: {direction: .row, align-items: .end, justify-content: .space-between},
+    children: [pitch, join]
+    pitch = text {
+      contents: "Set-up takes an afternoon. Bring your list, choose a typeface and send No. 1 before the weekend.",
+      width: 480px,
+      font-family: T.fonts.body, font-size: T.size.lead, line-height: T.leading.body, letter-spacing: T.tracking.body, fill: T.colors.deep-muted
+    }
+    join = frame {
+      width: 520px,
+      layout: {direction: .column, item-gap: 16px},
+      children: [form, note]
+      // Field and button share one paper bar, so the oxblood action reads against paper, not ink.
+      form = frame {
+        width: 100%, padding: 4px, corner-radius: T.radius.chip, fill: T.colors.bg,
+        layout: {direction: .row, align-items: .center, justify-content: .space-between},
+        children: [field, submit]
+        field = frame {
+          padding-left: 16px, layout: {direction: .row, align-items: .center, item-gap: 2px},
+          children: [caret, placeholder]
+          caret = frame {width: 1px, height: 20px, fill: T.colors.ink}
+          placeholder = text {contents: "you@yourmagazine.com", font-family: T.fonts.body, font-size: T.size.body, fill: T.colors.muted}
+        }
+        submit = frame : P.buttonPrimary {label {contents: "Start writing"}}
+      }
+      note = frame {
+        layout: {direction: .row, align-items: .center, item-gap: 8px},
+        children: [tick, noteLabel]
+        tick = asset {width: 14px, height: 14px, contents: checkIcon, fill: T.colors.on-deep}
+        noteLabel = text : P.label {contents: "FREE FOR YOUR FIRST 500 READERS · NO CARD", fill: T.colors.on-deep}
+      }
+    }
+  }
+}

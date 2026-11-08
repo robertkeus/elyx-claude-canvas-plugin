@@ -1,0 +1,110 @@
+// Footer: brand + newsletter beside five 60% link columns, a legal row with a live status dot, and a giant faint wordmark cropped by the page edge; borrow the cropped-wordmark sign-off.
+// Motion: the wordmark scales 0.96→1 and fades from 0 as the footer scrolls in (700ms ease-out); links brighten to 100% white in 150ms; the status dot pulses every 2s.
+import "midnight/tokens.elyx" as T
+import "midnight/parts.elyx" as P
+import "icons/arrow-right.svg" as arrowRight
+
+export footer = frame {
+  left: 0px, top: 0px, width: 1440px, padding: [T.space.block, T.space.gutter, 0px, T.space.gutter],
+  fill: T.colors.bg,
+  border: {color: T.colors.line, width: 1px, sides: [.top]},
+  layout: {direction: .column, item-gap: T.space.block},
+  children: [top, legal, wordmark]
+
+  top = frame {
+    width: 100%, layout: {direction: .row, justify-content: .space-between},
+    children: [brand, columns]
+
+    brand = frame {
+      width: 360px, layout: {direction: .column, item-gap: 24px}, overflow: .visible,
+      children: [logo, line, signup]
+      logo = frame : P.logo {}
+      line = text {contents: "Answers about your product, in plain language, with the chart and the SQL behind them.",
+        width: 320px, font-family: T.fonts.body, font-size: T.size.body, letter-spacing: T.tracking.body, line-height: T.leading.body, fill: T.colors.muted}
+      signup = frame {width: 100%, layout: {direction: .column, item-gap: 8px}, children: [label, field]
+        label = text : P.monoText {contents: "CHANGELOG, ONCE A MONTH"}
+        field = frame {
+          width: 100%, height: 44px, padding: [0px, 4px, 0px, 16px], corner-radius: T.radius.button,
+          fill: T.colors.tint, border: {color: T.colors.line-strong, width: 1px},
+          shadow: {inner-shadow: {color: #00000066, offset: point(0, 1), blur-radius: 2px}},
+          layout: {direction: .row, align-items: .center, justify-content: .space-between},
+          children: [placeholder, send]
+          placeholder = text : P.uiText {contents: "you@company.com", font-style: T.weights.regular, font-size: T.size.small, fill: T.colors.faint}
+          send = frame : P.ghostButton {height: 34px, padding: [0px, 12px], corner-radius: 7px, fill[0].color: T.colors.tint-2,
+            overrides: [insert(a, after = P.button.label)], label {contents: "Subscribe", font-size: T.size.small}
+            a = asset {width: 14px, height: 14px, contents: arrowRight, fill: T.colors.ink}}
+        }
+      }
+    }
+
+    columns = frame {
+      layout: {direction: .row, item-gap: 24px},
+      children: [product, solutions, developers, resources, company]
+      product = frame {width: 136px, layout: {direction: .column, item-gap: 16px}, children: [h, a, b, c, d, e]
+        h = text {contents: "Product", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.ink}
+        a = text {contents: "Ask", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        b = text {contents: "Charts", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        c = text {contents: "Semantic layer", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        d = text {contents: "Alerts", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        e = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [t, v]
+          t = text {contents: "Changelog", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+          v = frame : P.chip {height: 20px, padding: [0px, 8px], label {contents: "3.0", font-size: T.size.micro}}}}
+      solutions = frame {width: 136px, layout: {direction: .column, item-gap: 16px}, children: [h, a, b, c, d, e]
+        h = text {contents: "Solutions", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.ink}
+        a = text {contents: "Product teams", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        b = text {contents: "Data teams", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        c = text {contents: "Growth", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        d = text {contents: "Customer success", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        e = text {contents: "Startups", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}}
+      developers = frame {width: 136px, layout: {direction: .column, item-gap: 16px}, children: [h, a, b, c, d, e]
+        h = text {contents: "Developers", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.ink}
+        a = text {contents: "Docs", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        b = text {contents: "API reference", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        c = text {contents: "CLI", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        d = text {contents: "SQL dialects", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        e = text {contents: "Status", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}}
+      resources = frame {width: 136px, layout: {direction: .column, item-gap: 16px}, children: [h, a, b, c, d, e]
+        h = text {contents: "Resources", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.ink}
+        a = text {contents: "Blog", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        b = text {contents: "Guides", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        c = text {contents: "Question templates", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        d = text {contents: "Webinars", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        e = text {contents: "Brand kit", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}}
+      company = frame {width: 136px, layout: {direction: .column, item-gap: 16px}, children: [h, a, b, c, d, e]
+        h = text {contents: "Company", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.ink}
+        a = text {contents: "About", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        b = text {contents: "Customers", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        c = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [t, v]
+          t = text {contents: "Careers", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+          v = frame : P.chip {height: 20px, padding: [0px, 8px], label {contents: "4 open", font-size: T.size.micro}}}
+        d = text {contents: "Security", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+        e = text {contents: "Contact", font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}}
+    }
+  }
+
+  legal = frame {
+    width: 100%, padding-top: 24px, border: {color: T.colors.line, width: 1px, sides: [.top]},
+    layout: {direction: .row, align-items: .center, justify-content: .space-between},
+    children: [left, status]
+    left = frame {layout: {direction: .row, align-items: .center, item-gap: 24px}, children: [c, a, b, d, e]
+      c = text : P.uiText {contents: "© 2026 Lumora Labs, Inc.", font-style: T.weights.regular, fill: T.colors.muted}
+      a = text : P.uiText {contents: "Privacy", font-style: T.weights.regular, fill: T.colors.muted}
+      b = text : P.uiText {contents: "Terms", font-style: T.weights.regular, fill: T.colors.muted}
+      d = text : P.uiText {contents: "DPA", font-style: T.weights.regular, fill: T.colors.muted}
+      e = text : P.uiText {contents: "Cookie settings", font-style: T.weights.regular, fill: T.colors.muted}}
+    // Status: green dot plus words, never color alone.
+    status = frame {height: 28px, padding: [0px, 12px, 0px, 12px], corner-radius: T.radius.pill, fill: opacity(T.colors.success, 8%), border: {color: opacity(T.colors.success, 25%), width: 1px},
+      layout: {direction: .row, align-items: .center, item-gap: 8px}, overflow: .visible, children: [dot, t]
+      dot = frame {width: 7px, height: 7px, corner-radius: 4px, fill: T.colors.success, shadow: {drop-shadow: {color: opacity(T.colors.success, 60%), offset: point(0, 0), blur-radius: 8px}}}
+      t = text : P.codeText {contents: "All systems normal", fill: T.colors.success}}
+  }
+
+  // Giant wordmark, cropped by the frame's bottom edge.
+  wordmark = frame {
+    width: 100%, height: 216px, layout: {direction: .row, justify-content: .center},
+    children: [w]
+    w = text {contents: "Lumora", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.wordmark,
+      letter-spacing: T.tracking.wordmark, line-height: 0.8,
+      fill: {linear-gradient: {angle: 180deg, stops: [stop(0%, opacity(T.colors.ink, 16%)), stop(100%, opacity(T.colors.ink, 3%))]}}}
+  }
+}

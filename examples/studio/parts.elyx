@@ -1,0 +1,138 @@
+// Fernhouse parts: the buttons, chips, avatar, wordmark and window chrome every section instances instead of redrawing.
+// Motion: buttons lift 2px and deepen their shadow on hover (150ms, cubic-bezier(0,.49,.56,1)); arrows nudge 3px right.
+use "fonts/Archivo-Variable.ttf"
+use "fonts/InstrumentSerif-Regular.ttf"
+use "fonts/GeistMono-Variable.ttf"
+import "studio/tokens.elyx" as T
+import "icons/arrow-right.svg" as arrowRight
+import "icons/check.svg" as checkIcon
+
+// The one filled action. Labels on tangerine are ink: white on #FF5B2E is only 3.1:1, ink is 5.5:1.
+// Padding is tighter on the arrow side so the label sits optically centred.
+export primaryButton = frame {
+  left: 0px, top: 0px, height: 48px, padding: [0px, 18px, 0px, 24px],
+  layout: {direction: .row, align-items: .center, item-gap: 10px},
+  corner-radius: T.radius.pill, fill: T.colors.accent,
+  shadow: [{drop-shadow: {color: #B5391A29, offset: point(0, 1), blur-radius: 2px}}, {drop-shadow: {color: #FF5B2E14, offset: point(0, 10), blur-radius: 20px}}, {inner-shadow: {color: #FFFFFF38, offset: point(0, 1), blur-radius: 0px}}],
+  children: [label, arrow]
+  label = text {contents: "Start a project", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.body, letter-spacing: T.tracking.body, fill: T.colors.ink}
+  arrow = asset {width: 16px, height: 16px, contents: arrowRight, fill: T.colors.ink}
+}
+
+// The secondary: same pill, raised white with a 1px ring. On aubergine, override fill, shadow and label fill.
+export quietButton = frame {
+  left: 0px, top: 72px, height: 48px, padding: [0px, 22px],
+  layout: {direction: .row, align-items: .center},
+  corner-radius: T.radius.pill, fill: T.colors.raised, shadow: T.shadows.control,
+  children: [label]
+  label = text {contents: "Book a 20-min intro", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.body, letter-spacing: T.tracking.body, fill: T.colors.ink}
+}
+
+// A text action: no fill, the arrow carries the affordance.
+export textLink = frame {
+  left: 0px, top: 144px, height: 48px,
+  layout: {direction: .row, align-items: .center, item-gap: 8px},
+  children: [label, arrow]
+  label = text {contents: "See the work", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.body, letter-spacing: T.tracking.body, fill: T.colors.ink}
+  arrow = asset {width: 16px, height: 16px, contents: arrowRight, fill: T.colors.ink}
+}
+
+// Every section opens with this: body font, Medium (never bold), uppercase, tracked +4%.
+export eyebrow = text {
+  left: 0px, top: 216px,
+  contents: "SELECTED WORK", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.label, letter-spacing: T.tracking.label, fill: T.colors.muted
+}
+
+// Proof on every card: the number in ink, what it measures in muted.
+export metricChip = frame {
+  left: 0px, top: 256px, height: 28px, padding: [0px, 10px],
+  layout: {direction: .row, align-items: .center, item-gap: 6px},
+  corner-radius: T.radius.chip, fill: T.colors.surface, shadow: T.shadows.ring,
+  children: [value, caption]
+  value = text {contents: "+38%", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.small, font-features: {tnum: 1}, fill: T.colors.ink}
+  caption = text {contents: "activation", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.muted}
+}
+
+// Status shown twice: a green dot with a halo, and words that say it.
+export availabilityChip = frame {
+  left: 0px, top: 304px, height: 36px, padding: [0px, 14px, 0px, 12px],
+  layout: {direction: .row, align-items: .center, item-gap: 8px},
+  corner-radius: T.radius.pill, fill: T.colors.surface, shadow: T.shadows.ring,
+  children: [dot, note]
+  dot = shape {type: .ellipse, width: 8px, height: 8px, fill: T.colors.live, shadow: {drop-shadow: {color: #23A15B2E, offset: point(0, 0), blur-radius: 0px, spread: 3px}}}
+  note = text {contents: "2 slots open for Q1 2027", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.ink}
+}
+
+// Initials on a warm tint; override fill per person.
+export avatar = frame {
+  left: 0px, top: 360px, width: 48px, height: 48px,
+  layout: {direction: .row, align-items: .center, justify-content: .center},
+  corner-radius: T.radius.pill, fill: {linear-gradient: {angle: 135deg, stops: [stop(0%, T.colors.accent-soft), stop(100%, T.colors.surface-2)]}},
+  shadow: T.shadows.ring,
+  children: [initials]
+  initials = text {contents: "MV", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.body, fill: T.colors.ink}
+}
+
+// The mark: an arched doorway (the "house") drawn from two frames.
+export logoMark = frame {
+  left: 0px, top: 432px, width: 28px, height: 28px, corner-radius: T.radius.chip, fill: T.colors.deep,
+  children: [door, doorway]
+  door = frame {left: 7px, top: 7px, width: 14px, height: 21px, corner-radius: [7px, 7px, 0px, 0px], fill: T.colors.on-deep}
+  doorway = frame {left: 11px, top: 14px, width: 6px, height: 14px, corner-radius: [3px, 3px, 0px, 0px], fill: T.colors.deep}
+}
+
+export wordmark = frame {
+  left: 0px, top: 480px,
+  layout: {direction: .row, align-items: .center, item-gap: 10px},
+  children: [mark, name]
+  mark = frame : logoMark {}
+  name = text {contents: "fernhouse", font-family: T.fonts.display, font-style: T.weights.heading, font-size: T.size.h3, letter-spacing: -3%, fill: T.colors.ink}
+}
+
+// Neutral chrome for client product windows; the client's own colours live in the body below it.
+export windowBar = frame {
+  left: 0px, top: 528px, width: 480px, height: 34px, padding: [0px, 12px],
+  layout: {direction: .row, align-items: .center, justify-content: .space-between},
+  fill: T.colors.surface,
+  children: [lights, url, spacer]
+  lights = frame {
+    width: 44px, layout: {direction: .row, item-gap: 6px}, children: [l1, l2, l3]
+    l1 = shape {type: .ellipse, width: 9px, height: 9px, fill: T.colors.surface-2}
+    l2 = shape {type: .ellipse, width: 9px, height: 9px, fill: T.colors.surface-2}
+    l3 = shape {type: .ellipse, width: 9px, height: 9px, fill: T.colors.surface-2}
+  }
+  url = frame {
+    height: 20px, padding: [0px, 10px], layout: {direction: .row, align-items: .center},
+    corner-radius: T.radius.chip, fill: T.colors.raised, shadow: T.shadows.ring,
+    children: [address]
+    address = text {contents: "app.kestrel.eu", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.ui-sm, fill: T.colors.muted}
+  }
+  spacer = frame {width: 44px, height: 1px}
+}
+
+// Included-in-plan row: a tinted tick disc, then the line.
+export checkItem = frame {
+  left: 0px, top: 584px,
+  layout: {direction: .row, align-items: .center, item-gap: 12px},
+  children: [tick, item]
+  tick = frame {
+    width: 22px, height: 22px, layout: {direction: .row, align-items: .center, justify-content: .center},
+    corner-radius: T.radius.pill, fill: T.colors.surface-2, children: [glyph]
+    glyph = asset {width: 12px, height: 12px, contents: checkIcon, fill: T.colors.ink}
+  }
+  item = text {contents: "Clickable prototype of the core flow", font-family: T.fonts.body, font-size: T.size.body, letter-spacing: T.tracking.body, fill: T.colors.ink}
+}
+
+// Caption under a case tile: title and one-line outcome on the left, the proof chip on the right.
+export caseCaption = frame {
+  left: 0px, top: 632px, width: 640px,
+  layout: {direction: .row, align-items: .start, justify-content: .space-between},
+  children: [copy, metric]
+  copy = frame {
+    layout: {direction: .column, item-gap: 6px},
+    children: [title, outcome]
+    title = text {contents: "Kestrel — card onboarding", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.h3, line-height: T.leading.h3, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+    outcome = text {contents: "Sign-up cut from 11 steps to 4 for 40,000 finance teams.", font-family: T.fonts.body, font-size: T.size.body, line-height: 1.5, letter-spacing: T.tracking.body, fill: T.colors.muted}
+  }
+  metric = frame : metricChip {}
+}

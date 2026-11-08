@@ -1,0 +1,759 @@
+{
+  "about": "Curated web-page sections, one folder per style. Pick the style that fits, then read 2-4 sections of the kind you are designing: look at the .png first, read the .elyx for the pattern. Borrow structure, rhythm and detail, never the invented brand or its copy. Each style's tokens.elyx holds its palette, fonts, type scale, spacing and radii; parts.elyx holds its shared components. Sections are 1440px wide; page.elyx composes them.",
+  "styles": [
+    {
+      "id": "studio",
+      "description": "Warm neutrals, one tangerine accent, very large display type; tinted fills and soft ring shadows instead of borders; inset aubergine panels.",
+      "use_for": [
+        "agency",
+        "studio",
+        "portfolio",
+        "consultancy",
+        "brand site"
+      ],
+      "mood": [
+        "warm",
+        "confident",
+        "crafted"
+      ],
+      "fonts": [
+        "Bricolage Grotesque",
+        "Inter Tight"
+      ],
+      "example_brand": "Fernhouse, a product-design studio (invented)",
+      "tokens": "studio/tokens.elyx",
+      "parts": "studio/parts.elyx",
+      "page": "studio/page.elyx",
+      "preview": "studio/page.png"
+    },
+    {
+      "id": "midnight",
+      "description": "Near-black with white at alpha steps, violet and cyan glows, one serif-italic word per headline, real product UI as imagery.",
+      "use_for": [
+        "developer tool",
+        "AI product",
+        "launch",
+        "SaaS"
+      ],
+      "mood": [
+        "technical",
+        "premium",
+        "bold"
+      ],
+      "fonts": [
+        "Inter Tight",
+        "Instrument Serif",
+        "Geist Mono"
+      ],
+      "example_brand": "Lumora, an AI data analyst (invented)",
+      "tokens": "midnight/tokens.elyx",
+      "parts": "midnight/parts.elyx",
+      "page": "midnight/page.elyx",
+      "preview": "midnight/page.png"
+    },
+    {
+      "id": "editorial",
+      "description": "Paper and ink, a large serif display with italic turns, hairline rules and numbered chapters; no cards, no shadows.",
+      "use_for": [
+        "publishing",
+        "culture",
+        "hospitality",
+        "finance",
+        "nonprofit"
+      ],
+      "mood": [
+        "considered",
+        "calm",
+        "literary"
+      ],
+      "fonts": [
+        "Instrument Serif",
+        "Inter Tight",
+        "Geist Mono"
+      ],
+      "example_brand": "Marlow, a magazine publishing platform (invented)",
+      "tokens": "editorial/tokens.elyx",
+      "parts": "editorial/parts.elyx",
+      "page": "editorial/page.elyx",
+      "preview": "editorial/page.png"
+    },
+    {
+      "id": "swiss",
+      "description": "White, black and one signal red on a strict 12-column grid; hairlines, big numbers, technical drawings, no radius.",
+      "use_for": [
+        "engineering",
+        "data",
+        "architecture",
+        "B2B tools"
+      ],
+      "mood": [
+        "precise",
+        "rational",
+        "confident"
+      ],
+      "fonts": [
+        "Archivo",
+        "Inter",
+        "Geist Mono"
+      ],
+      "example_brand": "Gridform, structural-analysis software (invented)",
+      "tokens": "swiss/tokens.elyx",
+      "parts": "swiss/parts.elyx",
+      "page": "swiss/page.elyx",
+      "preview": "swiss/page.png"
+    },
+    {
+      "id": "soft",
+      "description": "Cream with a violet accent and pastels, chunky rounded shapes, heavy friendly type, phone mockups and one sticker moment per section.",
+      "use_for": [
+        "consumer app",
+        "education",
+        "health",
+        "family",
+        "community"
+      ],
+      "mood": [
+        "friendly",
+        "playful",
+        "warm"
+      ],
+      "fonts": [
+        "Bricolage Grotesque",
+        "Inter Tight"
+      ],
+      "example_brand": "Kitebook, a homework planner for families (invented)",
+      "tokens": "soft/tokens.elyx",
+      "parts": "soft/parts.elyx",
+      "page": "soft/page.elyx",
+      "preview": "soft/page.png"
+    },
+    {
+      "id": "clean",
+      "description": "White and cool greys, one confident blue, quiet layered shadows; dense, believable product UI as the hero.",
+      "use_for": [
+        "B2B SaaS",
+        "fintech",
+        "HR",
+        "operations",
+        "dashboards"
+      ],
+      "mood": [
+        "trustworthy",
+        "calm",
+        "efficient"
+      ],
+      "fonts": [
+        "Inter Tight",
+        "Inter"
+      ],
+      "example_brand": "Tessel, workforce planning and payroll (invented)",
+      "tokens": "clean/tokens.elyx",
+      "parts": "clean/parts.elyx",
+      "page": "clean/page.elyx",
+      "preview": "clean/page.png"
+    }
+  ],
+  "sections": [
+    {
+      "file": "studio/nav.elyx",
+      "png": "studio/nav.png",
+      "style": "studio",
+      "section": "nav",
+      "summary": "A transparent bar with the links gathered in one tinted pill and live availability beside the CTA; borrow the true-centred link group.",
+      "patterns": [
+        "transparent-nav",
+        "pill-link-group",
+        "status-chip",
+        "centred-links"
+      ],
+      "motion": "on scroll the bar condenses into an 800px floating pill (90% bg, 6px blur, 1px ring) over 300ms; link pills tint on hover in 120ms."
+    },
+    {
+      "file": "studio/hero.elyx",
+      "png": "studio/hero.png",
+      "style": "studio",
+      "section": "hero",
+      "summary": "A two-line display headline over a narrow pitch column and an overlapping collage of real-looking client products on a fading accent glow.",
+      "patterns": [
+        "collage-hero",
+        "overlapping-windows",
+        "floating-callout",
+        "glow",
+        "logo-strip"
+      ],
+      "motion": "H1 de-blurs from 20px at scale .98 (700ms, cubic-bezier(0,.75,.56,1)); windows rise 60px in turn, 150ms apart; logo tiles fade up 80ms apart."
+    },
+    {
+      "file": "studio/features.elyx",
+      "png": "studio/features.png",
+      "style": "studio",
+      "section": "features",
+      "summary": "A 2×2 case grid where every 16:10 tile draws a different client product in that client's own colours, each with a metric chip.",
+      "patterns": [
+        "case-grid",
+        "product-mockups",
+        "metric-chip",
+        "drag-state",
+        "notification-card"
+      ],
+      "motion": "tiles fade up 40px (600ms, cubic-bezier(0,.75,.56,1)), 120ms apart; on hover the tile scales 1.02 and a \"View case\" pill follows the cursor."
+    },
+    {
+      "file": "studio/testimonials.elyx",
+      "png": "studio/testimonials.png",
+      "style": "studio",
+      "section": "testimonials",
+      "summary": "One large quote card paired with the client's product proving it, and a segmented switcher for the next client; borrow the quote-plus-evidence split.",
+      "patterns": [
+        "quote-plus-evidence",
+        "split-card",
+        "segmented-switcher",
+        "before-after-chart"
+      ],
+      "motion": "the card slides in from x −80 (500ms, cubic-bezier(.47,.01,.27,1)); switching clients crossfades quote and snapshot in 300ms while the active pill glides."
+    },
+    {
+      "file": "studio/pricing.elyx",
+      "png": "studio/pricing.png",
+      "style": "studio",
+      "section": "pricing",
+      "summary": "Three engagement models as pricing panels, the recommended one raised on an inset aubergine panel with the only filled button.",
+      "patterns": [
+        "pricing-3-up",
+        "raised-recommended",
+        "inset-dark-panel",
+        "checklist"
+      ],
+      "motion": "panels rise 32px and fade in, 100ms apart (600ms, cubic-bezier(0,.75,.56,1)); the aubergine panel lands last and its badge fades in 200ms later."
+    },
+    {
+      "file": "studio/cta.elyx",
+      "png": "studio/cta.png",
+      "style": "studio",
+      "section": "cta",
+      "summary": "An aubergine panel inset 8px from the page edge, lit by a mesh of tangerine and plum radial glows, with one question and two actions; borrow the inset mesh panel.",
+      "patterns": [
+        "inset-panel",
+        "mesh-gradient",
+        "centred-cta",
+        "reply-note"
+      ],
+      "motion": "the mesh drifts slowly (radial centres move ±4% over 12s, paused under prefers-reduced-motion); the headline rises 24px and fades in over 600ms."
+    },
+    {
+      "file": "studio/footer.elyx",
+      "png": "studio/footer.png",
+      "style": "studio",
+      "section": "footer",
+      "summary": "An inset aubergine panel with large 26px link columns, the office and its local time, and a giant wordmark cropped by the bottom edge.",
+      "patterns": [
+        "inset-footer",
+        "big-link-columns",
+        "giant-wordmark-crop",
+        "legal-row"
+      ],
+      "motion": "the panel scales .94 → 1 as it scrolls into view; the giant wordmark slides up 40px behind the crop; links underline in 150ms on hover."
+    },
+    {
+      "file": "midnight/nav.elyx",
+      "png": "midnight/nav.png",
+      "style": "midnight",
+      "section": "nav",
+      "summary": "A quiet 72px bar on a hairline, links truly centered by equal-width side groups; borrow the balanced three-zone split.",
+      "patterns": [
+        "three-zone-nav",
+        "centered-links",
+        "version-chip",
+        "hairline"
+      ],
+      "motion": "fades down 8px over 500ms ease-out on load; links brighten 60→100% white in 150ms; the button lifts 1px on hover."
+    },
+    {
+      "file": "midnight/hero.elyx",
+      "png": "midnight/hero.png",
+      "style": "midnight",
+      "section": "hero",
+      "summary": "Centered two-line headline over a full product window (question, chart answer, SQL) framed in a gradient glass shell; borrow the real-UI-as-imagery shot with a glow beneath.",
+      "patterns": [
+        "centered-hero",
+        "product-shot",
+        "gradient-border-shell",
+        "underglow",
+        "announcement-pill",
+        "logo-strip"
+      ],
+      "motion": "pill, headline words, subhead and buttons rise 24px and unblur 8px→0 at 80ms stagger over 600ms ease-out; the window rises 72px at 400ms delay, bars grow from 0 at 100ms stagger, the caret blinks; logos drift in a 40s marquee."
+    },
+    {
+      "file": "midnight/features.elyx",
+      "png": "midnight/features.png",
+      "style": "midnight",
+      "section": "features",
+      "summary": "A bento of 2 large + 3 small tiles on a 1px hairline grid, each tile drawing its own product proof; borrow the gap-as-hairline grid trick.",
+      "patterns": [
+        "split-header",
+        "bento",
+        "hairline-grid",
+        "cursor-glow-edge",
+        "diagram",
+        "command-palette"
+      ],
+      "motion": "tiles fade up 32px at 100ms stagger over 700ms ease-out on enter; bars grow from the baseline; the cursor-glow edge follows the pointer at 150ms."
+    },
+    {
+      "file": "midnight/testimonials.elyx",
+      "png": "midnight/testimonials.png",
+      "style": "midnight",
+      "section": "testimonials",
+      "summary": "A 3-column wall of short quote cards flanking one tall stat card that proves the claim with a before/after bar; borrow the proof-in-the-middle wall.",
+      "patterns": [
+        "testimonial-wall",
+        "masonry",
+        "stat-card",
+        "gradient-border",
+        "initials-avatars"
+      ],
+      "motion": "columns rise 40px at 120ms stagger over 650ms ease-out on enter; the 4.1× counts up from 1.0 over 900ms while the Lumora bar shrinks into place."
+    },
+    {
+      "file": "midnight/pricing.elyx",
+      "png": "midnight/pricing.png",
+      "style": "midnight",
+      "section": "pricing",
+      "summary": "Three tiers as one hairline table with an enterprise row beneath; the middle tier earns a gradient edge, a top glow and the only accent button. Borrow the table-not-cards layout.",
+      "patterns": [
+        "pricing-table",
+        "segmented-toggle",
+        "highlighted-tier",
+        "check-list",
+        "enterprise-row"
+      ],
+      "motion": "the table fades up 32px over 600ms ease-out; switching Monthly/Yearly slides the segment thumb in 200ms and rolls prices vertically at 60ms stagger."
+    },
+    {
+      "file": "midnight/cta.elyx",
+      "png": "midnight/cta.png",
+      "style": "midnight",
+      "section": "cta",
+      "summary": "A framed panel of 60px hairline grid lit from below, one centered headline, an install command and a single button; borrow the grid-plus-glow close.",
+      "patterns": [
+        "cta-panel",
+        "grid-background",
+        "glow",
+        "command-chip"
+      ],
+      "motion": "the grid fades in from the center out over 700ms ease-out; headline and actions rise 24px at 100ms stagger; the copy icon swaps to a check for 1.5s on click."
+    },
+    {
+      "file": "midnight/footer.elyx",
+      "png": "midnight/footer.png",
+      "style": "midnight",
+      "section": "footer",
+      "summary": "Brand + newsletter beside five 60% link columns, a legal row with a live status dot, and a giant faint wordmark cropped by the page edge; borrow the cropped-wordmark sign-off.",
+      "patterns": [
+        "link-columns",
+        "newsletter",
+        "status-pill",
+        "cropped-wordmark"
+      ],
+      "motion": "the wordmark scales 0.96→1 and fades from 0 as the footer scrolls in (700ms ease-out); links brighten to 100% white in 150ms; the status dot pulses every 2s."
+    },
+    {
+      "file": "editorial/nav.elyx",
+      "png": "editorial/nav.png",
+      "style": "editorial",
+      "section": "nav",
+      "summary": "A centered serif wordmark between equal-width side columns, closed by a thin rule above and a double rule below.",
+      "patterns": [
+        "masthead-nav",
+        "centered-wordmark",
+        "double-rule"
+      ],
+      "motion": "rules draw outward from the wordmark over 500ms ease-out; links underline left-to-right on hover in 160ms."
+    },
+    {
+      "file": "editorial/hero.elyx",
+      "png": "editorial/hero.png",
+      "style": "editorial",
+      "section": "hero",
+      "summary": "A page-wide serif headline with an oxblood italic turn, a ruled meta row, then lead copy beside two overlapping drawn magazine covers.",
+      "patterns": [
+        "page-wide-headline",
+        "meta-row",
+        "split-hero",
+        "overlapping-rotated-mockups",
+        "figure-caption"
+      ],
+      "motion": "headline lines rise 24px and unblur over 700ms ease-out, 120ms apart; meta row fades in; covers drop in 40px with rotation settling 2deg over 600ms."
+    },
+    {
+      "file": "editorial/features.elyx",
+      "png": "editorial/features.png",
+      "style": "editorial",
+      "section": "features",
+      "summary": "Four numbered chapters in hairline-ruled rows (mono number, serif title and body, a drawn plate of the product on the right).",
+      "patterns": [
+        "numbered-chapters",
+        "hairline-rows",
+        "product-plates",
+        "running-header"
+      ],
+      "motion": "each chapter's rule draws left-to-right over 500ms ease-out, then its text and plate rise 16px, rows staggered 120ms."
+    },
+    {
+      "file": "editorial/testimonials.elyx",
+      "png": "editorial/testimonials.png",
+      "style": "editorial",
+      "section": "testimonials",
+      "summary": "One centered serif pull quote under an oversized oxblood quotation mark, then three short letters in hairline-divided columns.",
+      "patterns": [
+        "pull-quote",
+        "hairline-columns",
+        "running-header"
+      ],
+      "motion": "the quotation mark fades up first, the pull quote unblurs line by line over 600ms ease-out, then the three columns rise 16px, 120ms apart."
+    },
+    {
+      "file": "editorial/pricing.elyx",
+      "png": "editorial/pricing.png",
+      "style": "editorial",
+      "section": "pricing",
+      "summary": "Three membership tiers as open columns split by vertical hairlines, serif names and prices, one ink \"Editor's pick\" marker and one filled action.",
+      "patterns": [
+        "column-pricing",
+        "billing-toggle",
+        "recommended-marker",
+        "ruled-list"
+      ],
+      "motion": "columns fade up 16px, 100ms apart, over 500ms ease-out; the billing underline slides between options in 200ms when toggled."
+    },
+    {
+      "file": "editorial/cta.elyx",
+      "png": "editorial/cta.png",
+      "style": "editorial",
+      "section": "cta",
+      "summary": "A full-bleed ink page with a paper-colored serif headline, a sign-up bar that joins a paper field to the oxblood button, and a mono reassurance.",
+      "patterns": [
+        "full-bleed-dark",
+        "email-capture",
+        "joined-field-button"
+      ],
+      "motion": "the ink panel wipes up 24px over 600ms ease-out; headline lines follow 120ms apart; the field's caret blinks once on focus."
+    },
+    {
+      "file": "editorial/footer.elyx",
+      "png": "editorial/footer.png",
+      "style": "editorial",
+      "section": "footer",
+      "summary": "Typesetting credits and address beside four link columns, a page-wide serif wordmark, and a hairline over the legal row.",
+      "patterns": [
+        "colophon-footer",
+        "link-columns",
+        "giant-wordmark"
+      ],
+      "motion": "link columns fade up 12px, 80ms apart; the wordmark rises 40px from behind the legal hairline over 700ms ease-out as it enters view."
+    },
+    {
+      "file": "swiss/nav.elyx",
+      "png": "swiss/nav.png",
+      "style": "swiss",
+      "section": "nav",
+      "summary": "Six 2-column cells on the 12-column grid — logo, four links set as a numbered index, one black button — closed by a full-bleed black rule.",
+      "patterns": [
+        "index-nav",
+        "grid-cells",
+        "full-bleed-rule"
+      ],
+      "motion": "the bar fades in 400ms ease-out; on hover a link's index turns ink and its label underlines in 150ms; the rule draws left to right in 600ms."
+    },
+    {
+      "file": "swiss/hero.elyx",
+      "png": "swiss/hero.png",
+      "style": "swiss",
+      "section": "hero",
+      "summary": "A 9-column headline with a 3-column text block hung on its baseline, over a drawn structural elevation and a column of big numbers — the grid is the composition.",
+      "patterns": [
+        "split-hero",
+        "baseline-align",
+        "technical-drawing",
+        "stat-column"
+      ],
+      "motion": "headline lines rise 24px and fade, 600ms cubic-bezier(.16,1,.3,1), 100ms stagger; members draw in 700ms, then the red load path traces top to base in 900ms; numbers count up."
+    },
+    {
+      "file": "swiss/features.elyx",
+      "png": "swiss/features.png",
+      "style": "swiss",
+      "section": "features",
+      "summary": "A 4-column grid, each column under its own black rule — index, a precise drawn figure, title, body — with red marking the one critical value per figure.",
+      "patterns": [
+        "4-col-grid",
+        "rule-columns",
+        "diagram-cards",
+        "slot-figures"
+      ],
+      "motion": "columns enter left to right, 500ms ease-out, 120ms stagger; each rule draws before its figure; figure lines plot in 600ms and the red mark lands last."
+    },
+    {
+      "file": "swiss/testimonials.elyx",
+      "png": "swiss/testimonials.png",
+      "style": "swiss",
+      "section": "testimonials",
+      "summary": "One large quote on cols 1–7 and, on cols 9–12, the firm, the person and the project as a mono data sheet — proof set like a drawing's title block.",
+      "patterns": [
+        "split-quote",
+        "data-sheet",
+        "pager",
+        "initials-avatar"
+      ],
+      "motion": "the quote fades up line by line, 600ms ease-out, 90ms stagger; data rows follow at 80ms each; pager arrows nudge 3px on hover in 150ms."
+    },
+    {
+      "file": "swiss/pricing.elyx",
+      "png": "swiss/pricing.png",
+      "style": "swiss",
+      "section": "pricing",
+      "summary": "A comparison table on the grid — features on cols 1–3, one plan per 3 columns, hairline rows, black squares for included, a red bar over the recommended plan.",
+      "patterns": [
+        "comparison-table",
+        "plan-columns",
+        "recommended-flag",
+        "toggle"
+      ],
+      "motion": "plan headers rise 16px and fade, 500ms ease-out, 100ms stagger; table rows follow at 60ms each; the red bar grows from 1px to 4px in 400ms."
+    },
+    {
+      "file": "swiss/cta.elyx",
+      "png": "swiss/cta.png",
+      "style": "swiss",
+      "section": "cta",
+      "summary": "A full-bleed signal-red block — the page's one loud moment — with a huge black headline, mono small print and a single black button on the grid.",
+      "patterns": [
+        "full-bleed-cta",
+        "poster-type",
+        "signature-arrow"
+      ],
+      "motion": "the red field wipes up from the bottom in 500ms cubic-bezier(.7,0,.2,1); the headline lines rise 32px, 600ms ease-out, 100ms stagger; the button arrow slides 4px on hover in 150ms."
+    },
+    {
+      "file": "swiss/footer.elyx",
+      "png": "swiss/footer.png",
+      "style": "swiss",
+      "section": "footer",
+      "summary": "A black link grid that repeats the nav's six 2-column cells and numbered index, mono contact and build data, then the wordmark at poster scale, cropped by the page edge.",
+      "patterns": [
+        "link-grid",
+        "cropped-wordmark",
+        "legal-row"
+      ],
+      "motion": "columns fade in left to right, 400ms ease-out, 80ms stagger; the wordmark rises 40px into its crop over 700ms as the footer enters; links underline in 150ms on hover."
+    },
+    {
+      "file": "soft/nav.elyx",
+      "png": "soft/nav.png",
+      "style": "soft",
+      "section": "nav",
+      "summary": "A white floating pill bar on cream with a two-color kite logo, four quiet links, a text login and one violet pill.",
+      "patterns": [
+        "floating-pill-nav",
+        "centered-links"
+      ],
+      "motion": "bar drops 12px and fades in 500ms ease-out on load; link pills tint to accent-soft on 150ms hover; the CTA lifts 2px."
+    },
+    {
+      "file": "soft/hero.elyx",
+      "png": "soft/hero.png",
+      "style": "soft",
+      "section": "hero",
+      "summary": "Split layout, a heavy headline with one word on a butter marker, store buttons and proof, two overlapping phones with real screens and two rotated stickers.",
+      "patterns": [
+        "split-hero",
+        "phone-mockups",
+        "marker-highlight",
+        "stickers",
+        "store-buttons",
+        "social-proof"
+      ],
+      "motion": "headline rises 24px and fades in 600ms ease-out; marker wipes left-to-right 400ms after; phones rise 60px staggered 120ms; stickers pop from 0.8 scale with 150ms stagger; buttons lift 2px on 150ms hover."
+    },
+    {
+      "file": "soft/features.elyx",
+      "png": "soft/features.png",
+      "style": "soft",
+      "section": "features",
+      "summary": "A two-row bento of pastel cards (wide/narrow, then narrow/wide), each with its own drawn mini UI with real data.",
+      "patterns": [
+        "bento",
+        "bleed-panels",
+        "mini-ui",
+        "bar-chart",
+        "segmented-control",
+        "sticker"
+      ],
+      "motion": "cards rise 32px and fade in 600ms ease-out, staggered 120ms; mini UIs fill in after (bars grow from 0, 500ms); cards lift 4px with a deeper shadow on 200ms hover."
+    },
+    {
+      "file": "soft/testimonials.elyx",
+      "png": "soft/testimonials.png",
+      "style": "soft",
+      "section": "testimonials",
+      "summary": "A three-column masonry of pastel speech bubbles from students and parents, anchored by an app-store-style rating card.",
+      "patterns": [
+        "masonry",
+        "speech-bubbles",
+        "rating-summary",
+        "distribution-bars",
+        "sticker"
+      ],
+      "motion": "columns rise 40px and fade in 600ms ease-out, staggered 100ms by column; rating bars grow from 0 over 500ms; bubbles tilt 1° on 150ms hover."
+    },
+    {
+      "file": "soft/pricing.elyx",
+      "png": "soft/pricing.png",
+      "style": "soft",
+      "section": "pricing",
+      "summary": "Three white r32 plan cards with clipped pastel blobs, a monthly/yearly toggle, and the Family plan raised by a violet edge, the only filled button and a sticker.",
+      "patterns": [
+        "pricing-3-tier",
+        "toggle",
+        "highlighted-plan",
+        "check-list",
+        "blob-decor"
+      ],
+      "motion": "toggle thumb slides 200ms ease-out and prices cross-fade 150ms; cards rise 32px staggered 100ms; the Family sticker pops in last with a 0.85→1 scale."
+    },
+    {
+      "file": "soft/cta.elyx",
+      "png": "soft/cta.png",
+      "style": "soft",
+      "section": "cta",
+      "summary": "A violet r36 panel with pastel confetti at its edges, a centered white headline, store buttons and a quiet note for schools.",
+      "patterns": [
+        "cta-panel",
+        "confetti",
+        "centered",
+        "store-buttons"
+      ],
+      "motion": "panel scales 0.96→1 and fades in 600ms ease-out; confetti drifts in from the edges 500ms, staggered 80ms; store buttons lift 2px on 150ms hover."
+    },
+    {
+      "file": "soft/footer.elyx",
+      "png": "soft/footer.png",
+      "style": "soft",
+      "section": "footer",
+      "summary": "Cream, a brand column with a small kite-and-confetti cluster, four link groups, then a hairline and a legal row with a language chip.",
+      "patterns": [
+        "footer-columns",
+        "legal-row",
+        "language-picker",
+        "shape-cluster"
+      ],
+      "motion": "none on entry (the footer should feel settled); links underline on 150ms hover; the kite in the cluster sways ±3° on hover over 600ms."
+    },
+    {
+      "file": "clean/nav.elyx",
+      "png": "clean/nav.png",
+      "style": "clean",
+      "section": "nav",
+      "summary": "A thin dark announcement bar over a white 72px bar; logo and actions sit in equal-width wells so the five links centre exactly.",
+      "patterns": [
+        "announcement-bar",
+        "centred-links",
+        "equal-wells",
+        "sticky-nav"
+      ],
+      "motion": "announcement fades down 8px (400ms ease-out); on scroll the bar gains a white blur backdrop and hairline (200ms); menu chevrons turn 180° on open (150ms)."
+    },
+    {
+      "file": "clean/hero.elyx",
+      "png": "clean/hero.png",
+      "style": "clean",
+      "section": "hero",
+      "summary": "Split layout, headline and work-email capture left, the real product window right with two callouts layered over it; borrow the proof row (rating + faces) under the form.",
+      "patterns": [
+        "split-hero",
+        "product-window",
+        "floating-callouts",
+        "email-capture",
+        "avatar-stack",
+        "rating"
+      ],
+      "motion": "copy rises 16px and fades in (600ms, cubic-bezier(.16,1,.3,1), 100ms stagger); window follows from y+40 at +150ms; callouts scale .96→1 at +450/+570ms (500ms); button hover deepens shadow 150ms."
+    },
+    {
+      "file": "clean/features.elyx",
+      "png": "clean/features.png",
+      "style": "clean",
+      "section": "features",
+      "summary": "Centred head, two zig-zag rows (copy beside a drawn product visual), then three cards that each carry their own mini visual instead of an icon.",
+      "patterns": [
+        "zig-zag",
+        "product-ui-visual",
+        "line-chart",
+        "stepper",
+        "slot-card-trio",
+        "stats"
+      ],
+      "motion": "row copy fades up 16px (500ms, cubic-bezier(.16,1,.3,1)) as its visual rises 32px at +120ms; the actual line draws left to right (700ms); cards stagger 100ms; card hover lifts 2px (150ms)."
+    },
+    {
+      "file": "clean/testimonials.elyx",
+      "png": "clean/testimonials.png",
+      "style": "clean",
+      "section": "testimonials",
+      "summary": "A quiet greyscale logo strip, a hairline, then three case cards that each lead with one big metric; borrow the metric-first card.",
+      "patterns": [
+        "logo-strip",
+        "metric-first-cards",
+        "left-head-with-link",
+        "equal-height-row"
+      ],
+      "motion": "logos fade in together (400ms ease-out); cards rise 24px with 120ms stagger (600ms, cubic-bezier(.16,1,.3,1)); each metric counts up over 800ms."
+    },
+    {
+      "file": "clean/pricing.elyx",
+      "png": "clean/pricing.png",
+      "style": "clean",
+      "section": "pricing",
+      "summary": "Centred head, a monthly/yearly toggle, three per-employee tiers with the middle one raised by a blue border and the only filled button; borrow the \"Everything in X, plus\" lists.",
+      "patterns": [
+        "pricing-tiers",
+        "billing-toggle",
+        "highlighted-tier",
+        "check-lists",
+        "fineprint-row"
+      ],
+      "motion": "toggle thumb slides 200ms ease-out and prices cross-fade (150ms); tiers rise 24px with 100ms stagger (550ms, cubic-bezier(.16,1,.3,1)); card hover lifts 2px (150ms)."
+    },
+    {
+      "file": "clean/cta.elyx",
+      "png": "clean/cta.png",
+      "style": "clean",
+      "section": "cta",
+      "summary": "A light blue-tinted panel, copy and two actions on the left, the product window cropped by the panel edge on the right; borrow the \"peek\" crop.",
+      "patterns": [
+        "tinted-panel",
+        "product-peek",
+        "layered-card",
+        "dual-cta"
+      ],
+      "motion": "panel fades in (400ms ease-out); the window slides in from x+48 (700ms, cubic-bezier(.16,1,.3,1)); the go-live card follows at +200ms; buttons deepen shadow on hover (150ms)."
+    },
+    {
+      "file": "clean/footer.elyx",
+      "png": "clean/footer.png",
+      "style": "clean",
+      "section": "footer",
+      "summary": "Brand + newsletter beside five link columns, then a trust row (compliance chips, region picker) and a legal row with a live status label.",
+      "patterns": [
+        "link-columns",
+        "newsletter",
+        "compliance-chips",
+        "region-picker",
+        "legal-row",
+        "status-dot"
+      ],
+      "motion": "none on entry (it should feel settled); links shift to ink on hover (120ms), the region picker chevron turns 180° on open (150ms)."
+    }
+  ]
+}

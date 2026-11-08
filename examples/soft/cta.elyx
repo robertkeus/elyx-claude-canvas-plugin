@@ -1,0 +1,47 @@
+// CTA: a violet r36 panel with pastel confetti at its edges, a centered white headline, store buttons and a quiet note for schools.
+// Motion: panel scales 0.96→1 and fades in 600ms ease-out; confetti drifts in from the edges 500ms, staggered 80ms; store buttons lift 2px on 150ms hover.
+import "soft/tokens.elyx" as T
+import "soft/parts.elyx" as P
+import "soft/art/squiggle.svg" as squiggleArt
+import "soft/art/star.svg" as starArt
+import "icons/arrow-right.svg" as arrowIcon
+
+export cta = frame {
+  left: 0px, top: 0px, width: 1440px,
+  padding: [T.space.half, T.space.gutter], fill: T.colors.bg,
+  layout: {direction: .column},
+  children: [panel]
+
+  panel = frame {
+    width: 100%, padding: [104px, T.space.gutter, 96px, T.space.gutter], corner-radius: T.radius.panel,
+    fill: [T.colors.accent, {radial-gradient: {at: point(100%, 100%), radius: [70%, 90%], stops: [stop(0%, T.colors.accent-deep), stop(100%, opacity(T.colors.accent-deep, 0%))]}}],
+    shadow: T.shadow.float,
+    layout: {direction: .column, align-items: .center, item-gap: T.space.group},
+    children: [confetti, title, subhead, stores, schools]
+
+    // Confetti: the section's one playful moment, kept to the outer 320px on each side.
+    confetti = frame {ignore-stack: .true, left: 0px, top: 0px, width: 100%, height: 100%, children: [bitA, bitB, bitC, bitD, bitE, bitF, bitG, bitH, bitI, bitJ, bitK, bitL]
+      bitA = frame {left: 92px, top: 84px, width: 60px, height: 22px, corner-radius: 11px, fill: T.colors.butter, transform: [0.9135, 0.4067, 0, -0.4067, 0.9135, 0]}
+      bitB = frame {left: 196px, top: 156px, width: 28px, height: 28px, corner-radius: T.radius.pill, fill: T.colors.mint}
+      bitC = asset {left: 64px, top: 296px, width: 84px, height: 26px, contents: squiggleArt, fill: T.colors.pink, transform: [0.9703, -0.2419, 0, 0.2419, 0.9703, 0]}
+      bitD = asset {left: 214px, top: 384px, width: 36px, height: 36px, contents: starArt, fill: T.colors.butter}
+      bitE = frame {left: 128px, top: 432px, width: 18px, height: 48px, corner-radius: 9px, fill: T.colors.sky, transform: [0.8829, -0.4695, 0, 0.4695, 0.8829, 0]}
+      bitF = frame {left: 304px, top: 64px, width: 18px, height: 18px, corner-radius: T.radius.pill, fill: T.colors.peach}
+      bitG = frame {left: 1110px, top: 96px, width: 62px, height: 22px, corner-radius: 11px, fill: T.colors.peach, transform: [0.9397, -0.342, 0, 0.342, 0.9397, 0]}
+      bitH = frame {left: 1040px, top: 168px, width: 32px, height: 32px, corner-radius: T.radius.pill, fill: T.colors.sky}
+      bitI = asset {left: 1128px, top: 324px, width: 84px, height: 26px, contents: squiggleArt, fill: T.colors.butter, transform: [0.9781, 0.2079, 0, -0.2079, 0.9781, 0]}
+      bitJ = frame {left: 1214px, top: 236px, width: 20px, height: 20px, corner-radius: T.radius.pill, fill: T.colors.pink}
+      bitK = frame {left: 1010px, top: 420px, width: 20px, height: 50px, corner-radius: 10px, fill: T.colors.mint, transform: [0.866, 0.5, 0, -0.5, 0.866, 0]}
+      bitL = asset {left: 1178px, top: 440px, width: 30px, height: 30px, contents: starArt, fill: T.colors.pink}}
+
+    title = text : P.displayText {width: 720px, align: .center, contents: "Make tonight's homework the easy part.", font-size: T.size.h2, line-height: T.leading.h2, letter-spacing: T.tracking.h2, fill: T.colors.on-accent}
+    subhead = text : P.bodyText {width: 520px, align: .center, font-size: T.size.lead, contents: "Free to download. Plan the week in five minutes, and let Kitebook handle the reminders.", fill: T.colors.on-accent}
+    stores = frame {padding: [12px, 0px, 0px, 0px], overflow: .visible, layout: {direction: .row, item-gap: T.space.item}, children: [iphone, android]
+      iphone = frame : P.storeButtonLight {border: [], glyph {border[0].color: T.colors.ink}, lines {kicker {contents: "Free · iOS 16 or later"}, store {contents: "Download for iPhone"}}}
+      android = frame : P.storeButtonOutline {}}
+    schools = frame {padding: [10px, 18px], corner-radius: T.radius.pill, border: {color: opacity(T.colors.on-accent, 45%), width: 1.5px}, layout: {direction: .row, align-items: .center, item-gap: 10px}, children: [schoolsNote, schoolsLink, schoolsArrow]
+      schoolsNote = text : P.smallText {contents: "Teaching Years 7 to 11?", fill: T.colors.on-accent}
+      schoolsLink = text : P.smallText {contents: "Kitebook for Classrooms is free for teachers", font-style: T.weights.strong, underline: .single, fill: T.colors.on-accent}
+      schoolsArrow = asset {width: 16px, height: 16px, contents: arrowIcon, fill: T.colors.on-accent}}
+  }
+}

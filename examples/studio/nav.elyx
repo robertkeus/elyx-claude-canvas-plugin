@@ -1,0 +1,41 @@
+// Nav: a transparent bar with the links gathered in one tinted pill and live availability beside the CTA; borrow the true-centred link group.
+// Motion: on scroll the bar condenses into an 800px floating pill (90% bg, 6px blur, 1px ring) over 300ms; link pills tint on hover in 120ms.
+import "studio/tokens.elyx" as T
+import "studio/parts.elyx" as P
+
+export nav = frame {
+  left: 0px, top: 0px, width: 1440px, height: 88px, padding: [0px, T.space.gutter],
+  layout: {direction: .row, align-items: .center, justify-content: .space-between},
+  children: [brand, links, actions]
+
+  // brand and actions share one fixed width, so the link pill lands on the true centre line.
+  brand = frame {
+    width: 400px, layout: {direction: .row, align-items: .center},
+    children: [logo]
+    logo = frame : P.wordmark {}
+  }
+
+  links = frame {
+    padding: 4px, layout: {direction: .row, align-items: .center, item-gap: 2px},
+    corner-radius: T.radius.pill, fill: T.colors.surface,
+    children: [work, services, approach, studio, journal]
+    // The current page is a raised white pill, not a colour change.
+    work = frame {height: 36px, padding: [0px, 16px], layout: {direction: .row, align-items: .center}, corner-radius: T.radius.pill, fill: T.colors.raised, shadow: T.shadows.control, children: [t]
+      t = text {contents: "Work", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.ink}}
+    services = frame {height: 36px, padding: [0px, 16px], layout: {direction: .row, align-items: .center}, children: [t]
+      t = text {contents: "Services", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.ink}}
+    approach = frame {height: 36px, padding: [0px, 16px], layout: {direction: .row, align-items: .center}, children: [t]
+      t = text {contents: "Approach", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.ink}}
+    studio = frame {height: 36px, padding: [0px, 16px], layout: {direction: .row, align-items: .center}, children: [t]
+      t = text {contents: "Studio", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.ink}}
+    journal = frame {height: 36px, padding: [0px, 16px], layout: {direction: .row, align-items: .center}, children: [t]
+      t = text {contents: "Journal", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.ink}}
+  }
+
+  actions = frame {
+    width: 400px, layout: {direction: .row, align-items: .center, justify-content: .end, item-gap: T.space.item},
+    children: [slots, start]
+    slots = frame : P.availabilityChip {height: 40px}
+    start = frame : P.primaryButton {height: 40px, padding: [0px, 16px, 0px, 20px], label {font-size: T.size.small}, arrow {width: 14px, height: 14px}}
+  }
+}

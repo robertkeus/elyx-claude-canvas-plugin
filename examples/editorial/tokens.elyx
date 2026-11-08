@@ -1,0 +1,30 @@
+// Editorial: paper and ink, a large serif display, hairline rules, numbered chapters, no shadows.
+// For publishing, culture, hospitality, finance and anything that should feel considered.
+use "fonts/InstrumentSerif-Regular.ttf"
+use "fonts/InstrumentSerif-Italic.ttf"
+use "fonts/InterTight.ttf"
+use "fonts/GeistMono-Variable.ttf"
+
+export colors = tokens {
+  bg: #F3EEE5,
+  surface: #EAE3D6,
+  ink: #1B1916,
+  muted: #6A6358,
+  faint: #9C9486,
+  line: #D6CCBB,
+  rule: #1B1916,
+  accent: #9B3A1E,
+  on-accent: #F3EEE5,
+  accent-soft: #E8D3C4,
+  deep: #1B1916,
+  on-deep: #F3EEE5,
+  deep-muted: #A49C8E
+}
+
+export fonts = tokens {display: "Instrument Serif", body: "Inter Tight", mono: "Geist Mono"}
+export weights = tokens {display: "Regular", italic: "Italic", regular: "Regular", medium: "Medium", strong: "SemiBold"}
+export size = tokens {display: 124, h2: 68, h3: 30, quote: 44, stat: 64, lead: 21, body: 17, small: 14, label: 11, button: 15, mast: 48, cover: 100, ui: 12, giant: 480, glyph: 280}
+export tracking = tokens {display: -3%, h2: -2%, h3: -1%, body: -0.3%, label: 12%}
+export leading = tokens {display: 0.95, h2: 1.02, h3: 1.15, body: 1.6}
+export space = tokens {section: 144px, gutter: 96px, block: 72px, group: 32px, item: 12px}
+export radius = tokens {none: 0px, chip: 2px, pill: 999px}

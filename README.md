@@ -43,13 +43,20 @@ In the desktop app, where `/plugin` does not run: click **+** next to the prompt
 
 | You type | What happens |
 | --- | --- |
-| `/elyx` | Claude asks what you want to design |
+| `/elyx` | Claude asks what you want to design, and in which style |
 | `/elyx design a pricing card` | Claude writes the design, checks it and opens it on the canvas |
+| `/elyx improve screens/home.elyx` | The improve agent scores the screen, fixes its weakest points within your design system, and shows before and after |
 | `/elyx export the tokens of a.elyx` | Claude picks the right `elyx` command and runs it |
 | `/elyx a.elyx` | Opens the file on the canvas right away |
 | `/elyx --app a.elyx` | Opens the project in the Elyx app, if you have it |
 
 The canvas opens in the Browser pane of the Claude desktop app. Elsewhere you get a URL to open yourself.
+
+### Styles and examples
+
+Claude designs against a library of examples instead of from scratch: six styles (studio, midnight, editorial, swiss, soft and clean), each with a nav, hero, features, pricing, testimonials, call to action and footer, plus a full page. Name a style, or Claude offers them. They live in [`examples`](examples), with open-license fonts and a [reference of 260 free icon sets](examples/icon-libraries.md) Claude fetches icons from.
+
+Every new design gets a second look from the improve agent before you see it. You can also point it at anything you already have.
 
 ## The canvas
 

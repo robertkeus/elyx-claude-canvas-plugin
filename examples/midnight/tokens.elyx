@@ -1,0 +1,41 @@
+// Midnight: near-black, light text, violet and cyan glows, one serif-italic word in headlines.
+// For developer tools, AI products, launches and SaaS.
+use "fonts/InterTight.ttf"
+use "fonts/InstrumentSerif-Italic.ttf"
+use "fonts/GeistMono-Variable.ttf"
+use "fonts/Archivo-Variable.ttf"
+use "fonts/BricolageGrotesque-700.ttf"
+use "fonts/InstrumentSerif-Regular.ttf"
+
+export colors = tokens {
+  bg: #08080A,
+  surface: #111114,
+  surface-2: #18181D,
+  ink: #F5F5F7,
+  ink-2: #FFFFFFCC,
+  muted: #FFFFFF99,
+  faint: #FFFFFF66,
+  line: #FFFFFF14,
+  line-strong: #FFFFFF26,
+  accent: #7C6CFF,
+  accent-2: #3DD6FF,
+  on-accent: #FFFFFF,
+  accent-soft: #7C6CFF26,
+  glow: #7C6CFF66,
+  glow-2: #3DD6FF40,
+  glass: #FFFFFF40,
+  tint: #FFFFFF0A,
+  tint-2: #FFFFFF12,
+  success: #3DDC97,
+  warn: #FFB547,
+  accent-text: #ABA1FF,
+  accent-deep: #6655F0
+}
+
+export fonts = tokens {display: "Inter Tight", serif: "Instrument Serif", body: "Inter Tight", mono: "Geist Mono", logo: "Archivo", logo-2: "Bricolage Grotesque"}
+export weights = tokens {display: "SemiBold", heading: "SemiBold", regular: "Regular", medium: "Medium", strong: "SemiBold", serif: "Italic", upright: "Regular", bold: "Bold", black: "Black"}
+export size = tokens {display: 84, h2: 54, h3: 20, quote: 30, stat: 56, lead: 19, body: 16, small: 14, label: 12, ui: 15, xs: 13, micro: 11, price: 44, stat-xl: 112, wordmark: 340, kpi: 28}
+export tracking = tokens {display: -4.5%, h2: -3.5%, h3: -1.5%, body: -0.5%, label: 6%, ui: -1%, mono: 0%, logo: -3%, wordmark: -6%}
+export leading = tokens {display: 1.0, h2: 1.05, h3: 1.25, body: 1.55, ui: 1.4}
+export space = tokens {section: 136px, hero: 96px, gutter: 120px, block: 64px, group: 32px, item: 12px}
+export radius = tokens {chip: 6px, card: 14px, panel: 20px, pill: 999px, button: 10px, inner: 8px, shell: 28px}

@@ -1,0 +1,426 @@
+// Tessel parts: type styles, logo, buttons, badges, avatars, KPI card, table row and the app window, instanced by every section.
+// Motion: buttons lift 1px with a deeper shadow on hover (150ms ease-out); badges, chips and the app window are static.
+import "clean/tokens.elyx" as T
+import "icons/arrow-right.svg" as arrowIcon
+import "icons/check.svg" as checkIcon
+import "icons/chevron-down.svg" as chevronIcon
+import "icons/house.svg" as houseIcon
+import "icons/columns.svg" as columnsIcon
+import "icons/layers.svg" as layersIcon
+import "icons/grid.svg" as gridIcon
+import "icons/file.svg" as fileIcon
+
+// ── Type styles. Instance them (`text : P.lead {contents: …}`) instead of restating font, size and colour.
+export display = text {left: 0px, top: 0px, contents: "Plan every hire.", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.display, letter-spacing: T.tracking.display, line-height: T.leading.display, fill: T.colors.ink}
+export h2 = text {left: 0px, top: 90px, contents: "Section headline", font-family: T.fonts.display, font-style: T.weights.heading, font-size: T.size.h2, letter-spacing: T.tracking.h2, line-height: T.leading.h2, fill: T.colors.ink}
+export title = text {left: 0px, top: 160px, contents: "Feature title", font-family: T.fonts.display, font-style: T.weights.heading, font-size: T.size.title, letter-spacing: T.tracking.h2, line-height: T.leading.h2, fill: T.colors.ink}
+export h3 = text {left: 0px, top: 210px, contents: "Card title", font-family: T.fonts.display, font-style: T.weights.heading, font-size: T.size.h3, letter-spacing: T.tracking.h3, line-height: T.leading.h3, fill: T.colors.ink}
+export stat = text {left: 0px, top: 250px, contents: "−62%", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.stat, letter-spacing: T.tracking.h2, line-height: T.leading.h2, font-features: {tnum: 1}, fill: T.colors.ink}
+export lead = text {left: 0px, top: 320px, contents: "Lead paragraph", font-family: T.fonts.body, font-size: T.size.lead, letter-spacing: T.tracking.body, line-height: T.leading.body, fill: T.colors.muted}
+export body = text {left: 0px, top: 360px, contents: "Body paragraph", font-family: T.fonts.body, font-size: T.size.body, letter-spacing: T.tracking.body, line-height: T.leading.body, fill: T.colors.muted}
+export small = text {left: 0px, top: 400px, contents: "Small text", font-family: T.fonts.body, font-size: T.size.small, line-height: T.leading.body, fill: T.colors.muted}
+export eyebrow = text {left: 0px, top: 440px, contents: "EYEBROW", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.label, letter-spacing: T.tracking.caps, fill: T.colors.muted}
+export ui = text {left: 0px, top: 470px, contents: "UI text", font-family: T.fonts.body, font-size: T.size.ui, fill: T.colors.muted}
+export uiStrong = text {left: 0px, top: 500px, contents: "UI label", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.label, fill: T.colors.ink}
+
+// ── Logo: a 2×2 tile mark with one tile still settling into place, beside the wordmark.
+export logo = frame {left: 0px, top: 560px, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [mark, wordmark]
+  mark = frame {width: 26px, height: 26px, corner-radius: 7px, fill: T.colors.accent, children: [t1, t2, t3, t4]
+    t1 = frame {left: 6px, top: 6px, width: 6px, height: 6px, corner-radius: 1.5px, fill: T.colors.on-accent}
+    t2 = frame {left: 14px, top: 6px, width: 6px, height: 6px, corner-radius: 1.5px, fill: T.colors.on-accent}
+    t3 = frame {left: 6px, top: 14px, width: 6px, height: 6px, corner-radius: 1.5px, fill: T.colors.on-accent}
+    t4 = frame {left: 14px, top: 14px, width: 6px, height: 6px, corner-radius: 1.5px, fill: opacity(T.colors.on-accent, 45%)}
+  }
+  wordmark = text {contents: "Tessel", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.logo, letter-spacing: T.tracking.h2, fill: T.colors.ink}
+}
+
+// ── Buttons: 48px secondary (white, hairline, contact shadow). The primary variant is the one blue fill per section.
+export button = frame {left: 400px, top: 560px, height: 48px, padding: [0px, 20px], corner-radius: T.radius.control, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, shadow: T.shadows.control, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [label, arrow]
+  label = text {contents: "Talk to sales", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.button, fill: T.colors.ink}
+  arrow = asset {width: 16px, height: 16px, contents: arrowIcon, fill: T.colors.ink, display: .none}
+}
+
+@variant
+export primaryButton = frame : button {
+  left: 400px,
+  top: 620px,
+  fill: T.colors.accent,
+  border: {color: T.colors.accent, width: 1px},
+  shadow: [{drop-shadow: {color: opacity(T.colors.accent, 24%), offset: point(0, 1), blur-radius: 2px}}, {drop-shadow: {color: opacity(T.colors.accent, 20%), offset: point(0, 6), blur-radius: 16px}}, {inner-shadow: {color: opacity(T.colors.on-accent, 18%), offset: point(0, 1), blur-radius: 0px}}],
+  label {contents: "Book a demo", fill: T.colors.on-accent}
+  arrow {fill: T.colors.on-accent}
+}
+
+// Text link: the quiet action. Accent text + arrow, no box.
+export textLink = frame {left: 400px, top: 690px, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [label, arrow]
+  label = text {contents: "Compare all features", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.button, fill: T.colors.accent}
+  arrow = asset {width: 16px, height: 16px, contents: arrowIcon, fill: T.colors.accent}
+}
+
+// ── Status badge: a dot plus a word, so state never rides on colour alone.
+export badge = frame {left: 700px, top: 560px, height: 22px, padding: [0px, 8px], corner-radius: T.radius.pill, fill: T.colors.surface-2, layout: {direction: .row, align-items: .center, item-gap: 4px}, children: [dot, label]
+  dot = frame {width: 6px, height: 6px, corner-radius: 3px, fill: T.colors.muted}
+  label = text {contents: "Draft", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.ui, fill: T.colors.muted}
+}
+@variant
+export successBadge = frame : badge {left: 700px, top: 590px, fill: T.colors.success-soft, dot {fill: T.colors.success} label {contents: "Approved", fill: T.colors.success-ink}}
+@variant
+export warningBadge = frame : badge {left: 700px, top: 620px, fill: T.colors.warning-soft, dot {fill: T.colors.warning} label {contents: "In review", fill: T.colors.warning-ink}}
+@variant
+export dangerBadge = frame : badge {left: 700px, top: 650px, fill: T.colors.danger-soft, dot {fill: T.colors.danger} label {contents: "Blocked", fill: T.colors.danger-ink}}
+@variant
+export accentBadge = frame : badge {left: 700px, top: 680px, fill: T.colors.accent-soft, dot {fill: T.colors.accent} label {contents: "Most chosen", fill: T.colors.accent}}
+
+// Trend chip: an up-right arrow and a signed number.
+export delta = frame {left: 700px, top: 710px, height: 20px, padding: [0px, 8px], corner-radius: T.radius.pill, fill: T.colors.success-soft, layout: {direction: .row, align-items: .center, item-gap: 4px}, children: [up, value]
+  up = asset {width: 12px, height: 12px, contents: arrowIcon, fill: T.colors.success-ink, transform: [0.7071, 0.7071, -2.485, -0.7071, 0.7071, 6]}
+  value = text {contents: "+2.1%", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui, font-features: {tnum: 1}, fill: T.colors.success-ink}
+}
+
+// ── Initials avatar on a tinted circle. Override fill + initials for variety (accent-soft, surface-2, deep).
+export avatar = frame {left: 900px, top: 560px, width: 32px, height: 32px, corner-radius: T.radius.pill, fill: T.colors.accent-soft, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [initials]
+  initials = text {contents: "LF", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui, fill: T.colors.accent}
+}
+
+// Compliance chip: outlined pill with a ticked circle.
+export chip = frame {left: 900px, top: 610px, height: 32px, padding: [0px, 12px, 0px, 8px], corner-radius: T.radius.pill, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [tick, label]
+  tick = frame {width: 18px, height: 18px, corner-radius: T.radius.pill, fill: T.colors.success-soft, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [glyph]
+    glyph = asset {width: 12px, height: 12px, contents: checkIcon, fill: T.colors.success-ink}
+  }
+  label = text {contents: "SOC 2 Type II", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.label, fill: T.colors.ink}
+}
+
+// Check list item for plans and feature bullets.
+export checkItem = frame {left: 900px, top: 660px, layout: {direction: .row, align-items: .center, item-gap: 12px}, children: [glyph, label]
+  glyph = asset {width: 16px, height: 16px, contents: checkIcon, fill: T.colors.ink}
+  label = text {contents: "Unlimited payroll runs", font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.ink}
+}
+
+// ── App sidebar item. The active variant lifts onto white.
+export navItem = frame {left: 1100px, top: 560px, width: 148px, height: 32px, padding: [0px, 12px], corner-radius: T.radius.control, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [glyph, label, tally]
+  glyph = asset {width: 16px, height: 16px, contents: houseIcon, fill: T.colors.muted}
+  label = text {contents: "Overview", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.label, fill: T.colors.muted}
+  tally = frame {display: .none, ignore-stack: .true, right: 8px, top: 7px, height: 18px, padding: [0px, 8px], corner-radius: T.radius.pill, fill: T.colors.ink, layout: {direction: .row, align-items: .center}, children: [n]
+    n = text {contents: "3", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.micro, fill: T.colors.on-deep}
+  }
+}
+@variant
+export navItemActive = frame : navItem {left: 1100px, top: 600px, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, shadow: T.shadows.control, glyph {fill: T.colors.ink} label {fill: T.colors.ink}}
+
+// ── KPI card: label, tabular value, trend chip + comparison.
+export kpiCard = frame {left: 0px, top: 760px, width: 160px, padding: 16px, corner-radius: T.radius.card, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, shadow: T.shadows.control, layout: {direction: .column, item-gap: 8px}, children: [kLabel, kValue, kFoot]
+  kLabel = text : ui {contents: "Headcount"}
+  kValue = text {contents: "412", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.kpi, letter-spacing: T.tracking.h3, font-features: {tnum: 1}, fill: T.colors.ink}
+  kFoot = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [kDelta, kNote]
+    kDelta = frame : delta {value {contents: "+8"}}
+    kNote = text : ui {contents: "vs plan 404"}
+  }
+}
+
+// Country code tag (ISO 3166 alpha-2) used in tables and payslips.
+export countryCode = frame {left: 1100px, top: 700px, width: 28px, height: 20px, corner-radius: 4px, fill: T.colors.surface-2, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [codeLabel]
+  codeLabel = text {contents: "DE", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.micro, fill: T.colors.muted}
+}
+
+// ── Payroll table row: country code, run, people, gross (tabular), status badge; hairline below.
+export tableRow = frame {left: 200px, top: 760px, width: 504px, height: 48px, padding: [0px, 16px], layout: {direction: .row, align-items: .center}, children: [run, people, gross, status, rule]
+  run = frame {width: 200px, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [code, runText]
+    code = frame : countryCode {}
+    runText = frame {layout: {direction: .column, item-gap: 4px}, children: [runName, runMeta]
+      runName = text : uiStrong {contents: "Germany"}
+      runMeta = text : ui {contents: "Monthly · pays Nov 28"}
+    }
+  }
+  people = text : ui {width: 60px, align: .right, contents: "148", font-features: {tnum: 1}, fill: T.colors.ink}
+  gross = text : uiStrong {width: 108px, align: .right, contents: "€612,400", font-features: {tnum: 1}}
+  status = frame {width: 104px, layout: {direction: .row, justify-content: .end}, children: [pill]
+    pill = frame : successBadge {}
+  }
+  rule = frame {ignore-stack: .true, left: 0px, bottom: 0px, width: 100%, height: 1px, fill: T.colors.line}
+}
+
+// ── One month of the headcount chart: actual bar, plan tick, month label. Bar area is 112px tall, 1.2px per person above 340.
+export monthBar = frame {left: 760px, top: 760px, width: 37px, height: 136px, children: [bar, tick, month]
+  bar = frame {left: 11px, bottom: 24px, width: 15px, height: 34px, corner-radius: [3px, 3px, 0px, 0px], fill: T.colors.accent-line}
+  tick = frame {left: 7px, bottom: 59px, width: 23px, height: 2px, corner-radius: 1px, fill: T.colors.ink}
+  month = text : ui {left: 0px, top: 120px, width: 37px, align: .center, contents: "Jan"}
+}
+
+// ── App window: the product as hero imagery. Chrome bar, sidebar, then Overview: KPIs, headcount chart, payroll runs.
+// 724px wide; hero shows it whole, the CTA crops it.
+export dashboard = frame {left: 0px, top: 960px, width: 724px, corner-radius: T.radius.panel, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, shadow: T.shadows.window, layout: {direction: .column}, children: [chrome, app]
+  chrome = frame {width: 100%, height: 40px, padding: [0px, 16px], fill: T.colors.surface, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [dots, url, chromeEnd, chromeRule]
+    dots = frame {width: 52px, layout: {direction: .row, item-gap: 8px}, children: [d1, d2, d3]
+      d1 = frame {width: 10px, height: 10px, corner-radius: 5px, fill: T.colors.line}
+      d2 = frame {width: 10px, height: 10px, corner-radius: 5px, fill: T.colors.line}
+      d3 = frame {width: 10px, height: 10px, corner-radius: 5px, fill: T.colors.line}
+    }
+    url = frame {width: 260px, height: 24px, corner-radius: T.radius.chip, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [urlText]
+      urlText = text : ui {contents: "app.tessel.com/overview"}
+    }
+    chromeEnd = frame {width: 52px, height: 1px}
+    chromeRule = frame {ignore-stack: .true, left: 0px, bottom: 0px, width: 100%, height: 1px, fill: T.colors.line}
+  }
+  app = frame {width: 100%, layout: {direction: .row, align-items: .stretch}, children: [sidebar, main]
+    sidebar = frame {width: 172px, padding: [16px, 12px], fill: T.colors.surface, layout: {direction: .column, justify-content: .space-between}, overflow: .visible, children: [sideTop, sideUser, sideRule]
+      sideTop = frame {layout: {direction: .column, item-gap: 20px}, overflow: .visible, children: [workspace, menu]
+        workspace = frame {width: 148px, height: 36px, padding: [0px, 4px], layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [wsLeft, wsChevron]
+          wsLeft = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [wsMark, wsText]
+            wsMark = frame {width: 24px, height: 24px, corner-radius: T.radius.chip, fill: T.colors.deep, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [wsInitial]
+              wsInitial = text {contents: "K", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.label, fill: T.colors.on-deep}
+            }
+            wsText = frame {layout: {direction: .column, item-gap: 4px}, children: [wsName, wsMeta]
+              wsName = text : uiStrong {contents: "Kestrel Freight", font-size: T.size.ui}
+              wsMeta = text : ui {contents: "412 people · EU", font-size: T.size.micro}
+            }
+          }
+          wsChevron = asset {width: 14px, height: 14px, contents: chevronIcon, fill: T.colors.muted}
+        }
+        menu = frame {layout: {direction: .column, item-gap: 4px}, overflow: .visible, children: [menuHead, n1, n2, n3, n4, n5, n6]
+          menuHead = frame {padding: [0px, 12px, 8px, 12px], layout: {}, children: [menuLabel]
+            menuLabel = text : eyebrow {contents: "WORKSPACE", font-size: T.size.micro}
+          }
+          n1 = frame : navItemActive {}
+          n2 = frame : navItem {glyph {contents: columnsIcon} label {contents: "Headcount plan"}}
+          n3 = frame : navItem {glyph {contents: layersIcon} label {contents: "Payroll"}}
+          n4 = frame : navItem {glyph {contents: checkIcon} label {contents: "Approvals"} tally {display: .visible}}
+          n5 = frame : navItem {glyph {contents: gridIcon} label {contents: "People"}}
+          n6 = frame : navItem {glyph {contents: fileIcon} label {contents: "Reports"}}
+        }
+      }
+      sideUser = frame {padding: [0px, 8px], layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [me, meText]
+        me = frame : avatar {width: 28px, height: 28px, fill: T.colors.deep, initials {fill: T.colors.on-deep, font-size: T.size.micro}}
+        meText = frame {layout: {direction: .column, item-gap: 4px}, children: [meName, meRole]
+          meName = text : uiStrong {contents: "Lena Fischer"}
+          meRole = text : ui {contents: "Payroll lead"}
+        }
+      }
+      sideRule = frame {ignore-stack: .true, right: 0px, top: 0px, width: 1px, height: 100%, fill: T.colors.line}
+    }
+    main = frame {width: 552px, padding: 24px, layout: {direction: .column, item-gap: 16px}, overflow: .visible, children: [header, kpis, chart, runs]
+      header = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, overflow: .visible, children: [heading, controls]
+        heading = frame {layout: {direction: .column, item-gap: 4px}, children: [pageTitle, pageMeta]
+          pageTitle = text : h3 {contents: "Overview"}
+          pageMeta = text : ui {contents: "November 2026 · payroll closes in 4 days"}
+        }
+        controls = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, overflow: .visible, children: [period, exportButton]
+          period = frame {height: 30px, padding: 2px, corner-radius: T.radius.control, fill: T.colors.surface-2, layout: {direction: .row, item-gap: 2px}, overflow: .visible, children: [pMonth, pQuarter, pYear]
+            pMonth = frame {height: 26px, padding: [0px, 12px], corner-radius: T.radius.chip, fill: T.colors.bg, shadow: T.shadows.control, layout: {direction: .row, align-items: .center}, children: [pMonthText]
+              pMonthText = text : uiStrong {contents: "Month", font-size: T.size.ui}
+            }
+            pQuarter = frame {height: 26px, padding: [0px, 12px], layout: {direction: .row, align-items: .center}, children: [pQuarterText]
+              pQuarterText = text : ui {contents: "Quarter"}
+            }
+            pYear = frame {height: 26px, padding: [0px, 12px], layout: {direction: .row, align-items: .center}, children: [pYearText]
+              pYearText = text : ui {contents: "Year"}
+            }
+          }
+          exportButton = frame : button {height: 30px, padding: [0px, 12px], label {contents: "Export", font-size: T.size.ui}}
+        }
+      }
+      kpis = frame {width: 100%, layout: {direction: .row, item-gap: 12px}, overflow: .visible, children: [k1, k2, k3]
+        k1 = frame : kpiCard {}
+        k2 = frame : kpiCard {kLabel {contents: "Payroll · November"} kValue {contents: "€1.84M"} kFoot {kDelta {value {contents: "+2.1%"}} kNote {contents: "vs Oct"}}}
+        k3 = frame : kpiCard {
+          kLabel {contents: "Pending approvals"}
+          kValue {contents: "3"}
+          kFoot {
+            overrides: [remove(kpiCard.kFoot.kDelta), insert(due, after = .nil)]
+            kNote {display: .none}
+            due = frame : warningBadge {label {contents: "Due Nov 24"}}
+          }
+        }
+      }
+      chart = frame {width: 100%, padding: 16px, corner-radius: T.radius.card, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, layout: {direction: .column, item-gap: 12px}, children: [chartHead, plot]
+        chartHead = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [chartTitle, legend]
+          chartTitle = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [chartName, chartMeta]
+            chartName = text : uiStrong {contents: "Headcount"}
+            chartMeta = text : ui {contents: "Plan vs actual · 2026"}
+          }
+          legend = frame {layout: {direction: .row, align-items: .center, item-gap: 16px}, children: [lActual, lPlan, lForecast]
+            lActual = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [lActualKey, lActualText]
+              lActualKey = frame {width: 8px, height: 8px, corner-radius: 2px, fill: T.colors.accent}
+              lActualText = text : ui {contents: "Actual"}
+            }
+            lPlan = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [lPlanKey, lPlanText]
+              lPlanKey = frame {width: 10px, height: 2px, corner-radius: 1px, fill: T.colors.ink}
+              lPlanText = text : ui {contents: "Plan"}
+            }
+            lForecast = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [lForecastKey, lForecastText]
+              lForecastKey = frame {width: 8px, height: 8px, corner-radius: 2px, border: {color: T.colors.accent, width: 1px, dash: [2px, 1px]}}
+              lForecastText = text : ui {contents: "Forecast"}
+            }
+          }
+        }
+        plot = frame {width: 100%, height: 136px, children: [g425, g400, g375, g350, y425, y400, y375, y350, bars]
+          g425 = frame {left: 28px, top: 10px, width: 444px, height: 1px, fill: T.colors.surface-2}
+          g400 = frame {left: 28px, top: 40px, width: 444px, height: 1px, fill: T.colors.surface-2}
+          g375 = frame {left: 28px, top: 70px, width: 444px, height: 1px, fill: T.colors.surface-2}
+          g350 = frame {left: 28px, top: 100px, width: 444px, height: 1px, fill: T.colors.surface-2}
+          y425 = text : ui {left: 0px, top: 3px, contents: "425", font-size: T.size.micro}
+          y400 = text : ui {left: 0px, top: 33px, contents: "400", font-size: T.size.micro}
+          y375 = text : ui {left: 0px, top: 63px, contents: "375", font-size: T.size.micro}
+          y350 = text : ui {left: 0px, top: 93px, contents: "350", font-size: T.size.micro}
+          bars = frame {left: 28px, top: 0px, layout: {direction: .row}, children: [m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12]
+            m1 = frame : monthBar {}
+            m2 = frame : monthBar {bar {height: 40px} tick {bottom: 64px} month {contents: "Feb"}}
+            m3 = frame : monthBar {bar {height: 48px} tick {bottom: 69px} month {contents: "Mar"}}
+            m4 = frame : monthBar {bar {height: 49px} tick {bottom: 73px} month {contents: "Apr"}}
+            m5 = frame : monthBar {bar {height: 56px} tick {bottom: 78px} month {contents: "May"}}
+            m6 = frame : monthBar {bar {height: 62px} tick {bottom: 83px} month {contents: "Jun"}}
+            m7 = frame : monthBar {bar {height: 62px} tick {bottom: 87px} month {contents: "Jul"}}
+            m8 = frame : monthBar {bar {height: 68px} tick {bottom: 90px} month {contents: "Aug"}}
+            m9 = frame : monthBar {bar {height: 73px} tick {bottom: 94px} month {contents: "Sep"}}
+            m10 = frame : monthBar {bar {height: 78px} tick {bottom: 96px} month {contents: "Oct"}}
+            m11 = frame : monthBar {bar {height: 86px, fill: T.colors.accent} tick {bottom: 100px} month {contents: "Nov", fill: T.colors.ink}}
+            m12 = frame : monthBar {bar {height: 94px, fill: T.colors.bg, border: {color: T.colors.accent, width: 1px, dash: [3px, 2px]}} tick {bottom: 107px} month {contents: "Dec"}}
+          }
+        }
+      }
+      runs = frame {width: 100%, corner-radius: T.radius.card, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, layout: {direction: .column}, children: [runsHead, cols, r1, r2, r3, r4]
+        runsHead = frame {width: 100%, padding: [12px, 16px], layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [runsTitle, runsLink]
+          runsTitle = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [runsName, runsMeta]
+            runsName = text : uiStrong {contents: "Payroll runs"}
+            runsMeta = text : ui {contents: "November 2026 · €1.84M gross"}
+          }
+          runsLink = frame : textLink {item-gap: 4px, label {contents: "View all", font-size: T.size.ui} arrow {width: 14px, height: 14px}}
+        }
+        cols = frame {width: 100%, height: 30px, padding: [0px, 16px], fill: T.colors.surface, layout: {direction: .row, align-items: .center}, children: [cRun, cPeople, cGross, cStatus]
+          cRun = text : ui {width: 200px, contents: "Run", font-style: T.weights.medium}
+          cPeople = text : ui {width: 60px, align: .right, contents: "People", font-style: T.weights.medium}
+          cGross = text : ui {width: 108px, align: .right, contents: "Gross", font-style: T.weights.medium}
+          cStatus = text : ui {width: 104px, align: .right, contents: "Status", font-style: T.weights.medium}
+        }
+        r1 = frame : tableRow {gross {contents: "€668,200"}}
+        r2 = frame : tableRow {
+          run {code {codeLabel {contents: "NL"}} runText {runName {contents: "Netherlands"} runMeta {contents: "Monthly · pays Nov 25"}}}
+          people {contents: "96"}
+          gross {contents: "€452,880"}
+          status {@with-variant(warningBadge)
+            pill {}}
+        }
+        r3 = frame : tableRow {
+          run {code {codeLabel {contents: "ES"}} runText {runName {contents: "Spain"} runMeta {contents: "Monthly · pays Nov 30"}}}
+          people {contents: "61"}
+          gross {contents: "€229,350"}
+          status {@with-variant(badge)
+            pill {}}
+        }
+        r4 = frame : tableRow {
+          run {code {codeLabel {contents: "FR"}} runText {runName {contents: "France"} runMeta {contents: "2 tax IDs missing"}}}
+          people {contents: "107"}
+          gross {contents: "€489,570"}
+          status {@with-variant(dangerBadge)
+            pill {}}
+          rule {display: .none}
+        }
+      }
+    }
+  }
+}
+
+// ── Marketing nav link: 36px hit area, optional chevron for menus.
+export navLink = frame {left: 1100px, top: 650px, height: 36px, padding: [0px, 12px], corner-radius: T.radius.control, layout: {direction: .row, align-items: .center, item-gap: 4px}, children: [label, chevron]
+  label = text {contents: "Product", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.button, fill: T.colors.ink}
+  chevron = asset {width: 16px, height: 16px, contents: chevronIcon, fill: T.colors.muted}
+}
+
+// ── Section head: eyebrow, H2, lead. Centred by default; override align-items/align for a left-set head.
+export sectionHead = frame {left: 0px, top: 1760px, width: 1200px, layout: {direction: .column, align-items: .center, item-gap: 16px}, children: [kicker, heading, intro]
+  kicker = text : eyebrow {contents: "PLATFORM"}
+  heading = text : h2 {width: 800px, align: .center, contents: "One plan, from offer letter to payslip"}
+  intro = text : lead {width: 600px, align: .center, contents: "Supporting line that explains the section in one or two sentences."}
+}
+
+// ── Feature copy for zig-zag rows: eyebrow, title, paragraph, three ticks, a text link.
+export featureCopy = frame {left: 0px, top: 1960px, width: 440px, layout: {direction: .column, item-gap: 32px}, children: [copyHead, points, more]
+  copyHead = frame {width: 100%, layout: {direction: .column, item-gap: 16px}, children: [kicker, heading, para]
+    kicker = text : eyebrow {contents: "APPROVALS"}
+    heading = text : title {width: 100%, contents: "Approvals that follow your org chart"}
+    para = text : body {width: 100%, contents: "Feature paragraph."}
+  }
+  points = frame {layout: {direction: .column, item-gap: 12px}, children: [p1, p2, p3]
+    p1 = frame : checkItem {label {font-size: T.size.body, contents: "First point"}}
+    p2 = frame : checkItem {label {font-size: T.size.body, contents: "Second point"}}
+    p3 = frame : checkItem {label {font-size: T.size.body, contents: "Third point"}}
+  }
+  more = frame : textLink {label {contents: "Learn more"}}
+}
+
+// ── Small feature card: a surface "art" slot for its own drawn visual, then title and copy.
+export featureCard = frame {left: 500px, top: 1960px, width: 384px, corner-radius: T.radius.panel, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, shadow: T.shadows.card, layout: {direction: .column}, children: [art, cardText]
+  art = frame {slot: .true, width: 100%, height: 224px, fill: T.colors.surface, children: [artRule]
+    artRule = frame {left: 0px, bottom: 0px, width: 100%, height: 1px, fill: T.colors.line}
+  }
+  cardText = frame {width: 100%, padding: [24px, 24px, 28px, 24px], layout: {direction: .column, item-gap: 8px}, children: [cardTitle, cardBody]
+    cardTitle = text : h3 {contents: "Card title"}
+    cardBody = text : body {width: 100%, contents: "Card copy."}
+  }
+}
+
+// ── Approval step: rail node + connector, title, who/when. Default is "done"; override node for current/pending.
+export approvalStep = frame {left: 900px, top: 1960px, width: 360px, layout: {direction: .row, item-gap: 12px}, children: [rail, stepText]
+  rail = frame {width: 20px, height: 46px, children: [node, wire]
+    node = frame {left: 0px, top: 0px, width: 20px, height: 20px, corner-radius: T.radius.pill, fill: T.colors.success-soft, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [nodeGlyph]
+      nodeGlyph = asset {width: 12px, height: 12px, contents: checkIcon, fill: T.colors.success-ink}
+    }
+    wire = frame {left: 9.5px, top: 24px, width: 1px, height: 22px, fill: T.colors.line}
+  }
+  stepText = frame {layout: {direction: .column, item-gap: 4px}, children: [stepTitle, stepMeta]
+    stepTitle = text : uiStrong {contents: "Prepared"}
+    stepMeta = text : ui {contents: "Sanne de Vries, Payroll ops · Nov 18, 09:12"}
+  }
+}
+
+// ── Case card: tag, a big metric as the headline, the quote, then who said it. Person pins to the bottom when cards stretch.
+export caseCard = frame {left: 0px, top: 2600px, width: 384px, padding: [32px, 28px], corner-radius: T.radius.panel, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, shadow: T.shadows.card, layout: {direction: .column, justify-content: .space-between}, children: [caseTop, casePerson]
+  caseTop = frame {width: 100%, padding: [0px, 0px, 32px, 0px], layout: {direction: .column, item-gap: 24px}, children: [caseTag, caseMetric, caseRule, caseQuote]
+    caseTag = frame {height: 24px, padding: [0px, 12px], corner-radius: T.radius.pill, border: {color: T.colors.line, width: 1px}, layout: {direction: .row, align-items: .center}, children: [caseTagText]
+      caseTagText = text : ui {contents: "Logistics · 640 employees"}
+    }
+    caseMetric = frame {width: 100%, layout: {direction: .column, item-gap: 8px}, children: [metricValue, metricLabel]
+      metricValue = text : stat {contents: "−62%"}
+      metricLabel = text : small {contents: "payroll errors in year one", fill: T.colors.ink, font-style: T.weights.medium}
+    }
+    caseRule = frame {width: 100%, height: 1px, fill: T.colors.line}
+    caseQuote = text : body {width: 100%, fill: T.colors.ink, contents: "“Quote.”"}
+  }
+  casePerson = frame {layout: {direction: .row, align-items: .center, item-gap: 12px}, children: [personAvatar, personText]
+    personAvatar = frame : avatar {width: 40px, height: 40px, initials {font-size: T.size.label}}
+    personText = frame {layout: {direction: .column, item-gap: 4px}, children: [personName, personRole]
+      personName = text : uiStrong {contents: "Name Surname", font-size: T.size.small}
+      personRole = text : ui {contents: "Role, Company", font-size: T.size.label}
+    }
+  }
+}
+
+// ── Pricing tier: name + description, per-employee price, full-width action, then what's included.
+// The chosen tier overrides border to accent, shows the badge and switches its action to primaryButton.
+export priceCard = frame {left: 500px, top: 2600px, width: 384px, padding: 32px, corner-radius: T.radius.panel, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, shadow: T.shadows.card, layout: {direction: .column, item-gap: 28px}, overflow: .visible, children: [tierHead, tierPrice, tierAction, tierRule, tierList]
+  tierHead = frame {width: 100%, layout: {direction: .column, item-gap: 8px}, children: [tierNameRow, tierDesc]
+    tierNameRow = frame {width: 100%, height: 24px, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [tierName, tierBadge]
+      tierName = text : h3 {contents: "Starter"}
+      tierBadge = frame : accentBadge {display: .none}
+    }
+    tierDesc = text : body {width: 100%, contents: "For one-country teams of 50 to 200."}
+  }
+  tierPrice = frame {width: 100%, layout: {direction: .column, item-gap: 8px}, children: [priceRow, priceNote]
+    priceRow = frame {layout: {direction: .row, align-items: .end, item-gap: 8px}, children: [amount, unit]
+      amount = text : stat {contents: "€6"}
+      unit = frame {padding: [0px, 0px, 8px, 0px], layout: {direction: .column}, children: [unitText]
+        unitText = text : small {contents: "per employee / month"}
+      }
+    }
+    priceNote = text : ui {contents: "Billed yearly · €7.50 if paid monthly"}
+  }
+  tierAction = frame : button {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .center, item-gap: 8px}, label {contents: "Start a pilot"}}
+  tierRule = frame {width: 100%, height: 1px, fill: T.colors.line}
+  tierList = frame {width: 100%, layout: {direction: .column, item-gap: 12px}, children: [listLead, i1, i2, i3, i4, i5]
+    listLead = text : uiStrong {contents: "Includes"}
+    i1 = frame : checkItem {label {contents: "Payroll in 1 country"}}
+    i2 = frame : checkItem {label {contents: "Headcount plan, 1 scenario"}}
+    i3 = frame : checkItem {label {contents: "Two-step approvals"}}
+    i4 = frame : checkItem {label {contents: "Payslips and local filings"}}
+    i5 = frame : checkItem {label {contents: "Email support, 1-day response"}}
+  }
+}

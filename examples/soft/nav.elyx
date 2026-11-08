@@ -1,0 +1,37 @@
+// Nav: a white floating pill bar on cream with a two-color kite logo, four quiet links, a text login and one violet pill.
+// Motion: bar drops 12px and fades in 500ms ease-out on load; link pills tint to accent-soft on 150ms hover; the CTA lifts 2px.
+import "soft/tokens.elyx" as T
+import "soft/parts.elyx" as P
+
+export nav = frame {
+  left: 0px, top: 0px, width: 1440px,
+  padding: [24px, T.space.gutter, 40px, T.space.gutter], fill: T.colors.bg,
+  layout: {direction: .column},
+  children: [bar]
+
+  bar = frame {
+    width: 100%, height: 76px, padding: [0px, 16px, 0px, 28px],
+    corner-radius: T.radius.pill, fill: T.colors.surface, shadow: T.shadow.card, overflow: .visible,
+    layout: {direction: .row, justify-content: .space-between, align-items: .center},
+    children: [brand, links, side]
+
+    brand = frame : P.logo {width: 250px}
+
+    links = frame {layout: {direction: .row, align-items: .center, item-gap: 4px}, children: [howLink, parentsLink, schoolsLink, pricingLink]
+      howLink = frame {padding: [10px, 16px], corner-radius: T.radius.pill, layout: {direction: .row}, children: [howLabel]
+        howLabel = text : P.bodyText {contents: "How it works", font-style: T.weights.medium, fill: T.colors.ink}}
+      // The section's one marker moment: a butter "New" tag on the parents link.
+      parentsLink = frame {padding: [10px, 16px], corner-radius: T.radius.pill, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [parentsLabel, newTag]
+        parentsLabel = text : P.bodyText {contents: "For parents", font-style: T.weights.medium, fill: T.colors.ink}
+        newTag = frame : P.chip {fill[0].color: T.colors.butter, label {contents: "New"}}}
+      schoolsLink = frame {padding: [10px, 16px], corner-radius: T.radius.pill, layout: {direction: .row}, children: [schoolsLabel]
+        schoolsLabel = text : P.bodyText {contents: "For schools", font-style: T.weights.medium, fill: T.colors.ink}}
+      pricingLink = frame {padding: [10px, 16px], corner-radius: T.radius.pill, layout: {direction: .row}, children: [pricingLabel]
+        pricingLabel = text : P.bodyText {contents: "Pricing", font-style: T.weights.medium, fill: T.colors.ink}}}
+
+    side = frame {width: 250px, overflow: .visible, layout: {direction: .row, justify-content: .end, align-items: .center, item-gap: 8px}, children: [login, getApp]
+      login = frame {height: 48px, padding: [0px, 18px], corner-radius: T.radius.pill, layout: {direction: .row, align-items: .center}, children: [loginLabel]
+        loginLabel = text : P.bodyText {contents: "Log in", font-style: T.weights.strong, fill: T.colors.ink}}
+      getApp = frame : P.pillButton {}}
+  }
+}

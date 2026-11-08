@@ -1,0 +1,54 @@
+// CTA: an aubergine panel inset 8px from the page edge, lit by a mesh of tangerine and plum radial glows, with one question and two actions; borrow the inset mesh panel.
+// Motion: the mesh drifts slowly (radial centres move ±4% over 12s, paused under prefers-reduced-motion); the headline rises 24px and fades in over 600ms.
+import "studio/tokens.elyx" as T
+import "studio/parts.elyx" as P
+import "icons/history.svg" as clock
+
+export cta = frame {
+  left: 0px, top: 0px, width: 1440px, padding: T.space.inset,
+  layout: {direction: .column},
+  fill: T.colors.bg,
+  children: [panel]
+
+  panel = frame {
+    width: 100%, padding: [T.space.section, T.space.gutter],
+    layout: {direction: .column, align-items: .center, item-gap: T.space.group},
+    corner-radius: T.radius.panel,
+    // Mesh: radial glows stacked back to front over the deep base. Tangerine stays low and warm; plum lifts the top.
+    fill: [
+      T.colors.deep,
+      {radial-gradient: {at: point(92%, -10%), radius: [55%, 100%], stops: [stop(0%, #6B3A78E6), stop(100%, #6B3A7800)]}},
+      {radial-gradient: {at: point(8%, 105%), radius: [55%, 115%], stops: [stop(0%, #FF5B2EBF), stop(45%, #FF5B2E40), stop(100%, #FF5B2E00)]}},
+      {radial-gradient: {at: point(80%, 112%), radius: [45%, 90%], stops: [stop(0%, #B5391AD9), stop(100%, #B5391A00)]}},
+      {radial-gradient: {at: point(50%, 45%), radius: [36%, 55%], stops: [stop(0%, #2A1530CC), stop(100%, #2A153000)]}}
+    ],
+    shadow: T.shadows.ring-deep,
+    children: [label, heading, sub, actions, reply]
+
+    label = text : P.eyebrow {contents: "START A PROJECT", fill: T.colors.deep-muted}
+    heading = text {
+      contents: "What number should\nwe move next?", align: .center,
+      font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.h2,
+      line-height: T.leading.h2, letter-spacing: T.tracking.h2, fill: T.colors.on-deep
+    }
+    sub = text {
+      contents: "Tell us about your product and the metric that matters. A partner, not a sales rep, replies within one working day.",
+      width: 560px, align: .center, font-family: T.fonts.body, font-size: T.size.lead, line-height: 1.5, letter-spacing: T.tracking.body, fill: T.colors.deep-muted
+    }
+    actions = frame {
+      padding: [8px, 0px, 0px, 0px], layout: {direction: .row, align-items: .center, item-gap: T.space.item},
+      children: [start, intro]
+      start = frame : P.primaryButton {}
+      intro = frame : P.quietButton {fill: #FBF2F814, shadow: T.shadows.ring-deep, label {fill: T.colors.on-deep}}
+    }
+    reply = frame {
+      layout: {direction: .row, align-items: .center, item-gap: 16px},
+      children: [time, sep, slots]
+      time = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [i, t]
+        i = asset {width: 16px, height: 16px, contents: clock, fill: T.colors.deep-muted}
+        t = text {contents: "Average reply 3h 40m · Mon–Fri, 9:00–18:00 CET", font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.deep-muted}}
+      sep = shape {type: .ellipse, width: 3px, height: 3px, fill: T.colors.deep-muted}
+      slots = frame : P.availabilityChip {height: 28px, padding: [0px, 0px], fill: #00000000, shadow: .nil, note {font-style: T.weights.regular, fill: T.colors.deep-muted}}
+    }
+  }
+}

@@ -1,0 +1,41 @@
+// Nav: a thin dark announcement bar over a white 72px bar; logo and actions sit in equal-width wells so the five links centre exactly.
+// Motion: announcement fades down 8px (400ms ease-out); on scroll the bar gains a white blur backdrop and hairline (200ms); menu chevrons turn 180° on open (150ms).
+import "clean/tokens.elyx" as T
+import "clean/parts.elyx" as P
+import "icons/arrow-right.svg" as arrowIcon
+import "icons/chevron-down.svg" as chevronIcon
+
+export nav = frame {
+  left: 0px,
+  top: 0px,
+  width: 1440px,
+  fill: T.colors.bg,
+  layout: {direction: .column},
+  children: [announcement, bar]
+
+  announcement = frame {width: 100%, height: 40px, fill: T.colors.deep, layout: {direction: .row, align-items: .center, justify-content: .center, item-gap: 8px}, children: [newTag, message, go]
+    newTag = frame {height: 22px, padding: [0px, 8px], corner-radius: T.radius.pill, fill: opacity(T.colors.on-deep, 12%), layout: {direction: .row, align-items: .center}, children: [newText]
+      newText = text {contents: "New", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui, fill: T.colors.on-deep}
+    }
+    message = text {contents: "EU payroll in 14 countries", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.on-deep}
+    go = asset {width: 16px, height: 16px, contents: arrowIcon, fill: T.colors.on-deep}
+  }
+
+  bar = frame {width: 100%, height: 72px, padding: [0px, T.space.gutter], layout: {direction: .row, align-items: .center, justify-content: .space-between}, overflow: .visible, children: [brand, links, actions, rule]
+    brand = frame {width: 240px, layout: {direction: .row, align-items: .center}, children: [logo]
+      logo = frame : P.logo {}
+    }
+    links = frame {layout: {direction: .row, align-items: .center, item-gap: 4px}, children: [product, solutions, pricing, customers, resources]
+      product = frame : P.navLink {}
+      solutions = frame : P.navLink {label {contents: "Solutions"}}
+      pricing = frame : P.navLink {label {contents: "Pricing"} chevron {display: .none}}
+      customers = frame : P.navLink {label {contents: "Customers"} chevron {display: .none}}
+      resources = frame : P.navLink {label {contents: "Resources"} chevron {display: .none}}
+    }
+    actions = frame {width: 240px, layout: {direction: .row, align-items: .center, justify-content: .end, item-gap: 8px}, overflow: .visible, children: [login, demo]
+      login = frame : P.navLink {label {contents: "Log in"} chevron {display: .none}}
+      demo = frame : P.primaryButton {height: 40px, padding: [0px, 16px]}
+    }
+    rule = frame {ignore-stack: .true, left: 0px, bottom: 0px, width: 100%, height: 1px, fill: T.colors.line}
+  }
+}

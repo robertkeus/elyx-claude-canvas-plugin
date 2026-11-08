@@ -1,0 +1,48 @@
+// Editorial masthead nav: a centered serif wordmark between equal-width side columns, closed by a thin rule above and a double rule below.
+// Motion: rules draw outward from the wordmark over 500ms ease-out; links underline left-to-right on hover in 160ms.
+import "editorial/tokens.elyx" as T
+import "editorial/parts.elyx" as P
+
+export nav = frame {
+  left: 0px, top: 0px, width: 1440px,
+  fill: T.colors.bg,
+  padding: [T.space.group, T.space.gutter, 0px, T.space.gutter],
+  layout: {direction: .column, item-gap: 4px},
+  children: [bar, doubleRule]
+
+  bar = frame {
+    width: 100%, height: 88px,
+    border: {color: T.colors.rule, width: 1px, sides: [.top, .bottom]},
+    layout: {direction: .row, align-items: .center, justify-content: .space-between},
+    children: [issue, wordmark, menu]
+
+    // Equal 520px side columns keep the wordmark optically centered on the page.
+    issue = frame {
+      width: 520px, layout: {direction: .row, align-items: .center, item-gap: 16px},
+      children: [issueLabel, issueRule, issueDate]
+      issueLabel = text : P.label {contents: "ISSUE 48", fill: T.colors.ink}
+      issueRule = frame {width: 24px, height: 1px, fill: T.colors.faint}
+      issueDate = text : P.label {contents: "WINTER 2026"}
+    }
+    wordmark = text {
+      contents: "Marlow",
+      font-family: T.fonts.display, font-size: T.size.mast, letter-spacing: T.tracking.h3, fill: T.colors.ink
+    }
+    menu = frame {
+      width: 520px,
+      layout: {direction: .row, align-items: .center, justify-content: .end, item-gap: 28px},
+      children: [links, start]
+      links = frame {
+        layout: {direction: .row, item-gap: 28px},
+        children: [magazines, newsletters, pricing, journal]
+        magazines = text {contents: "Magazines", font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.ink}
+        newsletters = text {contents: "Newsletters", font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.ink}
+        pricing = text {contents: "Pricing", font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.ink}
+        journal = text {contents: "Journal", font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.ink}
+      }
+      start = frame : P.buttonPrimary {height: 40px, padding: [0px, 16px, 0px, 18px], label {contents: "Start writing", font-size: T.size.small}}
+    }
+  }
+
+  doubleRule = frame {width: 100%, height: 1px, fill: T.colors.rule}
+}

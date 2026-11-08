@@ -1,0 +1,378 @@
+// Hero: centered two-line headline over a full product window (question, chart answer, SQL) framed in a gradient glass shell; borrow the real-UI-as-imagery shot with a glow beneath.
+// Motion: pill, headline words, subhead and buttons rise 24px and unblur 8px→0 at 80ms stagger over 600ms ease-out; the window rises 72px at 400ms delay, bars grow from 0 at 100ms stagger, the caret blinks; logos drift in a 40s marquee.
+import "midnight/tokens.elyx" as T
+import "midnight/parts.elyx" as P
+import "icons/chevron-right.svg" as chevronRight
+import "icons/chevron-down.svg" as chevronDown
+import "icons/search.svg" as searchIcon
+import "icons/plus.svg" as plusIcon
+import "icons/columns.svg" as chartIcon
+import "icons/arrow-right.svg" as arrowRight
+import "icons/sparkles.svg" as sparkles
+import "icons/code.svg" as codeIcon
+
+export hero = frame {
+  left: 0px, top: 0px, width: 1440px,
+  padding: [T.space.hero, T.space.gutter, T.space.section, T.space.gutter],
+  fill: [T.colors.bg,
+    {radial-gradient: {at: point(50%, 0%), radius: [52%, 38%], stops: [stop(0%, T.colors.glow), stop(100%, opacity(T.colors.accent, 0%))]}},
+    {radial-gradient: {at: point(78%, 8%), radius: [26%, 22%], stops: [stop(0%, T.colors.glow-2), stop(100%, opacity(T.colors.accent-2, 0%))]}}],
+  layout: {direction: .column, align-items: .center, item-gap: T.space.block},
+  children: [intro, window, logos]
+
+  // ── Headline block ───────────────────────────────────────────
+  intro = frame {
+    layout: {direction: .column, align-items: .center, item-gap: 40px}, overflow: .visible,
+    children: [message, cta]
+
+    message = frame {
+      layout: {direction: .column, align-items: .center, item-gap: 24px}, overflow: .visible,
+      children: [announce, title, sub]
+      announce = frame {
+        height: 32px, padding: [0px, 12px, 0px, 4px], corner-radius: T.radius.pill,
+        fill: {color: T.colors.tint, blur-radius: 12px}, border: {color: T.colors.line-strong, width: 1px},
+        shadow: {inner-shadow: {color: T.colors.tint-2, offset: point(0, 1), blur-radius: 0px}},
+        layout: {direction: .row, align-items: .center, item-gap: 8px},
+        children: [tag, note, go]
+        tag = frame {height: 24px, padding: [0px, 12px], corner-radius: T.radius.pill, fill: T.colors.accent-soft, border: {color: opacity(T.colors.accent, 45%), width: 1px},
+          layout: {direction: .row, align-items: .center}, children: [t]
+          t = text {contents: "New", font-family: T.fonts.mono, font-style: T.weights.medium, font-size: T.size.label, fill: T.colors.accent-text}}
+        note = text {contents: "Lumora 3 answers in charts", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.ink-2}
+        go = asset {width: 14px, height: 14px, contents: chevronRight, fill: T.colors.faint}
+      }
+      title = text {
+        contents: "Ask your data a question.\nGet a chart back.",
+        width: 1000px, align: .center,
+        font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.display,
+        letter-spacing: T.tracking.display, line-height: T.leading.display, fill: T.colors.ink,
+        subrange: [{range: [32, 37], font-family: T.fonts.serif, font-style: T.weights.serif, letter-spacing: T.tracking.mono}]
+      }
+      sub = text {
+        contents: "Lumora answers plain-language questions about your product data with a chart you can trust and the SQL that built it.",
+        width: 580px, align: .center, font-family: T.fonts.body, font-size: T.size.lead, letter-spacing: T.tracking.body, line-height: T.leading.body, fill: T.colors.muted
+      }
+    }
+
+    cta = frame {
+      layout: {direction: .column, align-items: .center, item-gap: 20px}, overflow: .visible,
+      children: [actions, fineprint]
+      actions = frame {
+        layout: {direction: .row, align-items: .center, item-gap: 12px}, overflow: .visible,
+        children: [primary, secondary]
+        primary = frame : P.arrowButton {label {contents: "Ask your first question"}}
+        secondary = frame : P.ghostButton {label {contents: "Book a demo"}}
+      }
+      fineprint = text : P.monoText {contents: "FREE FOR 3 SEATS  ·  NO CARD  ·  SOC 2 TYPE II"}
+    }
+  }
+
+  // ── Product window: 28px glass shell, 8px pad, 20px app ──────
+  window = frame {
+    width: 1200px, padding: 8px, corner-radius: T.radius.shell,
+    fill: {color: T.colors.tint, blur-radius: 24px},
+    border: {linear-gradient: {angle: 160deg, stops: [stop(0%, opacity(T.colors.accent, 70%)), stop(35%, T.colors.line-strong), stop(70%, T.colors.line), stop(100%, opacity(T.colors.accent-2, 55%))]}, width: 1px},
+    shadow: [{inner-shadow: {color: T.colors.glass, offset: point(0, 1), blur-radius: 0px}},
+      {drop-shadow: {color: #000000B3, offset: point(0, 30), blur-radius: 60px}},
+      {drop-shadow: {color: #7C6CFF4D, offset: point(0, 60), blur-radius: 140px}}],
+    layout: {direction: .column}, overflow: .visible,
+    children: [underglow, app]
+
+    underglow = frame {ignore-stack: .true, left: 100px, top: 600px, width: 1000px, height: 360px,
+      fill: {radial-gradient: {at: point(50%, 50%), radius: [50%, 50%], stops: [stop(0%, T.colors.glow), stop(45%, opacity(T.colors.accent-2, 12%)), stop(100%, opacity(T.colors.accent, 0%))]}}}
+
+    app = frame {
+      width: 100%, corner-radius: T.radius.panel, fill: T.colors.surface,
+      border: {color: T.colors.line, width: 1px},
+      layout: {direction: .column},
+      children: [titlebar, body]
+
+      titlebar = frame {
+        width: 100%, height: 44px, padding: [0px, 16px],
+        border: {color: T.colors.line, width: 1px, sides: [.bottom]},
+        layout: {direction: .row, align-items: .center, justify-content: .space-between},
+        children: [lights, crumbs, people]
+        lights = frame {width: 160px, layout: {direction: .row, item-gap: 8px}, children: [a, b, c]
+          a = frame {width: 10px, height: 10px, corner-radius: 5px, fill: T.colors.line-strong}
+          b = frame {width: 10px, height: 10px, corner-radius: 5px, fill: T.colors.line-strong}
+          c = frame {width: 10px, height: 10px, corner-radius: 5px, fill: T.colors.line-strong}}
+        crumbs = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [w, s1, p, s2, q]
+          w = text : P.uiText {contents: "Northwind", fill: T.colors.muted}
+          s1 = text : P.uiText {contents: "/", fill: T.colors.line-strong}
+          p = text : P.uiText {contents: "Product analytics", fill: T.colors.muted}
+          s2 = text : P.uiText {contents: "/", fill: T.colors.line-strong}
+          q = text : P.uiText {contents: "Activation by plan", fill: T.colors.ink}}
+        people = frame {width: 160px, layout: {direction: .row, align-items: .center, justify-content: .end, item-gap: 12px}, children: [stack, share]
+          stack = frame {layout: {direction: .row, item-gap: -8px}, children: [a1, a2, a3]
+            a1 = frame : P.avatar {width: 22px, height: 22px, border: {color: T.colors.surface, width: 2px}, initials {contents: "AK", font-size: T.size.micro}}
+            a2 = frame : P.avatar {width: 22px, height: 22px, border: {color: T.colors.surface, width: 2px}, fill: {linear-gradient: {angle: 135deg, stops: [stop(0%, T.colors.accent-2), stop(100%, T.colors.success)]}}, initials {contents: "JR", font-size: T.size.micro}}
+            a3 = frame : P.avatar {width: 22px, height: 22px, border: {color: T.colors.surface, width: 2px}, fill: {linear-gradient: {angle: 135deg, stops: [stop(0%, T.colors.warn), stop(100%, T.colors.accent)]}}, initials {contents: "SL", font-size: T.size.micro}}}
+          share = frame : P.chip {height: 24px, label {contents: "Share"}}}
+      }
+
+      body = frame {
+        width: 100%, layout: {direction: .row},
+        children: [sidebar, main]
+
+        // Sidebar: workspace, search, pinned questions, sources, user.
+        sidebar = frame {
+          width: 232px, height: 100%, padding: [16px, 12px], fill: opacity(T.colors.bg, 60%),
+          border: {color: T.colors.line, width: 1px, sides: [.right]},
+          layout: {direction: .column, justify-content: .space-between},
+          children: [nav, user]
+
+          user = frame {width: 100%, padding: [12px, 8px, 0px, 8px], border: {color: T.colors.line, width: 1px, sides: [.top]},
+            layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [a, who]
+            a = frame : P.avatar {width: 28px, height: 28px, initials {contents: "AK", font-size: T.size.micro}}
+            who = frame {layout: {direction: .column, item-gap: 4px}, children: [n, r]
+              n = text : P.uiText {contents: "Ana Kovač", fill: T.colors.ink}
+              r = text : P.monoText {contents: "PRODUCT LEAD"}}}
+
+          nav = frame {width: 100%, layout: {direction: .column, item-gap: 20px}, children: [search, newQ, pinned, sources]
+
+          search = frame {width: 100%, height: 34px, padding: [0px, 8px, 0px, 12px], corner-radius: T.radius.inner, fill: T.colors.tint, border: {color: T.colors.line, width: 1px},
+            layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [i, t, k]
+            i = asset {width: 14px, height: 14px, contents: searchIcon, fill: T.colors.faint}
+            t = text : P.uiText {contents: "Search questions", font-style: T.weights.regular, fill: T.colors.faint, width: 116px}
+            k = frame : P.keycap {height: 22px, min-width: 22px, padding: [0px, 8px], glyph {contents: "⌘K", font-size: T.size.micro}}}
+
+          newQ = frame {width: 100%, height: 32px, padding: [0px, 12px], corner-radius: T.radius.inner,
+            layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [i, t]
+            i = asset {width: 14px, height: 14px, contents: plusIcon, fill: T.colors.muted}
+            t = text : P.uiText {contents: "New question", fill: T.colors.muted}}
+
+          pinned = frame {width: 100%, layout: {direction: .column, item-gap: 4px}, children: [h, q1, q2, q3, q4]
+            h = frame {padding: [0px, 12px, 8px, 12px], layout: {}, children: [l]  l = text : P.monoText {contents: "PINNED"}}
+            q1 = frame {width: 100%, height: 32px, padding: [0px, 12px], corner-radius: T.radius.inner, fill: T.colors.tint-2,
+              shadow: {inner-shadow: {color: T.colors.tint-2, offset: point(0, 1), blur-radius: 0px}},
+              layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [i, t]
+              i = asset {width: 14px, height: 14px, contents: chartIcon, fill: T.colors.accent-text}
+              t = text : P.uiText {contents: "Activation by plan", fill: T.colors.ink}}
+            q2 = frame {width: 100%, height: 32px, padding: [0px, 12px], layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [i, t]
+              i = asset {width: 14px, height: 14px, contents: chartIcon, fill: T.colors.faint}
+              t = text : P.uiText {contents: "Weekly active teams", fill: T.colors.muted}}
+            q3 = frame {width: 100%, height: 32px, padding: [0px, 12px], layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [i, t]
+              i = asset {width: 14px, height: 14px, contents: chartIcon, fill: T.colors.faint}
+              t = text : P.uiText {contents: "Checkout drop-off", fill: T.colors.muted}}
+            q4 = frame {width: 100%, height: 32px, padding: [0px, 12px], layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [i, t]
+              i = asset {width: 14px, height: 14px, contents: chartIcon, fill: T.colors.faint}
+              t = text : P.uiText {contents: "Churn risk, Q3", fill: T.colors.muted}}}
+
+          sources = frame {width: 100%, layout: {direction: .column, item-gap: 4px}, children: [h, s1, s2, s3]
+            h = frame {padding: [0px, 12px, 8px, 12px], layout: {}, children: [l]  l = text : P.monoText {contents: "SOURCES"}}
+            s1 = frame {width: 100%, height: 30px, padding: [0px, 12px], layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [n, st]
+              n = text : P.codeText {contents: "events_v2", font-size: T.size.micro, fill: T.colors.muted}
+              st = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [d, l]
+                d = frame {width: 6px, height: 6px, corner-radius: 3px, fill: T.colors.success}
+                l = text : P.monoText {contents: "2m", letter-spacing: T.tracking.mono}}}
+            s2 = frame {width: 100%, height: 30px, padding: [0px, 12px], layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [n, st]
+              n = text : P.codeText {contents: "billing.invoices", font-size: T.size.micro, fill: T.colors.muted}
+              st = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [d, l]
+                d = frame {width: 6px, height: 6px, corner-radius: 3px, fill: T.colors.success}
+                l = text : P.monoText {contents: "14m", letter-spacing: T.tracking.mono}}}
+            s3 = frame {width: 100%, height: 30px, padding: [0px, 12px], layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [n, st]
+              n = text : P.codeText {contents: "crm.accounts", font-size: T.size.micro, fill: T.colors.muted}
+              st = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [d, l]
+                d = frame {width: 6px, height: 6px, corner-radius: 3px, fill: T.colors.warn}
+                l = text : P.monoText {contents: "syncing", letter-spacing: T.tracking.mono}}}}
+          }
+        }
+
+        // Thread: question, answer with chart and SQL, composer.
+        main = frame {
+          width: 956px, padding: [28px, 0px, 20px, 0px],
+          layout: {direction: .column, align-items: .center, item-gap: 20px},
+          children: [question, answer, composer]
+
+          question = frame {width: 780px, layout: {direction: .row, justify-content: .end}, children: [bubble]
+            bubble = frame {padding: [12px, 16px], corner-radius: [14px, 14px, 4px, 14px], fill: T.colors.tint-2, border: {color: T.colors.line, width: 1px},
+              layout: {}, children: [t]
+              t = text : P.uiText {contents: "Which onboarding step loses the most new teams this quarter, by plan?", font-size: T.size.small, fill: T.colors.ink}}}
+
+          answer = frame {
+            width: 780px, layout: {direction: .row, item-gap: 12px}, overflow: .visible,
+            children: [who, content]
+            who = frame : P.logoMark {width: 28px, height: 28px, ring {left: 6px, top: 6px, width: 16px, height: 16px}, glint {left: 16px, top: 4px, width: 7px, height: 7px}}
+            content = frame {
+              width: 740px, layout: {direction: .column, item-gap: 12px},
+              children: [reply, chart, sql]
+
+              reply = text {
+                contents: "Connect a data source loses the most teams: 51% of Starter and 33% of Growth teams stop there.",
+                width: 100%, font-family: T.fonts.body, font-size: T.size.small, letter-spacing: T.tracking.body, line-height: T.leading.body, fill: T.colors.muted,
+                subrange: [{range: [0, 21], fill: T.colors.ink, font-style: T.weights.medium}, {range: [44, 47], fill: T.colors.ink, font-style: T.weights.medium}, {range: [63, 66], fill: T.colors.ink, font-style: T.weights.medium}]
+              }
+
+              // Chart card: grouped bars, the leaking step banded and called out.
+              chart = frame {
+                width: 100%, padding: [16px, 20px, 16px, 20px], corner-radius: T.radius.card,
+                fill: T.colors.tint, border: {color: T.colors.line, width: 1px},
+                layout: {direction: .column, item-gap: 16px},
+                children: [head, plotArea, xAxis]
+
+                head = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [ttl, legend]
+                  ttl = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [n, u]
+                    n = text : P.uiText {contents: "Onboarding funnel · Q3 2026", fill: T.colors.ink}
+                    u = text : P.monoText {contents: "% OF SIGN-UPS"}}
+                  legend = frame {layout: {direction: .row, align-items: .center, item-gap: 16px}, children: [k1, k2, seg]
+                    k1 = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [sw, l]
+                      sw = frame {width: 8px, height: 8px, corner-radius: 2px, fill: T.colors.accent}
+                      l = text : P.uiText {contents: "Starter", font-size: T.size.label, fill: T.colors.muted}}
+                    k2 = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [sw, l]
+                      sw = frame {width: 8px, height: 8px, corner-radius: 2px, fill: T.colors.accent-2}
+                      l = text : P.uiText {contents: "Growth", font-size: T.size.label, fill: T.colors.muted}}
+                    seg = frame {padding: 4px, corner-radius: T.radius.chip, fill: T.colors.tint, border: {color: T.colors.line, width: 1px}, layout: {direction: .row}, children: [b, l, t]
+                      b = frame {padding: [4px, 8px], corner-radius: 4px, fill: T.colors.tint-2, layout: {}, children: [x]  x = text : P.monoText {contents: "Bar", letter-spacing: T.tracking.mono, fill: T.colors.ink}}
+                      l = frame {padding: [4px, 8px], layout: {}, children: [x]  x = text : P.monoText {contents: "Line", letter-spacing: T.tracking.mono}}
+                      t = frame {padding: [4px, 8px], layout: {}, children: [x]  x = text : P.monoText {contents: "Table", letter-spacing: T.tracking.mono}}}}
+                }
+
+                plotArea = frame {width: 100%, layout: {direction: .row, item-gap: 8px}, overflow: .visible, children: [yAxis, plot]
+                  yAxis = frame {width: 32px, height: 160px, overflow: .visible, children: [y100, y75, y50, y25, y0]
+                    y100 = text : P.monoText {top: -7px, contents: "100", letter-spacing: T.tracking.mono}
+                    y75 = text : P.monoText {top: 33px, contents: "75", letter-spacing: T.tracking.mono}
+                    y50 = text : P.monoText {top: 73px, contents: "50", letter-spacing: T.tracking.mono}
+                    y25 = text : P.monoText {top: 113px, contents: "25", letter-spacing: T.tracking.mono}
+                    y0 = text : P.monoText {top: 153px, contents: "0", letter-spacing: T.tracking.mono}}
+                  plot = frame {width: 660px, height: 160px, overflow: .visible, children: [g100, g75, g50, g25, g0, band, bars, callout]
+                    g100 = frame {left: 0px, top: 0px, width: 100%, height: 1px, fill: T.colors.line}
+                    g75 = frame {left: 0px, top: 40px, width: 100%, height: 1px, fill: T.colors.line}
+                    g50 = frame {left: 0px, top: 80px, width: 100%, height: 1px, fill: T.colors.line}
+                    g25 = frame {left: 0px, top: 120px, width: 100%, height: 1px, fill: T.colors.line}
+                    g0 = frame {left: 0px, top: 159px, width: 100%, height: 1px, fill: T.colors.line-strong}
+                    band = frame {left: 282px, top: -10px, width: 96px, height: 170px, corner-radius: [T.radius.inner, T.radius.inner, 0px, 0px],
+                      fill: {linear-gradient: {angle: 180deg, stops: [stop(0%, opacity(T.colors.ink, 0%)), stop(100%, T.colors.tint-2)]}},
+                      border: {color: T.colors.line, width: 1px, dash: [3px, 3px], sides: [.left, .right]}}
+                    bars = frame {left: 0px, top: 0px, width: 100%, height: 100%, layout: {direction: .row}, children: [c1, c2, c3, c4, c5]
+                      c1 = frame {width: 132px, height: 100%, layout: {direction: .row, align-items: .end, justify-content: .center, item-gap: 4px}, children: [s, g]
+                        s = frame {width: 22px, height: 160px, corner-radius: [4px, 4px, 0px, 0px], fill: T.colors.accent, shadow: {inner-shadow: {color: T.colors.glass, offset: point(0, 1), blur-radius: 0px}}}
+                        g = frame {width: 22px, height: 160px, corner-radius: [4px, 4px, 0px, 0px], fill: T.colors.accent-2, shadow: {inner-shadow: {color: T.colors.glass, offset: point(0, 1), blur-radius: 0px}}}}
+                      c2 = frame {width: 132px, height: 100%, layout: {direction: .row, align-items: .end, justify-content: .center, item-gap: 4px}, children: [s, g]
+                        s = frame {width: 22px, height: 118px, corner-radius: [4px, 4px, 0px, 0px], fill: T.colors.accent, shadow: {inner-shadow: {color: T.colors.glass, offset: point(0, 1), blur-radius: 0px}}}
+                        g = frame {width: 22px, height: 138px, corner-radius: [4px, 4px, 0px, 0px], fill: T.colors.accent-2, shadow: {inner-shadow: {color: T.colors.glass, offset: point(0, 1), blur-radius: 0px}}}}
+                      c3 = frame {width: 132px, height: 100%, layout: {direction: .row, align-items: .end, justify-content: .center, item-gap: 4px}, children: [s, g]
+                        s = frame {width: 22px, height: 58px, corner-radius: [4px, 4px, 0px, 0px], fill: T.colors.accent, shadow: [{inner-shadow: {color: T.colors.glass, offset: point(0, 1), blur-radius: 0px}}, {drop-shadow: {color: T.colors.glow, offset: point(0, 0), blur-radius: 16px}}]}
+                        g = frame {width: 22px, height: 93px, corner-radius: [4px, 4px, 0px, 0px], fill: T.colors.accent-2, shadow: [{inner-shadow: {color: T.colors.glass, offset: point(0, 1), blur-radius: 0px}}, {drop-shadow: {color: T.colors.glow-2, offset: point(0, 0), blur-radius: 16px}}]}}
+                      c4 = frame {width: 132px, height: 100%, layout: {direction: .row, align-items: .end, justify-content: .center, item-gap: 4px}, children: [s, g]
+                        s = frame {width: 22px, height: 50px, corner-radius: [4px, 4px, 0px, 0px], fill: T.colors.accent, shadow: {inner-shadow: {color: T.colors.glass, offset: point(0, 1), blur-radius: 0px}}}
+                        g = frame {width: 22px, height: 86px, corner-radius: [4px, 4px, 0px, 0px], fill: T.colors.accent-2, shadow: {inner-shadow: {color: T.colors.glass, offset: point(0, 1), blur-radius: 0px}}}}
+                      c5 = frame {width: 132px, height: 100%, layout: {direction: .row, align-items: .end, justify-content: .center, item-gap: 4px}, children: [s, g]
+                        s = frame {width: 22px, height: 35px, corner-radius: [4px, 4px, 0px, 0px], fill: T.colors.accent, shadow: {inner-shadow: {color: T.colors.glass, offset: point(0, 1), blur-radius: 0px}}}
+                        g = frame {width: 22px, height: 70px, corner-radius: [4px, 4px, 0px, 0px], fill: T.colors.accent-2, shadow: {inner-shadow: {color: T.colors.glass, offset: point(0, 1), blur-radius: 0px}}}}}
+                    callout = frame {left: 262px, top: 26px, height: 24px, padding: [0px, 8px], corner-radius: T.radius.chip,
+                      fill: T.colors.surface-2, border: {color: T.colors.line-strong, width: 1px},
+                      shadow: {drop-shadow: {color: #00000080, offset: point(0, 6), blur-radius: 16px}},
+                      layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [v, l]
+                      v = text : P.codeText {contents: "−51%", font-style: T.weights.medium, fill: T.colors.ink}
+                      l = text : P.monoText {contents: "STARTER LEAK"}}}
+                }
+
+                xAxis = frame {padding-left: 40px, layout: {direction: .row}, children: [x1, x2, x3, x4, x5]
+                  x1 = text : P.monoText {width: 132px, align: .center, contents: "Signed up", letter-spacing: T.tracking.mono}
+                  x2 = text : P.monoText {width: 132px, align: .center, contents: "Invited team", letter-spacing: T.tracking.mono}
+                  x3 = text : P.monoText {width: 132px, align: .center, contents: "Connected source", letter-spacing: T.tracking.mono, fill: T.colors.ink-2}
+                  x4 = text : P.monoText {width: 132px, align: .center, contents: "First question", letter-spacing: T.tracking.mono}
+                  x5 = text : P.monoText {width: 132px, align: .center, contents: "Shared chart", letter-spacing: T.tracking.mono}}
+              }
+
+              // SQL: expanded, collapsible from its header.
+              sql = frame {
+                width: 100%, corner-radius: T.radius.card, fill: opacity(T.colors.bg, 70%), border: {color: T.colors.line, width: 1px},
+                layout: {direction: .column},
+                children: [bar, code]
+                bar = frame {width: 100%, height: 38px, padding: [0px, 12px, 0px, 16px], border: {color: T.colors.line, width: 1px, sides: [.bottom]},
+                  layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [l, r]
+                  l = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [c, i, t, m]
+                    c = asset {width: 14px, height: 14px, contents: chevronDown, fill: T.colors.muted}
+                    i = asset {width: 14px, height: 14px, contents: codeIcon, fill: T.colors.accent-text}
+                    t = text : P.codeText {contents: "SQL", font-style: T.weights.medium, fill: T.colors.ink}
+                    m = text : P.monoText {contents: "5 LINES · 182 MS · 14,208 ROWS", letter-spacing: T.tracking.mono}}
+                  r = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [copy, open]
+                    copy = frame : P.chip {height: 24px, label {contents: "Copy"}}
+                    open = frame : P.chip {height: 24px, label {contents: "Open in editor"}}}}
+                code = frame {width: 100%, padding: [12px, 16px], layout: {direction: .row, item-gap: 16px}, children: [nums, lines]
+                  nums = text : P.codeText {contents: "1\n2\n3\n4\n5", fill: T.colors.faint, align: .right}
+                  lines = frame {layout: {direction: .column}, children: [l1, l2, l3, l4, l5]
+                    l1 = text : P.codeText {contents: "SELECT step, plan, COUNT(DISTINCT team_id) AS teams",
+                      subrange: [{range: [0, 6], fill: T.colors.accent-text}, {range: [19, 24], fill: T.colors.accent-2}, {range: [25, 33], fill: T.colors.accent-text}, {range: [43, 45], fill: T.colors.accent-text}]}
+                    l2 = text : P.codeText {contents: "FROM   analytics.onboarding_events", subrange: [{range: [0, 4], fill: T.colors.accent-text}]}
+                    l3 = text : P.codeText {contents: "WHERE  signed_up_at >= DATE '2026-07-01'",
+                      subrange: [{range: [0, 5], fill: T.colors.accent-text}, {range: [20, 22], fill: T.colors.faint}, {range: [23, 27], fill: T.colors.accent-text}, {range: [28, 40], fill: T.colors.success}]}
+                    l4 = text : P.codeText {contents: "GROUP  BY step, plan", subrange: [{range: [0, 5], fill: T.colors.accent-text}, {range: [7, 9], fill: T.colors.accent-text}]}
+                    l5 = text : P.codeText {contents: "ORDER  BY step_order;", subrange: [{range: [0, 5], fill: T.colors.accent-text}, {range: [7, 9], fill: T.colors.accent-text}]}}}
+              }
+            }
+          }
+
+          // Composer: the next question mid-typing.
+          composer = frame {
+            width: 780px, padding: [16px, 12px, 12px, 16px], corner-radius: T.radius.card,
+            fill: T.colors.bg, border: {color: T.colors.line-strong, width: 1px},
+            shadow: [{inner-shadow: {color: T.colors.tint-2, offset: point(0, 1), blur-radius: 0px}}, {drop-shadow: {color: #00000099, offset: point(0, 12), blur-radius: 32px}}],
+            layout: {direction: .column, item-gap: 12px}, overflow: .visible,
+            children: [typing, tools]
+            typing = frame {layout: {direction: .row, align-items: .center, item-gap: 4px}, children: [t, caret]
+              t = text : P.uiText {contents: "Now compare Starter with last quarter", font-style: T.weights.regular, font-size: T.size.small, fill: T.colors.ink}
+              caret = frame {width: 2px, height: 18px, corner-radius: 1px, fill: T.colors.accent-2, shadow: {drop-shadow: {color: T.colors.glow-2, offset: point(0, 0), blur-radius: 6px}}}}
+            tools = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, overflow: .visible, children: [left, right]
+              left = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [src, kind]
+                src = frame : P.chip {height: 26px, label {contents: "@events_v2"}}
+                kind = frame : P.chip {height: 26px, overrides: [insert(i, after = .nil)], label {contents: "Chart"}
+                  i = asset {width: 12px, height: 12px, contents: sparkles, fill: T.colors.accent-text}}}
+              right = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, overflow: .visible, children: [hint, send]
+                hint = frame {layout: {direction: .row, align-items: .center, item-gap: 4px}, children: [k1, k2]
+                  k1 = frame : P.keycap {height: 22px, min-width: 22px, padding: [0px, 8px], glyph {contents: "⌘", font-size: T.size.micro}}
+                  k2 = frame : P.keycap {height: 22px, min-width: 22px, padding: [0px, 8px], glyph {contents: "↵", font-size: T.size.micro}}}
+                send = frame {width: 32px, height: 32px, corner-radius: T.radius.inner, fill: T.colors.accent-soft, border: {color: opacity(T.colors.accent, 50%), width: 1px},
+                  shadow: {drop-shadow: {color: T.colors.glow, offset: point(0, 0), blur-radius: 14px}},
+                  layout: {direction: .row, align-items: .center, justify-content: .center}, children: [a]
+                  a = asset {width: 16px, height: 16px, contents: arrowRight, fill: T.colors.accent-text}}}}
+          }
+        }
+      }
+    }
+  }
+
+  // ── Logo strip: invented teams at 40% white; layer opacity steps 35→70→100% fade both edges ──
+  logos = frame {
+    width: 100%, layout: {direction: .column, align-items: .center, item-gap: 28px}, overflow: .visible,
+    children: [caption, strip]
+    caption = text : P.monoText {contents: "ANSWERING QUESTIONS FOR 1,900+ PRODUCT TEAMS"}
+    strip = frame {
+      width: 100%, height: 40px, layout: {direction: .row, align-items: .center, justify-content: .space-between},
+      children: [northwind, fernway, tessel, kitebase, ledgerline, orbitly, quarry]
+
+      northwind = frame {opacity: 0.35, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [m, w]
+        m = shape {type: .ellipse, width: 18px, height: 18px, border: {color: T.colors.faint, width: 2px}}
+        w = text {contents: "Northwind", font-family: T.fonts.display, font-style: T.weights.strong, font-size: T.size.h3, letter-spacing: -3%, fill: T.colors.faint}}
+      fernway = frame {opacity: 0.7, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [m, w]
+        m = frame {width: 16px, height: 16px, corner-radius: [16px, 0px, 16px, 0px], fill: T.colors.faint}
+        w = text {contents: "Fernway", font-family: T.fonts.serif, font-style: T.weights.serif, font-size: 26, letter-spacing: -1%, fill: T.colors.faint}}
+      tessel = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [m, w]
+        m = frame {width: 16px, height: 16px, layout: {direction: .row, wrap: .true, item-gap: 4px, line-gap: 4px}, children: [a, b, c, d]
+          a = frame {width: 6px, height: 6px, fill: T.colors.faint}
+          b = frame {width: 6px, height: 6px, fill: opacity(T.colors.ink, 20%)}
+          c = frame {width: 6px, height: 6px, fill: opacity(T.colors.ink, 20%)}
+          d = frame {width: 6px, height: 6px, fill: T.colors.faint}}
+        w = text {contents: "tessel", font-family: T.fonts.mono, font-style: T.weights.medium, font-size: 19, letter-spacing: -2%, fill: T.colors.faint}}
+      kitebase = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [m, w]
+        m = frame {width: 14px, height: 14px, corner-radius: 2px, fill: T.colors.faint, transform: [0.7071, -0.7071, 0, 0.7071, 0.7071, 0]}
+        w = text {contents: "KITEBASE", font-family: T.fonts.logo, font-style: T.weights.black, font-size: 18, letter-spacing: 4%, fill: T.colors.faint}}
+      ledgerline = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [m, w]
+        m = frame {layout: {direction: .column, item-gap: 4px}, children: [a, b, c]
+          a = frame {width: 16px, height: 3px, corner-radius: 1px, fill: T.colors.faint}
+          b = frame {width: 11px, height: 3px, corner-radius: 1px, fill: T.colors.faint}
+          c = frame {width: 16px, height: 3px, corner-radius: 1px, fill: T.colors.faint}}
+        w = text {contents: "Ledgerline", font-family: T.fonts.logo, font-style: T.weights.regular, font-size: T.size.h3, letter-spacing: -2%, fill: T.colors.faint}}
+      orbitly = frame {opacity: 0.7, layout: {direction: .row, align-items: .center, item-gap: 4px}, children: [m, w]
+        m = frame {width: 26px, height: 18px, children: [a, b]
+          a = shape {type: .ellipse, left: 0px, top: 1px, width: 16px, height: 16px, fill: T.colors.faint}
+          b = shape {type: .ellipse, left: 9px, top: 1px, width: 16px, height: 16px, border: {color: T.colors.faint, width: 2px}}}
+        w = text {contents: "orbitly", font-family: T.fonts.logo-2, font-style: T.weights.bold, font-size: 22, letter-spacing: -4%, fill: T.colors.faint}}
+      quarry = frame {opacity: 0.35, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [m, w]
+        m = frame {width: 18px, height: 18px, corner-radius: 4px, border: {color: T.colors.faint, width: 2px}, children: [n]
+          n = frame {left: 7px, top: 7px, width: 9px, height: 9px, corner-radius: 2px, fill: T.colors.faint}}
+        w = text {contents: "Quarry", font-family: T.fonts.display, font-style: T.weights.bold, font-size: T.size.h3, letter-spacing: -4%, fill: T.colors.faint}}
+
+    }
+  }
+}

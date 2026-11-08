@@ -1,0 +1,77 @@
+// CTA: a framed panel of 60px hairline grid lit from below, one centered headline, an install command and a single button; borrow the grid-plus-glow close.
+// Motion: the grid fades in from the center out over 700ms ease-out; headline and actions rise 24px at 100ms stagger; the copy icon swaps to a check for 1.5s on click.
+import "midnight/tokens.elyx" as T
+import "midnight/parts.elyx" as P
+
+export cta = frame {
+  left: 0px, top: 0px, width: 1440px, padding: [T.space.section, T.space.gutter],
+  fill: T.colors.bg,
+  layout: {direction: .column, align-items: .center},
+  children: [panel]
+
+  panel = frame {
+    width: 100%, padding: [104px, 0px, 112px, 0px], corner-radius: T.radius.shell,
+    fill: T.colors.surface,
+    border: {linear-gradient: {angle: 180deg, stops: [stop(0%, T.colors.line-strong), stop(100%, opacity(T.colors.accent, 45%))]}, width: 1px},
+    shadow: {inner-shadow: {color: T.colors.tint-2, offset: point(0, 1), blur-radius: 0px}},
+    layout: {direction: .column, align-items: .center, item-gap: 40px},
+    children: [columns, rows, vignette, glow, message, actions]
+
+    // 60px hairline grid, then a vignette that fades it toward the edges.
+    columns = frame {ignore-stack: .true, left: 0px, top: 0px, width: 100%, height: 100%,
+      layout: {direction: .row, justify-content: .space-between},
+      children: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20]
+      v0 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}  v1 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}  v2 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}  v3 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}
+      v4 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}  v5 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}  v6 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}  v7 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}
+      v8 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}  v9 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}  v10 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}  v11 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}
+      v12 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}  v13 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}  v14 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}  v15 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}
+      v16 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}  v17 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}  v18 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}  v19 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}
+      v20 = frame {width: 1px, height: 100%, fill: T.colors.line-strong}
+    }
+    rows = frame {ignore-stack: .true, left: 0px, top: 0px, width: 100%, height: 100%,
+      layout: {direction: .column, justify-content: .space-between},
+      children: [h0, h1, h2, h3, h4, h5, h6, h7, h8]
+      h0 = frame {width: 100%, height: 1px, fill: T.colors.line-strong}  h1 = frame {width: 100%, height: 1px, fill: T.colors.line-strong}  h2 = frame {width: 100%, height: 1px, fill: T.colors.line-strong}  h3 = frame {width: 100%, height: 1px, fill: T.colors.line-strong}
+      h4 = frame {width: 100%, height: 1px, fill: T.colors.line-strong}  h5 = frame {width: 100%, height: 1px, fill: T.colors.line-strong}  h6 = frame {width: 100%, height: 1px, fill: T.colors.line-strong}  h7 = frame {width: 100%, height: 1px, fill: T.colors.line-strong}
+      h8 = frame {width: 100%, height: 1px, fill: T.colors.line-strong}
+    }
+    vignette = frame {ignore-stack: .true, left: 0px, top: 0px, width: 100%, height: 100%,
+      fill: {radial-gradient: {at: point(50%, 55%), radius: [55%, 70%], stops: [stop(0%, opacity(T.colors.surface, 20%)), stop(45%, opacity(T.colors.surface, 55%)), stop(100%, T.colors.surface)]}}}
+    glow = frame {ignore-stack: .true, left: 0px, top: 0px, width: 100%, height: 100%,
+      fill: [{radial-gradient: {at: point(50%, 100%), radius: [62%, 95%], stops: [stop(0%, opacity(T.colors.accent, 40%)), stop(50%, opacity(T.colors.accent, 12%)), stop(100%, opacity(T.colors.accent, 0%))]}},
+        {radial-gradient: {at: point(50%, 100%), radius: [26%, 40%], stops: [stop(0%, opacity(T.colors.accent-2, 18%)), stop(100%, opacity(T.colors.accent-2, 0%))]}}]}
+
+    message = frame {
+      layout: {direction: .column, align-items: .center, item-gap: 20px},
+      children: [h2, sub]
+      h2 = text {contents: "Ask your first question\nin five minutes.", width: 800px, align: .center,
+        font-family: T.fonts.display, font-style: T.weights.heading, font-size: T.size.h2,
+        letter-spacing: T.tracking.h2, line-height: T.leading.h2, fill: T.colors.ink,
+        subrange: [{range: [32, 39], font-family: T.fonts.serif, font-style: T.weights.serif, letter-spacing: T.tracking.mono}]}
+      sub = text {contents: "Connect a warehouse, describe one metric and share the chart. Free for up to three seats.",
+        width: 500px, align: .center, font-family: T.fonts.body, font-size: T.size.body, letter-spacing: T.tracking.body, line-height: T.leading.body, fill: T.colors.muted}
+    }
+
+    actions = frame {
+      layout: {direction: .row, align-items: .center, item-gap: 12px}, overflow: .visible,
+      children: [command, start]
+
+      // Install command: mono on glass, divider, drawn copy glyph.
+      command = frame {
+        height: 44px, padding: [0px, 12px, 0px, 16px], corner-radius: T.radius.button,
+        fill: {color: opacity(T.colors.bg, 70%), blur-radius: 12px}, border: {color: T.colors.line-strong, width: 1px},
+        shadow: {inner-shadow: {color: T.colors.tint-2, offset: point(0, 1), blur-radius: 0px}},
+        layout: {direction: .row, align-items: .center, item-gap: 12px},
+        children: [prompt, cmd, divider, copy]
+        prompt = text : P.codeText {contents: "$", font-size: T.size.small, fill: T.colors.faint}
+        cmd = text : P.codeText {contents: "npx lumora init", font-size: T.size.small, fill: T.colors.ink,
+          subrange: [{range: [4, 10], fill: T.colors.accent-text}]}
+        divider = frame {width: 1px, height: 20px, fill: T.colors.line-strong}
+        copy = frame {width: 16px, height: 16px, children: [back, front]
+          back = frame {left: 1px, top: 1px, width: 10px, height: 10px, corner-radius: 2px, border: {color: T.colors.faint, width: 1.5px}}
+          front = frame {left: 5px, top: 5px, width: 10px, height: 10px, corner-radius: 2px, fill: T.colors.surface, border: {color: T.colors.ink-2, width: 1.5px}}}
+      }
+      start = frame : P.arrowButton {label {contents: "Start free"}}
+    }
+  }
+}

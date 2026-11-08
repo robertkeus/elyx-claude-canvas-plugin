@@ -1,0 +1,114 @@
+// Footer: brand + newsletter beside five link columns, then a trust row (compliance chips, region picker) and a legal row with a live status label.
+// Motion: none on entry (it should feel settled); links shift to ink on hover (120ms), the region picker chevron turns 180° on open (150ms).
+import "clean/tokens.elyx" as T
+import "clean/parts.elyx" as P
+import "icons/chevron-down.svg" as chevronIcon
+
+export footer = frame {
+  left: 0px,
+  top: 0px,
+  width: 1440px,
+  padding: [96px, T.space.gutter, 48px, T.space.gutter],
+  fill: T.colors.surface,
+  layout: {direction: .column, item-gap: T.space.block},
+  children: [main, base, topRule]
+
+  topRule = frame {ignore-stack: .true, left: 0px, top: 0px, width: 100%, height: 1px, fill: T.colors.line}
+
+  main = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [brand, columns]
+    brand = frame {width: 340px, layout: {direction: .column, item-gap: 32px}, overflow: .visible, children: [brandHead, newsletter]
+      brandHead = frame {width: 100%, layout: {direction: .column, item-gap: 16px}, children: [logo, tagline]
+        logo = frame : P.logo {}
+        tagline = text : P.small {width: 300px, contents: "Workforce planning and payroll for European teams of 50 to 2,000 people."}
+      }
+      newsletter = frame {width: 100%, layout: {direction: .column, item-gap: 12px}, overflow: .visible, children: [newsTitle, newsForm, newsNote]
+        newsTitle = text : P.uiStrong {contents: "Payroll notes, once a month", font-size: T.size.small}
+        newsForm = frame {layout: {direction: .row, item-gap: 8px}, overflow: .visible, children: [email, subscribe]
+          email = frame {width: 220px, height: 44px, padding: [0px, 16px], corner-radius: T.radius.control, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, layout: {direction: .row, align-items: .center}, children: [emailHint]
+            emailHint = text : P.small {contents: "Work email"}
+          }
+          subscribe = frame : P.button {height: 44px, padding: [0px, 16px], label {contents: "Subscribe", font-size: T.size.small}}
+        }
+        newsNote = text : P.ui {contents: "Filing deadlines and law changes. No spam."}
+      }
+    }
+    columns = frame {width: 760px, layout: {direction: .row, justify-content: .space-between}, children: [product, solutions, customers, resources, company]
+      product = frame {layout: {direction: .column, item-gap: 12px}, children: [productHead, pr1, pr2, pr3, pr4, pr5, pr6]
+        productHead = text : P.uiStrong {contents: "Product"}
+        pr1 = text : P.small {contents: "Headcount planning"}
+        pr2 = text : P.small {contents: "Payroll"}
+        pr3 = text : P.small {contents: "Approvals"}
+        pr4 = text : P.small {contents: "Reports"}
+        pr5 = text : P.small {contents: "Integrations"}
+        pr6 = text : P.small {contents: "What's new"}
+      }
+      solutions = frame {layout: {direction: .column, item-gap: 12px}, children: [solutionsHead, so1, so2, so3, so4, so5]
+        solutionsHead = text : P.uiStrong {contents: "Solutions"}
+        so1 = text : P.small {contents: "For HR teams"}
+        so2 = text : P.small {contents: "For finance"}
+        so3 = text : P.small {contents: "For managers"}
+        so4 = text : P.small {contents: "Multi-country payroll"}
+        so5 = text : P.small {contents: "Scale-ups"}
+      }
+      customers = frame {layout: {direction: .column, item-gap: 12px}, children: [customersHead, cu1, cu2, cu3, cu4]
+        customersHead = text : P.uiStrong {contents: "Customers"}
+        cu1 = text : P.small {contents: "Customer stories"}
+        cu2 = text : P.small {contents: "Kestrel Freight"}
+        cu3 = text : P.small {contents: "Oakline"}
+        cu4 = text : P.small {contents: "Lumio Health"}
+      }
+      resources = frame {layout: {direction: .column, item-gap: 12px}, children: [resourcesHead, re1, re2, re3, re4, re5]
+        resourcesHead = text : P.uiStrong {contents: "Resources"}
+        re1 = text : P.small {contents: "Payroll calendar 2027"}
+        re2 = text : P.small {contents: "Guides"}
+        re3 = text : P.small {contents: "Help centre"}
+        re4 = text : P.small {contents: "API docs"}
+        re5 = text : P.small {contents: "Webinars"}
+      }
+      company = frame {layout: {direction: .column, item-gap: 12px}, children: [companyHead, co1, careers, co3, co4, co5]
+        companyHead = text : P.uiStrong {contents: "Company"}
+        co1 = text : P.small {contents: "About"}
+        careers = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [co2, hiring]
+          co2 = text : P.small {contents: "Careers"}
+          hiring = frame : P.badge {height: 20px, dot {display: .none}, label {contents: "4 open", font-size: T.size.micro, fill: T.colors.ink}}
+        }
+        co3 = text : P.small {contents: "Security"}
+        co4 = text : P.small {contents: "Press"}
+        co5 = text : P.small {contents: "Contact"}
+      }
+    }
+  }
+
+  base = frame {width: 100%, layout: {direction: .column, item-gap: 24px}, children: [trustRow, baseRule, legal]
+    trustRow = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [chips, region]
+      chips = frame {layout: {direction: .row, item-gap: 8px}, children: [soc2, gdpr, iso]
+        soc2 = frame : P.chip {}
+        gdpr = frame : P.chip {label {contents: "GDPR"}}
+        iso = frame : P.chip {label {contents: "ISO 27001"}}
+      }
+      region = frame {height: 36px, padding: [0px, 12px], corner-radius: T.radius.control, fill: T.colors.bg, border: {color: T.colors.line, width: 1px}, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [globe, regionText, regionChevron]
+        // Drawn globe: ring, meridian, equator.
+        globe = frame {width: 16px, height: 16px, corner-radius: T.radius.pill, border: {color: T.colors.muted, width: 1.5px}, children: [meridian, equator]
+          meridian = frame {left: 4.5px, top: 0px, width: 7px, height: 16px, corner-radius: T.radius.pill, border: {color: T.colors.muted, width: 1.5px}}
+          equator = frame {left: 0px, top: 7.25px, width: 16px, height: 1.5px, fill: T.colors.muted}
+        }
+        regionText = text : P.small {contents: "Europe · English", fill: T.colors.ink}
+        regionChevron = asset {width: 14px, height: 14px, contents: chevronIcon, fill: T.colors.muted}
+      }
+    }
+    baseRule = frame {width: 100%, height: 1px, fill: T.colors.line}
+    legal = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [legalLeft, status]
+      legalLeft = frame {layout: {direction: .row, align-items: .center, item-gap: 24px}, children: [copyright, privacy, terms, dpa, cookies]
+        copyright = text : P.ui {contents: "© 2026 Tessel B.V., Amsterdam", font-size: T.size.label}
+        privacy = text : P.ui {contents: "Privacy", font-size: T.size.label}
+        terms = text : P.ui {contents: "Terms", font-size: T.size.label}
+        dpa = text : P.ui {contents: "Data processing agreement", font-size: T.size.label}
+        cookies = text : P.ui {contents: "Cookie settings", font-size: T.size.label}
+      }
+      status = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [statusDot, statusText]
+        statusDot = frame {width: 8px, height: 8px, corner-radius: T.radius.pill, fill: T.colors.success, border: {color: T.colors.success-soft, width: 2px, position: .outside}}
+        statusText = text : P.ui {contents: "All systems normal", font-size: T.size.label}
+      }
+    }
+  }
+}

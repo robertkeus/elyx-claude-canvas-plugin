@@ -1,0 +1,97 @@
+// Testimonials: a 3-column wall of short quote cards flanking one tall stat card that proves the claim with a before/after bar; borrow the proof-in-the-middle wall.
+// Motion: columns rise 40px at 120ms stagger over 650ms ease-out on enter; the 4.1× counts up from 1.0 over 900ms while the Lumora bar shrinks into place.
+import "midnight/tokens.elyx" as T
+import "midnight/parts.elyx" as P
+import "icons/arrow-right.svg" as arrowRight
+
+export testimonials = frame {
+  left: 0px, top: 0px, width: 1440px, padding: [T.space.section, T.space.gutter],
+  fill: [T.colors.bg, {radial-gradient: {at: point(50%, 62%), radius: [34%, 36%], stops: [stop(0%, opacity(T.colors.accent, 14%)), stop(100%, opacity(T.colors.accent, 0%))]}}],
+  layout: {direction: .column, align-items: .center, item-gap: T.space.block},
+  children: [header, wall]
+
+  header = frame {
+    layout: {direction: .column, align-items: .center, item-gap: 20px},
+    children: [eyebrow, h2, sub]
+    eyebrow = frame : P.eyebrow {index {contents: "02"}, label {contents: "CUSTOMERS"}}
+    h2 = text {contents: "Fewer tickets. More answers.", font-family: T.fonts.display, font-style: T.weights.heading, font-size: T.size.h2,
+      letter-spacing: T.tracking.h2, line-height: T.leading.h2, fill: T.colors.ink,
+      subrange: [{range: [20, 27], font-family: T.fonts.serif, font-style: T.weights.serif, letter-spacing: T.tracking.mono}]}
+    sub = text {contents: "Product teams at 1,900 companies ask Lumora before they file a ticket with the data team.",
+      width: 480px, align: .center, font-family: T.fonts.body, font-size: T.size.body, letter-spacing: T.tracking.body, line-height: T.leading.body, fill: T.colors.muted}
+  }
+
+  wall = frame {
+    width: 100%, layout: {direction: .row, align-items: .stretch, item-gap: 24px}, overflow: .visible,
+    children: [left, middle, right]
+
+    left = frame {width: 384px, layout: {direction: .column, item-gap: 24px}, children: [maya, daniel, priya]
+      maya = frame : P.quoteCard {}
+      daniel = frame : P.quoteCard {
+        person {face {fill: {linear-gradient: {angle: 135deg, stops: [stop(0%, T.colors.accent-2), stop(100%, T.colors.success)]}}, initials {contents: "DL"}}
+          who {name {contents: "Daniel Lindqvist"}, role {contents: "STAFF DATA ENGINEER · TESSEL"}}}
+        quote {contents: "The SQL sits under every answer. My team reviews it in a minute instead of rewriting it from scratch on Friday."}}
+      priya = frame : P.quoteCard {
+        person {face {fill: {linear-gradient: {angle: 135deg, stops: [stop(0%, T.colors.warn), stop(100%, T.colors.accent)]}}, initials {contents: "PR"}}
+          who {name {contents: "Priya Raman"}, role {contents: "GROWTH PM · KITEBASE"}}}
+        quote {contents: "We caught a 9% checkout drop on a Tuesday afternoon. Noticing used to take a sprint."}}
+    }
+
+    // The proof: one tall card, gradient hairline, before/after bars.
+    middle = frame {
+      width: 384px, padding: 32px, corner-radius: T.radius.panel,
+      fill: [T.colors.surface,
+        {radial-gradient: {at: point(50%, 100%), radius: [90%, 60%], stops: [stop(0%, opacity(T.colors.accent, 32%)), stop(60%, opacity(T.colors.accent-2, 6%)), stop(100%, opacity(T.colors.accent, 0%))]}}],
+      border: {linear-gradient: {angle: 165deg, stops: [stop(0%, opacity(T.colors.accent, 80%)), stop(45%, T.colors.line), stop(100%, opacity(T.colors.accent-2, 60%))]}, width: 1px},
+      shadow: [{inner-shadow: {color: T.colors.glass, offset: point(0, 1), blur-radius: 0px}}, {drop-shadow: {color: opacity(T.colors.accent, 25%), offset: point(0, 24), blur-radius: 80px}}],
+      layout: {direction: .column, justify-content: .space-between}, overflow: .visible,
+      children: [top, bars, foot]
+
+      top = frame {width: 100%, layout: {direction: .column, item-gap: 12px}, children: [k, num, what]
+        k = text : P.monoText {contents: "MEDIAN TIME TO ANSWER"}
+        num = text {contents: "4.1×", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.stat-xl,
+          letter-spacing: T.tracking.display, line-height: T.leading.display, fill: T.colors.ink,
+          subrange: [{range: [3, 4], font-family: T.fonts.serif, font-style: T.weights.serif, fill: T.colors.accent-text}]}
+        what = text {contents: "faster answers, from question to a chart the team trusts.", width: 100%,
+          font-family: T.fonts.body, font-size: T.size.body, letter-spacing: T.tracking.body, line-height: T.leading.body, fill: T.colors.muted,
+          subrange: [{range: [0, 14], fill: T.colors.ink, font-style: T.weights.medium}]}}
+
+      bars = frame {width: 100%, padding: [40px, 0px], layout: {direction: .column, item-gap: 24px}, children: [before, after]
+        before = frame {width: 100%, layout: {direction: .column, item-gap: 8px}, children: [row, track]
+          row = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [l, v]
+            l = text : P.uiText {contents: "Ticket to the data team", fill: T.colors.muted}
+            v = text : P.codeText {contents: "47 min", fill: T.colors.muted}}
+          track = frame {width: 100%, height: 10px, corner-radius: 5px, fill: T.colors.line-strong}}
+        after = frame {width: 100%, layout: {direction: .column, item-gap: 8px}, children: [row, track]
+          row = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [l, v]
+            l = text : P.uiText {contents: "Asking Lumora", fill: T.colors.ink}
+            v = text : P.codeText {contents: "11.5 min", font-style: T.weights.medium, fill: T.colors.ink}}
+          track = frame {width: 100%, height: 10px, corner-radius: 5px, fill: T.colors.tint, children: [fillBar]
+            fillBar = frame {left: 0px, top: 0px, width: 78px, height: 10px, corner-radius: 5px,
+              fill: {linear-gradient: {angle: 90deg, stops: [stop(0%, T.colors.accent), stop(100%, T.colors.accent-2)]}},
+              shadow: {drop-shadow: {color: T.colors.glow, offset: point(0, 0), blur-radius: 12px}}}}}}
+
+      foot = frame {width: 100%, padding-top: 20px, border: {color: T.colors.line, width: 1px, sides: [.top]},
+        layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [src, link]
+        src = text : P.monoText {contents: "212 TEAMS · Q2 2026"}
+        link = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [t, a]
+          t = text : P.uiText {contents: "Read the study", fill: T.colors.ink}
+          a = asset {width: 14px, height: 14px, contents: arrowRight, fill: T.colors.ink}}}
+    }
+
+    right = frame {width: 384px, layout: {direction: .column, item-gap: 24px}, children: [tomas, hana, leo]
+      tomas = frame : P.quoteCard {
+        person {face {fill: {linear-gradient: {angle: 135deg, stops: [stop(0%, T.colors.success), stop(100%, T.colors.accent)]}}, initials {contents: "TA"}}
+          who {name {contents: "Tomás Aguilar"}, role {contents: "VP ANALYTICS · LEDGERLINE"}}}
+        quote {contents: "Defining metrics once in the semantic layer ended our weekly “which number is right” meeting for good."}}
+      hana = frame : P.quoteCard {
+        person {face {fill: {linear-gradient: {angle: 135deg, stops: [stop(0%, T.colors.accent-2), stop(100%, T.colors.accent)]}}, initials {contents: "HS"}}
+          who {name {contents: "Hana Sato"}, role {contents: "PRODUCT DESIGNER · ORBITLY"}}}
+        quote {contents: "I don't write SQL, and I still walk into design reviews with answers I can defend."}}
+      leo = frame : P.quoteCard {
+        person {face {fill: {linear-gradient: {angle: 135deg, stops: [stop(0%, T.colors.accent), stop(100%, T.colors.warn)]}}, initials {contents: "LB"}}
+          who {name {contents: "Leo Brandt"}, role {contents: "CTO · QUARRY"}}}
+        quote {contents: "Row-level permissions got security to sign off in one week. That never happens."}}
+    }
+  }
+}

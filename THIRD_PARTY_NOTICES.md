@@ -1,6 +1,6 @@
 # Third-party notices
 
-The icons in `server/ui/icons.js` and `design/icons` come from [Lucide](https://lucide.dev), under this license:
+The icons in `server/ui/icons.js`, `design/icons` and `examples/icons` come from [Lucide](https://lucide.dev), under this license:
 
 ```text
 ISC License
@@ -47,3 +47,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+---
+
+The fonts in `examples/fonts` are Inter Tight, Instrument Serif, Bricolage Grotesque, Archivo and Geist Mono, under the SIL Open Font License 1.1. Their copyright notices and the license text are in `examples/fonts/OFL.txt`.
