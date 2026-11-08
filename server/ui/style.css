@@ -425,5 +425,42 @@ body.rail-open #rail { display: flex }
 #toast button, #toast a { font-weight: 600 }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important } }
 
+/* Play: one screen at a time, its links clickable */
+#play { position: fixed; z-index: 25; inset: 0; display: flex; flex-direction: column; background: var(--stage) }
+.play-bar { flex: none; display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 12px; border-bottom: 1px solid var(--line); background: var(--surface) }
+.play-mark { display: grid; place-items: center; width: 24px; height: 24px; border-radius: var(--r-sm); background: var(--accent-soft); color: var(--accent) }
+.play-bar .title { color: var(--ink); font-weight: 500 }
+.play-bar .where { color: var(--muted) }
+.play-transitions { display: flex; align-items: center; gap: 6px }
+.play-stage { position: relative; flex: 1; min-height: 0; overflow: hidden }
+.play-screen { position: absolute; left: 50%; top: 50%; translate: -50% -50%; overflow: hidden; border-radius: 2px; background: var(--surface); box-shadow: var(--deep) }
+.play-screen img { display: block; width: 100%; height: 100%; user-select: none; -webkit-user-drag: none }
+.hotspot { position: absolute; border-radius: 4px; cursor: pointer; transition: box-shadow var(--ease), background var(--ease) }
+.hotspot:hover, .hotspot:focus-visible { box-shadow: 0 0 0 2px var(--accent); outline: 0 }
+.play-screen.hint .hotspot { animation: hint .7s ease }
+@keyframes hint { 20%, 70% { background: color-mix(in srgb, var(--accent) 22%, transparent); box-shadow: 0 0 0 2px var(--accent) } }
+.play-morph { position: absolute; inset: 0; z-index: 2; pointer-events: none }
+.play-morph div { position: absolute; transform-origin: 0 0; background-repeat: no-repeat }
+.play-foot { flex: none; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; min-height: 64px; padding: 12px }
+.play-link {
+  display: flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border: 1px solid var(--line-strong); border-radius: var(--r-md);
+  background: var(--surface); color: var(--ink); font-weight: 500; box-shadow: var(--soft-shadow); transition: border-color var(--ease)
+}
+.play-link:hover { border-color: var(--accent) }
+.play-link.quiet { color: var(--body) }
+.play-here { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 6px }
+
+/* Motion tokens */
+.motion-track { position: relative; flex: 1; min-width: 0; height: 10px; border-radius: 5px; background: var(--chip) }
+.motion-track i { position: absolute; left: 0; top: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--accent) }
+.easing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px }
+.easing-card { display: flex; flex-direction: column; gap: 10px; padding: 14px; color: inherit; text-align: left; transition: border-color var(--ease) }
+.easing-card:hover, .easing-card[aria-pressed="true"] { border-color: var(--accent) }
+.easing-card svg { width: 100%; height: 96px; overflow: visible }
+.easing-card .axis { fill: none; stroke: var(--line-strong); stroke-width: 1; vector-effect: non-scaling-stroke }
+.easing-card .curve { fill: none; stroke: var(--accent); stroke-width: 2; vector-effect: non-scaling-stroke }
+.easing-card strong { overflow: hidden; color: var(--ink); font-weight: 500; text-overflow: ellipsis; white-space: nowrap }
+.easing-card span { overflow: hidden; color: var(--muted); font-size: 12px; text-overflow: ellipsis; white-space: nowrap }
+
 /* Last, so canvas mode wins over an open sidebar or rail. */
 body.canvas-mode #topbar, body.canvas-mode #sidebar, body.canvas-mode #rail, body.canvas-mode #hud { display: none }

@@ -1,0 +1,233 @@
+import "icons/play.svg" as playIcon
+import "icons/x.svg" as closeIcon
+import "icons/check.svg" as checkIcon
+import "icons/chevron-down.svg" as chevronIcon
+import "icons/arrow-right.svg" as arrowIcon
+import "tokens/colors.elyx" as Colors
+import "tokens/radius.elyx" as Radius
+import "components/controls.elyx" as Controls
+import "components/type.elyx" as Text
+import "sample/product.elyx" as Sample
+
+// Play: a screen at full size, its links clickable, and how the next one arrives.
+export play = frame {
+  left: 0px,
+  top: 0px,
+  width: 1280px,
+  height: 640px,
+  fill: Colors.colors.stage,
+  children: [bar, page, spot, foot, menu],
+
+  bar = frame {
+    left: 0px,
+    top: 0px,
+    width: 1280px,
+    height: 52px,
+    fill: Colors.colors.surface,
+    border: {color: Colors.colors.line, width: 1px, sides: .bottom},
+    layout: {direction: .row, align-items: .center, item-gap: 10px},
+    padding: [0px, 12px],
+    children: [mark, name, note, spacer, transitions, dismiss],
+
+    mark = frame {
+      width: 24px,
+      height: 24px,
+      corner-radius: Radius.radius.sm,
+      fill: Colors.colors.accent-soft,
+      layout: {direction: .row, justify-content: .center, align-items: .center},
+      children: glyph,
+
+      glyph = asset {
+        width: 13px,
+        height: 13px,
+        contents: playIcon,
+        fill: Colors.colors.accent
+      }
+    }
+
+    name = text : Text.body {
+      contents: "landing",
+      font-style: "Medium",
+      fill: Colors.colors.ink
+    }
+
+    note = text : Text.body {
+      contents: "2 links to click",
+      fill: Colors.colors.muted
+    }
+
+    spacer = frame {}
+
+    transitions = frame : Controls.button {
+      overrides: [insert(chevron, after = Controls.button.label)],
+
+      label {
+        contents: "As designed"
+      }
+
+      chevron = asset {
+        width: 12px,
+        height: 12px,
+        contents: chevronIcon,
+        fill: Colors.colors.muted
+      }
+    }
+
+    dismiss = frame : Controls.iconButton {
+      glyph {
+        contents: closeIcon
+      }
+    }
+  }
+
+  page = frame : Sample.landing {
+    left: 304px,
+    top: 98px,
+    transform: [1.6, 0, 0, 0, 1.6, 0],
+    corner-radius: 2px,
+    shadow: [{drop-shadow: {color: #00000029, offset: point(0, 24), blur-radius: 64px}}, {drop-shadow: {color: #0000000F, offset: point(0, 1), blur-radius: 3px}}]
+  }
+
+  // A link you can click, outlined as the pointer reaches it.
+  spot = frame {
+    left: 336px,
+    top: 397px,
+    width: 196px,
+    height: 60px,
+    corner-radius: Radius.radius.lg,
+    fill: opacity(Colors.colors.accent, 14%),
+    border: {color: Colors.colors.accent, width: 2px}
+  }
+
+  foot = frame {
+    left: 0px,
+    top: 576px,
+    width: 1280px,
+    height: 64px,
+    layout: {direction: .row, justify-content: .center, align-items: .center, item-gap: 8px},
+    children: [back, plans],
+
+    back = frame {
+      height: 34px,
+      corner-radius: Radius.radius.md,
+      fill: Colors.colors.surface,
+      border: {color: Colors.colors.line-strong, width: 1px},
+      layout: {direction: .row, align-items: .center},
+      padding: [0px, 12px],
+      children: label,
+
+      label = text : Text.body {
+        contents: "Back",
+        font-style: "Medium",
+        fill: Colors.colors.body
+      }
+    }
+
+    plans = frame {
+      height: 34px,
+      corner-radius: Radius.radius.md,
+      fill: Colors.colors.surface,
+      border: {color: Colors.colors.line-strong, width: 1px},
+      layout: {direction: .row, align-items: .center, item-gap: 6px},
+      padding: [0px, 12px],
+      children: [label, glyph],
+
+      label = text : Text.body {
+        contents: "See plans",
+        font-style: "Medium",
+        fill: Colors.colors.ink
+      }
+
+      glyph = asset {
+        width: 14px,
+        height: 14px,
+        contents: arrowIcon,
+        fill: Colors.colors.ink
+      }
+    }
+  }
+
+  // The transitions, as the menu under the bar shows them.
+  menu = frame {
+    right: 56px,
+    top: 56px,
+    width: 196px,
+    corner-radius: Radius.radius.lg,
+    fill: Colors.colors.surface,
+    border: {color: Colors.colors.line-strong, width: 1px},
+    layout: {direction: .column, item-gap: 0px},
+    padding: 4px,
+    shadow: [{drop-shadow: {color: #00000014, offset: point(0, 8), blur-radius: 24px}}, {drop-shadow: {color: #0000000F, offset: point(0, 1), blur-radius: 3px}}],
+    children: [head, designed, smart, push, slide, dissolve, instant],
+
+    head = frame {
+      width: 100%,
+      padding: [6px, 8px, 2px, 8px],
+      layout: {direction: .row},
+      children: label,
+
+      label = text : Text.meta {
+        contents: "Transition"
+      }
+    }
+
+    designed = frame : row {
+      overrides: [insert(check, after = row.label)],
+
+      label {
+        contents: "As designed",
+        font-style: "Medium",
+        fill[0].color: Colors.colors.accent
+      }
+
+      check = asset {
+        width: 14px,
+        height: 14px,
+        contents: checkIcon,
+        fill: Colors.colors.accent
+      }
+    }
+
+    smart = frame : row {}
+
+    push = frame : row {
+      label {
+        contents: "Push"
+      }
+    }
+
+    slide = frame : row {
+      label {
+        contents: "Slide in"
+      }
+    }
+
+    dissolve = frame : row {
+      label {
+        contents: "Dissolve"
+      }
+    }
+
+    instant = frame : row {
+      label {
+        contents: "Instant"
+      }
+    }
+  }
+}
+
+// One choice in the menu.
+row = frame {
+  left: 0px,
+  top: 700px,
+  width: 188px,
+  height: 30px,
+  corner-radius: Radius.radius.sm,
+  layout: {direction: .row, justify-content: .space-between, align-items: .center},
+  padding: [0px, 8px],
+  children: label,
+
+  label = text : Text.body {
+    contents: "Smart animate"
+  }
+}

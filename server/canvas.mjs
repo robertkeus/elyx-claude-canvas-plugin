@@ -16,6 +16,7 @@ import path from 'node:path'
 import { promisify } from 'node:util'
 import { blockSource, importAlias, setProperty, setToken, tokenLiteral } from './edit.mjs'
 import { fileVersions, hash, indexTree, LOG_FORMAT, mergeIndexes, parseLog, reachOf } from './insight.mjs'
+import { linksIn, metaLiteral, resolveLinks, TRANSITIONS } from './prototype.mjs'
 import { frameIds, sharedLink, sharePage, shareRequest, shareScale } from './share.mjs'
 import { treeToSvg } from './svg.mjs'
 
@@ -286,6 +287,17 @@ const usage = async () => {
   })
 }
 
+// The board as a prototype: which layer leads to which screen.
+const prototype = async file => {
+  const absolute = await elyxFile(file)
+  const { frames } = await board(file)
+  const { sources } = await snapshot()
+  const boardFile = relative(absolute)
+  const files = new Set([boardFile, ...frames.map(frame => frame.source.file)])
+  const linksByFile = Object.fromEntries([...files].map(name => [name, linksIn(sources.get(name) ?? '')]))
+  return resolveLinks(frames, boardFile, linksByFile)
+}
+
 const contextArgs = values => values.filter(value => CONTEXT.test(value)).map(value => `--context=${value}`)
 
 const board = async file => {
@@ -511,6 +523,15 @@ const edit = async ({ target: layer, prop, value }) => {
   })
 }
 
+// Where a prototype link says how to move: its layer's `meta`, written whole, because an
+// instance's `meta` replaces its source's rather than merging with it.
+const setMotion = async ({ file, ref, meta }) => {
+  if (!/^[\w-]+(\.[\w-]+)*$/.test(ref)) throw new Error('That link cannot be changed here.')
+  if (meta.transition !== undefined && !TRANSITIONS.includes(meta.transition)) throw new Error(`${meta.transition} is not a transition.`)
+  const absolute = await elyxFile(file)
+  return commit(absolute, source => setProperty(source, { ref }, 'meta', metaLiteral(meta)))
+}
+
 const editToken = async ({ file, scope, name, value }) => {
   if (!TOKEN_VALUE.test(value)) throw new Error(`${value} is not a token value.`)
   return commit(await elyxFile(file), source => setToken(source, String(scope), String(name), value))
@@ -647,10 +668,11 @@ const getters = {
   },
   layers: query => layers(query.get('file'), query.get('ref'), query.getAll('context')),
   revisions: query => revisions(query.get('file')),
+  prototype: query => prototype(query.get('file')),
   source: query => source(query.get('file'), query.get('ref'), query.get('path')),
   'share-status': query => shareStatus(query.get('file')),
 }
-const posters = { edit, token: editToken, move: moveFrame, undo, ask, share, export: exportLayer, reveal: revealExports, 'switch-project': switchProject }
+const posters = { edit, motion: setMotion, token: editToken, move: moveFrame, undo, ask, share, export: exportLayer, reveal: revealExports, 'switch-project': switchProject }
 
 const server = createServer(async (request, response) => {
   const respond = (status, type, body, headers = {}) => {

@@ -2,6 +2,7 @@ import "readme/drag.elyx" as Drag
 import "readme/hero.elyx" as Hero
 import "readme/history.elyx" as History
 import "readme/library.elyx" as Library
+import "readme/play.elyx" as Play
 import "readme/quick-edit.elyx" as Quick
 import "readme/zoom.elyx" as Zoom
 
@@ -34,6 +35,11 @@ dragScreens = frame : Drag.dragScreens {
 
 history = frame : History.history {
   left: 7600px,
+  top: 0px
+}
+
+play = frame : Play.play {
+  left: 9120px,
   top: 0px
 }
 
@@ -70,5 +76,11 @@ dragScreensDark = frame : Drag.dragScreens {
 @context(theme=dark)
 historyDark = frame : History.history {
   left: 7600px,
+  top: 960px
+}
+
+@context(theme=dark)
+playDark = frame : Play.play {
+  left: 9120px,
   top: 960px
 }

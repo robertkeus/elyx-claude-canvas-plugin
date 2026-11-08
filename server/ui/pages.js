@@ -1,7 +1,7 @@
 // The overview pages: home, the component library, tokens and assets.
 import { isScreenFile } from './nav.js'
 import { selectToken } from './rail.js'
-import { $, ago, colorTokens, el, humanize, icon, isBase, plural, query, renderUrl, ROLE_ORDER, roleOf, sectionOf, shortName, state } from './lib.js'
+import { $, ago, colorTokens, curveOf, DEFAULT_EASING, durationTokens, easingTokens, el, humanize, icon, isBase, isMotionGroup, plural, query, renderUrl, ROLE_ORDER, roleOf, sectionOf, shortName, state, tokenPath } from './lib.js'
 
 const show = (...content) => {
   const page = $('page')
@@ -180,7 +180,7 @@ const radiusSheet = tokens => el('div', { className: 'sheet radius-grid' }, toke
 const sheetFor = (group, tokens) => (/radius/i.test(group) ? radiusSheet(tokens) : /font-?size/i.test(group) ? typeSheet(tokens) : barSheet(tokens))
 
 export const scalesPage = group => {
-  const groups = Object.groupBy(state.project.tokens.filter(token => token.type === 'number' && isBase(token)), token => token.rootScope[0])
+  const groups = Object.groupBy(state.project.tokens.filter(token => token.type === 'number' && isBase(token) && !isMotionGroup(token.rootScope[0])), token => token.rootScope[0])
   const names = Object.keys(groups).filter(name => !group || name === group)
   const typeFirst = names.toSorted((a, b) => /font/i.test(b) - /font/i.test(a))
   show(
@@ -188,6 +188,48 @@ export const scalesPage = group => {
     chips([['All', '#tokens:scales'], ...Object.keys(groups).map(name => [humanize(name), `#tokens:scales:${name}`])], group ? humanize(group) : 'All'),
     rule(),
     typeFirst.map(name => [el('h3', { textContent: humanize(name) }), sheetFor(name, groups[name])]),
+  )
+}
+
+// Motion: each duration and easing played on hover, so you see the timing, not a number.
+
+const replay = (dot, track, duration, easing) => () => {
+  dot.getAnimations().forEach(animation => animation.cancel())
+  dot.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${track.clientWidth - dot.offsetWidth}px)` }], { duration, easing, fill: 'forwards' })
+}
+
+const durationRow = token => {
+  const dot = el('i')
+  const track = el('span', { className: 'motion-track' }, dot)
+  const row = el('button', { className: 'scale-row', ariaPressed: String(state.token === token), onclick: () => selectToken(token) },
+    el('span', { className: 'scale-name', textContent: token.name, title: tokenPath(token) }), track, el('span', { className: 'scale-value figure', textContent: `${token.value} ms` }))
+  row.onpointerenter = replay(dot, track, token.value, DEFAULT_EASING)
+  return row
+}
+
+const easingCard = token => {
+  const [x1, y1, x2, y2] = curveOf(token.value)
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  svg.setAttribute('viewBox', '-4 -4 108 108')
+  svg.setAttribute('preserveAspectRatio', 'none')
+  svg.innerHTML = `<path class="axis" d="M0 100 L100 100 M0 100 L0 0"/><path class="curve" d="M0 100 C${x1 * 100} ${100 - y1 * 100} ${x2 * 100} ${100 - y2 * 100} 100 0"/>`
+  const dot = el('i')
+  const track = el('span', { className: 'motion-track' }, dot)
+  const card = el('button', { className: 'sheet easing-card', ariaPressed: String(state.token === token), onclick: () => selectToken(token) },
+    svg, track, el('strong', { textContent: tokenPath(token) }), el('span', { className: 'figure', textContent: token.value }))
+  card.onpointerenter = replay(dot, track, 900, token.value)
+  return card
+}
+
+export const motionPage = () => {
+  const durations = durationTokens().toSorted((a, b) => a.value - b.value)
+  const easings = easingTokens()
+  show(
+    head('Motion', `${plural(durations.length, 'duration')} and ${plural(easings.length, 'easing curve')}. Point at one to play it.`),
+    rule(),
+    durations.length ? [el('h3', { textContent: 'Durations' }), el('div', { className: 'sheet scale-sheet' }, durations.map(durationRow))] : null,
+    easings.length ? [el('h3', { textContent: 'Easing' }), el('div', { className: 'easing-grid' }, easings.map(easingCard))] : null,
+    durations.length || easings.length ? null : el('div', { className: 'empty', textContent: 'No motion tokens yet. Add number tokens in a group named motion, in milliseconds, and string tokens with an easing such as "cubic-bezier(0.2, 0, 0, 1)".' }),
   )
 }
 

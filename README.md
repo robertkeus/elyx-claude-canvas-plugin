@@ -118,6 +118,37 @@ The **History** tab lists every commit that changed the board or anything it imp
   </picture>
 </p>
 
+### Play your prototype
+
+**Play**, in the top bar (or **P**), shows one screen at a time at the size it fits. Every layer with a connection is a link you can click, and links on a whole screen become buttons below it. **←** goes back, **→** follows the next link, **Esc** closes.
+
+Moving to the next screen animates. **Smart animate** pairs layers with the same name and moves each one from where it was to where it lands; the rest dissolves. **Push**, **Slide in**, **Dissolve** and **Instant** are there too, and the menu in the play bar tries any of them on the whole prototype.
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/readme/play-dark.png">
+    <img src="docs/readme/play-light.png" alt="Play mode: a landing page at full size with its Start free trial button outlined as a link, Back and See plans buttons below, and the transition menu open.">
+  </picture>
+</p>
+
+How a link moves is kept in the design file, in the `meta` of the layer that carries the link. Select that layer and set it in the inspector's **Prototype** section, or write it yourself:
+
+```elyx
+card = frame {
+  meta: {transition: "smart", duration: "motion.medium", easing: "easing.standard"},
+  connections: {target: ::detail, label: "Open"}
+}
+```
+
+`duration` takes milliseconds or the name of a token, and `easing` takes a CSS easing or the name of a token. Motion tokens are number tokens in a group named for motion, in milliseconds, and string tokens holding an easing:
+
+```elyx
+export motion = tokens {fast: 150, medium: 300, slow: 500}
+export easing = tokens {standard: "cubic-bezier(0.2, 0, 0, 1)"}
+```
+
+They get their own **Motion** page under Tokens, where pointing at one plays it, and play uses them when a link doesn't say otherwise.
+
 ### Share it with anyone
 
 **Share**, top right, turns the board into a page Claude publishes as an artifact: every frame at 2×, with zoom, a link per frame, and the design's tokens. It starts private; share it from its page on claude.ai with people, your organization or anyone with the link. Sharing again updates the same page, and the link button beside Share opens it. Without the canvas, `/elyx share a.elyx` does the same.

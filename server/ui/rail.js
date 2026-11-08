@@ -2,8 +2,9 @@
 import { claudeBody } from './ask.js'
 import { editLayer, leaveRevision, select, showRevision, trailOf } from './board.js'
 import { exportControls } from './export.js'
-import { canColor, colorOf, FIELDS, openColors, openNumbers, openWeights, renderQuick, swatch } from './pickers.js'
-import { $, ago, contextAxes, edit, el, get, hex, icon, isBase, local, plural, post, query, report, saved, shortName, state, stored, tokenOf, tokenPath, unwrap } from './lib.js'
+import { openPlay } from './play.js'
+import { canColor, closePopover, colorOf, FIELDS, openColors, openNumbers, openWeights, popover, renderQuick, swatch } from './pickers.js'
+import { $, ago, contextAxes, DEFAULT_EASING, durationTokens, easingTokens, edit, el, get, hex, icon, isBase, local, plural, post, query, report, resolveMotion, saved, shortName, state, stored, tokenOf, tokenPath, TRANSITIONS, unwrap } from './lib.js'
 
 const section = (title, ...kids) => el('div', { className: 'section' }, el('div', { className: 'section-head' }, title), kids)
 const pair = (key, value) => el('div', { className: 'pair' }, el('span', { textContent: key }), typeof value === 'string' ? el('span', { textContent: value, title: value }) : value)
@@ -135,6 +136,53 @@ const styleSection = layer => {
   return section('Style', rows, el('div', { className: 'toggle-row' }, 'Visible', visible))
 }
 
+// A link's source names are a path through the file, which can skip layers the tree
+// has between them; they match when they appear in order and end on this layer.
+const sameNames = (path, names) => {
+  if (!path.length || path.at(-1) !== names.at(-1)) return !path.length && !names.length
+  let at = 0
+  for (const name of names) if (name === path[at]) at++
+  return at === path.length
+}
+
+// Where a layer leads in play, and how it moves there. Motion is kept in the layer's
+// `meta`, so it lives in the design file beside the link.
+const prototypeSection = () => {
+  const { frame } = state.selection
+  const names = trailOf(state.selection).slice(1).map(layer => layer.name)
+  const links = state.links.filter(link => link.from === frame.name && sameNames(link.path, names))
+  if (!links.length) return null
+  const [link] = links
+  const motion = resolveMotion(link.meta)
+  const save = async changes => {
+    try {
+      saved((await post('motion', { file: link.file, ref: link.ref, meta: { ...link.meta, ...changes } })).file)
+    } catch (cause) {
+      report(cause)
+    }
+  }
+  const choose = (label, current, options, key) => pair(label, el('button', {
+    className: 'chip figure',
+    textContent: current,
+    title: `Change ${label.toLowerCase()}`,
+    onclick: event => popover(event.currentTarget, options.map(([value, text]) => el('button', {
+      onclick: () => {
+        closePopover()
+        save({ [key]: value })
+      },
+    }, text)), { className: 'menu' }),
+  }))
+  const durations = [...durationTokens().map(token => [tokenPath(token), `${tokenPath(token)} · ${token.value} ms`]), [150, '150 ms'], [300, '300 ms'], [500, '500 ms']]
+  const easings = [...easingTokens().map(token => [tokenPath(token), tokenPath(token)]), [DEFAULT_EASING, 'Standard'], ['ease-out', 'Ease out'], ['ease-in-out', 'Ease in and out'], ['linear', 'Linear']]
+  const easingName = typeof link.meta.easing === 'string' ? (easings.find(([value]) => value === link.meta.easing)?.[1] ?? link.meta.easing) : (easingTokens().find(token => token.value === motion.easing) ? tokenPath(easingTokens().find(token => token.value === motion.easing)) : 'Standard')
+  return section('Prototype',
+    links.map(item => pair('Goes to', `${item.to}${item.label ? ` · ${item.label}` : ''}`)),
+    choose('Transition', TRANSITIONS.find(([id]) => id === motion.transition)[1], TRANSITIONS, 'transition'),
+    choose('Duration', typeof link.meta.duration === 'string' ? link.meta.duration : `${motion.duration} ms`, durations, 'duration'),
+    choose('Easing', easingName, easings, 'easing'),
+    el('button', { className: 'button play-here', onclick: () => openPlay(frame.name) }, icon('play', 13), 'Play from here'))
+}
+
 const layerBody = () => {
   const trail = trailOf(state.selection)
   const own = trail.at(-1)
@@ -144,6 +192,7 @@ const layerBody = () => {
   return el('div', { className: 'rail-body' },
     el('div', { className: 'identity' }, el('h2', { textContent: own.name }), pathTrail(trail)),
     scopeSection(own),
+    prototypeSection(),
     layer.text ? textField(layer) : null,
     styleSection(layer),
     section('Source',

@@ -23,6 +23,9 @@ export const state = {
   railTab: 'inspect',
   // The commit the board shows instead of now, if any.
   rev: null,
+  // Prototype links on the board in view, and whether play is open.
+  links: [],
+  playing: false,
   token: null,
   tokenContext: '{}',
   filter: {},
@@ -140,6 +143,31 @@ const ROLES = [
 ]
 export const roleOf = name => ROLES.find(([, pattern]) => pattern.test(name))?.[0] ?? 'Surfaces'
 export const ROLE_ORDER = ['Surfaces', 'Text', 'Lines', 'Brand and status']
+
+// Motion: durations are number tokens in a group about motion, in milliseconds; easings
+// are string tokens holding a CSS easing. A link's `meta` can name either, or a value.
+export const TRANSITIONS = [['smart', 'Smart animate'], ['push', 'Push'], ['slide', 'Slide in'], ['dissolve', 'Dissolve'], ['instant', 'Instant']]
+const CURVES = { ease: [0.25, 0.1, 0.25, 1], 'ease-in': [0.42, 0, 1, 1], 'ease-out': [0, 0, 0.58, 1], 'ease-in-out': [0.42, 0, 0.58, 1], linear: [0, 0, 1, 1] }
+export const curveOf = value => {
+  const text = String(value).trim()
+  if (CURVES[text]) return CURVES[text]
+  const points = text.match(/^cubic-bezier\(([^)]*)\)$/)?.[1].split(',').map(Number)
+  return points?.length === 4 && points.every(Number.isFinite) && points[0] >= 0 && points[0] <= 1 && points[2] >= 0 && points[2] <= 1 ? points : null
+}
+export const isMotionGroup = group => /motion|duration|delay|timing|transition|anim/i.test(group)
+export const durationTokens = () => state.project.tokens.filter(token => token.type === 'number' && isBase(token) && isMotionGroup(token.rootScope[0]))
+export const easingTokens = () => state.project.tokens.filter(token => token.type === 'string' && isBase(token) && curveOf(token.value))
+const named = (tokens, name) => tokens.find(token => tokenPath(token) === name || token.name === name)
+export const DEFAULT_EASING = 'cubic-bezier(0.2, 0, 0, 1)'
+const defaultDuration = () => (durationTokens().find(token => /medium|default|base|normal/i.test(token.name))?.value ?? 300)
+const defaultEasing = () => (easingTokens().find(token => /standard|default|out/i.test(token.name))?.value ?? DEFAULT_EASING)
+
+export const resolveMotion = (meta = {}) => {
+  const duration = typeof meta.duration === 'number' ? meta.duration : named(durationTokens(), meta.duration)?.value ?? defaultDuration()
+  const easing = named(easingTokens(), meta.easing)?.value ?? (meta.easing && curveOf(meta.easing) ? meta.easing : defaultEasing())
+  const transition = TRANSITIONS.some(([id]) => id === meta.transition) ? meta.transition : 'smart'
+  return { transition, duration: clamp(Number(duration) || 0, 0, 5000), easing }
+}
 
 export const colorTokens = () => state.project.tokens.filter(token => token.type === 'color' && isBase(token) && token.scope.length === 1)
 export const tokenValue = token => ({ token: `${token.file}#${tokenPath(token)}` })
