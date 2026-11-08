@@ -93,6 +93,10 @@ Whatever is in view is redrawn by the Elyx engine at the exact zoom when you sto
   </picture>
 </p>
 
+### Share it with anyone
+
+**Share**, top right, turns the board into a page Claude publishes as an artifact: every frame at 2×, with zoom, a link per frame, and the design's tokens. It starts private; share it from its page on claude.ai with people, your organization or anyone with the link. Sharing again updates the same page. Without the canvas, `/elyx share a.elyx` does the same.
+
 ### Arrange your board
 
 Drag a screen and the new position is saved to the file. Drag empty canvas, or hold Space, to pan.

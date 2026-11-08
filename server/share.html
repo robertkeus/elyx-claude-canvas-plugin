@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<!-- The page a shared board becomes: frames as PNGs beside it, data inline. It loads
+     nothing from outside, so it runs under a Claude artifact's content policy. -->
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --page: #f6f6f5; --card: #fff; --well: #ececea; --line: #e4e4e1; --ink: #1b1c1e; --body: #4a4d52; --muted: #6e7278;
+  --accent: #3b6ce0; --scrim: #121315; --on-scrim: #f1f2f4; --bar: #1f2023e6; --bar-line: #ffffff1f;
+  --shadow: 0 1px 2px #0000000d, 0 8px 24px #0000000f; --r: 12px;
+  font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; -webkit-font-smoothing: antialiased;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --page: #121315; --card: #1c1d20; --well: #26272b; --line: #2c2d31; --ink: #f1f2f4; --body: #c3c6cc; --muted: #959aa2; --accent: #7ea2ff; --shadow: 0 1px 2px #0000004d, 0 8px 24px #00000040 }
+}
+* { box-sizing: border-box; margin: 0 }
+body { background: var(--page); color: var(--body) }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px }
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 32px }
+header { position: sticky; top: 0; z-index: 2; background: color-mix(in srgb, var(--page) 88%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line) }
+header .wrap { display: flex; align-items: center; gap: 16px; height: 64px }
+.mark { flex: none; width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, var(--ink), color-mix(in srgb, var(--ink) 55%, var(--accent))) }
+h1 { font-size: 15px; font-weight: 600; color: var(--ink); line-height: 1.2 }
+.sub { font-size: 12px; color: var(--muted) }
+nav { margin-left: auto; display: flex; gap: 4px }
+nav a { padding: 6px 12px; border-radius: 8px; color: var(--body); text-decoration: none; font-size: 13px; font-weight: 500 }
+nav a:hover { background: var(--well) }
+section { padding: 40px 0 8px }
+h2 { display: flex; align-items: baseline; gap: 8px; margin-bottom: 20px; font-size: 13px; font-weight: 600; color: var(--ink); letter-spacing: .02em; text-transform: uppercase }
+h2 span { color: var(--muted); font-weight: 500 }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr)); gap: 24px }
+.grid.one { grid-template-columns: 1fr }
+.frame { display: block; color: inherit; text-decoration: none }
+.shot { display: grid; place-items: center; aspect-ratio: 16 / 10; padding: 20px; border-radius: var(--r); background: var(--well); overflow: hidden; transition: background .15s }
+.grid.one .shot { aspect-ratio: auto; max-height: 78vh; padding: 32px }
+.shot img { display: block; max-width: 100%; max-height: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow); transition: transform .25s cubic-bezier(.2, .7, .3, 1) }
+.grid.one .shot img { max-height: calc(78vh - 64px) }
+.frame:hover .shot img { transform: translateY(-2px) }
+.cap { display: flex; justify-content: space-between; gap: 12px; padding: 10px 2px 0; font-size: 13px }
+.cap b { color: var(--ink); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.cap span, .num { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap }
+.groups { columns: 300px 3; column-gap: 24px }
+.group { break-inside: avoid; margin-bottom: 24px; padding: 16px; border-radius: var(--r); background: var(--card); box-shadow: var(--shadow) }
+.group h3 { margin-bottom: 8px; font-size: 12px; font-weight: 600; color: var(--muted) }
+.row { display: flex; align-items: center; gap: 10px; min-height: 30px; font-size: 13px }
+.row + .row { border-top: 1px solid var(--line) }
+.row .name { flex: 1; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.row .num { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px }
+.swatch { flex: none; width: 20px; height: 20px; border-radius: 6px; box-shadow: inset 0 0 0 1px #0000001a }
+.ctx { padding: 1px 6px; border-radius: 4px; background: var(--well); font-size: 11px; color: var(--muted) }
+footer { padding: 32px 0 48px; font-size: 12px; color: var(--muted) }
+.viewer { position: fixed; inset: 0; z-index: 5; display: flex; flex-direction: column; background: var(--scrim); color: var(--on-scrim) }
+.viewer[hidden] { display: none }
+.bar { display: flex; align-items: center; gap: 4px; height: 56px; padding: 0 12px; background: var(--bar); border-bottom: 1px solid var(--bar-line) }
+.bar .title { flex: 1; min-width: 0; padding: 0 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.bar .title b { font-weight: 600 }
+.bar .title span { margin-left: 8px; color: #ffffff99; font-variant-numeric: tabular-nums }
+.tool { display: grid; place-items: center; min-width: 36px; height: 36px; padding: 0 10px; border-radius: 8px; color: #ffffffcc; font-size: 13px; font-variant-numeric: tabular-nums }
+.tool:hover { background: #ffffff1a; color: #fff }
+.tool:disabled { opacity: .35; cursor: default; background: none }
+.sep { width: 1px; height: 20px; margin: 0 6px; background: var(--bar-line) }
+.stage { position: relative; flex: 1; overflow: hidden; cursor: grab; touch-action: none }
+.stage.dragging { cursor: grabbing }
+.stage img { position: absolute; left: 0; top: 0; transform-origin: 0 0; box-shadow: 0 24px 64px #00000080; user-select: none; -webkit-user-drag: none }
+.hint { position: absolute; left: 50%; bottom: 16px; translate: -50%; padding: 6px 12px; border-radius: 99px; background: var(--bar); color: #ffffffb3; font-size: 12px; pointer-events: none; transition: opacity .4s }
+@media (max-width: 640px) { .wrap { padding: 0 16px } .bar .title span, .hide-sm { display: none } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important } }
+</style>
+<body>
+<header><div class="wrap">
+  <div class="mark" aria-hidden="true"></div>
+  <div><h1 id="project"></h1><div class="sub" id="board"></div></div>
+  <nav aria-label="Sections"><a href="#frames">Frames</a><a href="#tokens" id="tokens-link">Tokens</a></nav>
+</div></header>
+<main class="wrap">
+  <section id="frames-section" aria-labelledby="frames-title"><h2 id="frames-title">Frames <span id="frame-count"></span></h2><div class="grid" id="grid"></div></section>
+  <section id="tokens-section" aria-labelledby="tokens-title"><h2 id="tokens-title">Tokens <span id="token-count"></span></h2><div class="groups" id="groups"></div></section>
+</main>
+<footer class="wrap" id="footer"></footer>
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="viewer-name" hidden>
+  <div class="bar">
+    <button class="tool" id="prev" aria-label="Previous frame">←</button>
+    <button class="tool" id="next" aria-label="Next frame">→</button>
+    <div class="title"><b id="viewer-name"></b><span id="viewer-size"></span></div>
+    <button class="tool" id="out" aria-label="Zoom out">−</button>
+    <button class="tool" id="zoom" aria-label="Zoom to 100%"></button>
+    <button class="tool" id="in" aria-label="Zoom in">+</button>
+    <button class="tool hide-sm" id="fit">Fit</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button class="tool" id="close" aria-label="Close">✕</button>
+  </div>
+  <div class="stage" id="stage"><img id="big" alt=""><div class="hint" id="hint">Drag to pan · pinch or ⌘ scroll to zoom · ← → for frames</div></div>
+</div>
+<script id="data" type="application/json">__DATA__</script>
+<script>
+const data = JSON.parse(document.getElementById('data').textContent)
+const $ = id => document.getElementById(id)
+const el = (tag, props = {}, ...kids) => {
+  const node = Object.assign(document.createElement(tag), props)
+  node.append(...kids)
+  return node
+}
+const size = frame => `${Math.round(frame.w)} × ${Math.round(frame.h)}`
+const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`
+
+$('project').textContent = data.project
+$('board').textContent = data.board
+$('frame-count').textContent = data.frames.length
+$('footer').textContent = `Shared from Elyx on ${new Date(data.sharedAt).toLocaleString(undefined, { dateStyle: 'long', timeStyle: 'short' })}. A snapshot: the frames and tokens as they were then.`
+
+$('grid').classList.toggle('one', data.frames.length === 1)
+$('grid').append(...data.frames.map(frame =>
+  el('a', { className: 'frame', href: `#${frame.id}` },
+    el('div', { className: 'shot' }, el('img', { src: frame.image, alt: frame.name, loading: 'lazy', decoding: 'async', width: frame.w, height: frame.h })),
+    el('div', { className: 'cap' }, el('b', { textContent: frame.name }), el('span', { textContent: size(frame) })))))
+
+const groups = Map.groupBy(data.tokens, token => token.group)
+$('token-count').textContent = data.tokens.length || ''
+if (!data.tokens.length) { $('tokens-section').hidden = true; $('tokens-link').hidden = true }
+$('groups').append(...[...groups].map(([group, tokens]) =>
+  el('div', { className: 'group' }, el('h3', { textContent: `${group} · ${tokens.length}` }), ...tokens.map(token =>
+    el('div', { className: 'row' },
+      token.type === 'color' ? el('span', { className: 'swatch', style: `background: ${token.value}` }) : '',
+      el('span', { className: 'name', textContent: token.name }),
+      Object.keys(token.context).length ? el('span', { className: 'ctx', textContent: Object.entries(token.context).map(pair => pair.join('=')).join(' ') }) : '',
+      el('span', { className: 'num', textContent: token.literal ?? String(token.value) }))))))
+
+// The viewer: one frame at a time, panned and zoomed with a transform. 100% is design size.
+const view = { index: -1, s: 1, x: 0, y: 0 }
+const stage = $('stage'), big = $('big')
+const paint = () => {
+  big.style.transform = `translate(${view.x}px, ${view.y}px) scale(${view.s})`
+  $('zoom').textContent = `${Math.round(view.s * 100)}%`
+}
+const zoomAt = (s, cx = stage.clientWidth / 2, cy = stage.clientHeight / 2) => {
+  const next = Math.min(8, Math.max(0.05, s))
+  view.x = cx - (cx - view.x) * (next / view.s)
+  view.y = cy - (cy - view.y) * (next / view.s)
+  view.s = next
+  paint()
+}
+const fit = () => {
+  const frame = data.frames[view.index]
+  view.s = Math.min((stage.clientWidth - 64) / frame.w, (stage.clientHeight - 64) / frame.h, 2)
+  view.x = (stage.clientWidth - frame.w * view.s) / 2
+  view.y = Math.max(32, (stage.clientHeight - frame.h * view.s) / 2)
+  paint()
+}
+const open = index => {
+  const frame = data.frames[index]
+  const wasOpen = !$('viewer').hidden
+  view.index = index
+  big.src = frame.image
+  big.alt = frame.name
+  big.style.width = `${frame.w}px`
+  $('viewer-name').textContent = frame.name
+  $('viewer-size').textContent = `${size(frame)} · ${index + 1} of ${data.frames.length}`
+  $('prev').disabled = index === 0
+  $('next').disabled = index === data.frames.length - 1
+  $('viewer').hidden = false
+  document.body.style.overflow = 'hidden'
+  fit()
+  if (!wasOpen) $('close').focus()
+  setTimeout(() => { $('hint').style.opacity = 0 }, 2500)
+}
+const close = () => {
+  $('viewer').hidden = true
+  document.body.style.overflow = ''
+  view.index = -1
+}
+const go = id => { if (location.hash !== `#${id}`) location.hash = id }
+const route = () => {
+  const id = location.hash.slice(1)
+  const index = data.frames.findIndex(frame => frame.id === id)
+  if (index >= 0) return open(index)
+  close()
+  const target = id === 'tokens' ? $('tokens-section') : id === 'frames' ? $('frames-section') : null
+  target?.scrollIntoView()
+}
+addEventListener('hashchange', route)
+
+$('prev').onclick = () => go(data.frames[view.index - 1].id)
+$('next').onclick = () => go(data.frames[view.index + 1].id)
+$('close').onclick = () => go('frames')
+$('in').onclick = () => zoomAt(view.s * 1.25)
+$('out').onclick = () => zoomAt(view.s / 1.25)
+$('zoom').onclick = () => zoomAt(1)
+$('fit').onclick = fit
+addEventListener('resize', () => { if (view.index >= 0) fit() })
+
+stage.addEventListener('wheel', event => {
+  event.preventDefault()
+  if (event.ctrlKey || event.metaKey) {
+    const box = stage.getBoundingClientRect()
+    return zoomAt(view.s * Math.exp(-event.deltaY * 0.01), event.clientX - box.left, event.clientY - box.top)
+  }
+  view.x -= event.deltaX
+  view.y -= event.deltaY
+  paint()
+}, { passive: false })
+let drag = null
+stage.addEventListener('pointerdown', event => {
+  drag = { id: event.pointerId, x: event.clientX - view.x, y: event.clientY - view.y }
+  stage.setPointerCapture(event.pointerId)
+  stage.classList.add('dragging')
+})
+stage.addEventListener('pointermove', event => {
+  if (drag?.id !== event.pointerId) return
+  view.x = event.clientX - drag.x
+  view.y = event.clientY - drag.y
+  paint()
+})
+const release = () => { drag = null; stage.classList.remove('dragging') }
+stage.addEventListener('pointerup', release)
+stage.addEventListener('pointercancel', release)
+stage.addEventListener('dblclick', event => {
+  const box = stage.getBoundingClientRect()
+  view.s < 0.99 || view.s > 1.01 ? zoomAt(1, event.clientX - box.left, event.clientY - box.top) : fit()
+})
+addEventListener('keydown', event => {
+  if ($('viewer').hidden) return
+  const keys = {
+    Escape: () => go('frames'),
+    ArrowLeft: () => view.index > 0 && go(data.frames[view.index - 1].id),
+    ArrowRight: () => view.index < data.frames.length - 1 && go(data.frames[view.index + 1].id),
+    '+': () => zoomAt(view.s * 1.25), '=': () => zoomAt(view.s * 1.25), '-': () => zoomAt(view.s / 1.25),
+    0: fit, 1: () => zoomAt(1),
+  }
+  if (!keys[event.key] || event.metaKey || event.ctrlKey) return
+  event.preventDefault()
+  keys[event.key]()
+})
+route()
+</script>
+</html>
