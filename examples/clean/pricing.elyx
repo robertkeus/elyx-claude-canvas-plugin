@@ -1,0 +1,76 @@
+// Pricing: centred head, a monthly/yearly toggle, three per-employee tiers with the middle one raised by a blue border and the only filled button; borrow the "Everything in X, plus" lists.
+// Motion: toggle thumb slides 200ms ease-out and prices cross-fade (150ms); tiers rise 24px with 100ms stagger (550ms, cubic-bezier(.16,1,.3,1)); card hover lifts 2px (150ms).
+import "clean/tokens.elyx" as T
+import "clean/parts.elyx" as P
+
+export pricing = frame {
+  left: 0px,
+  top: 0px,
+  width: 1440px,
+  padding: [T.space.section, T.space.gutter],
+  fill: T.colors.bg,
+  layout: {direction: .column, align-items: .center, item-gap: 48px},
+  overflow: .visible,
+  children: [intro, tiers, fineprint]
+
+  intro = frame {width: 100%, layout: {direction: .column, align-items: .center, item-gap: 32px}, overflow: .visible, children: [head, billing]
+    head = frame : P.sectionHead {
+      kicker {contents: "PRICING"}
+      heading {contents: "Priced per employee, billed simply"}
+      intro {contents: "Every plan includes EU data residency, unlimited admins and a parallel payroll run before you switch."}
+    }
+    billing = frame {height: 44px, padding: 4px, corner-radius: T.radius.card, fill: T.colors.surface-2, layout: {direction: .row, item-gap: 4px}, overflow: .visible, children: [monthly, yearly]
+      monthly = frame {height: 36px, padding: [0px, 20px], corner-radius: T.radius.control, layout: {direction: .row, align-items: .center}, children: [monthlyText]
+        monthlyText = text {contents: "Monthly", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.muted}
+      }
+      yearly = frame {height: 36px, padding: [0px, 8px, 0px, 20px], corner-radius: T.radius.control, fill: T.colors.bg, shadow: T.shadows.control, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [yearlyText, save]
+        yearlyText = text {contents: "Yearly", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.ink}
+        save = frame : P.successBadge {label {contents: "Save 20%"}}
+      }
+    }
+  }
+
+  tiers = frame {width: 100%, layout: {direction: .row, align-items: .stretch, item-gap: 24px}, overflow: .visible, children: [starter, growth, scale]
+    starter = frame : P.priceCard {}
+    growth = frame : P.priceCard {
+      border: {color: T.colors.accent, width: 2px},
+      shadow: T.shadows.float,
+      tierHead {
+        tierNameRow {tierName {contents: "Growth"} tierBadge {display: .visible}}
+        tierDesc {contents: "For multi-country teams scaling past 200."}
+      }
+      tierPrice {priceRow {amount {contents: "€11"}} priceNote {contents: "Billed yearly · €13.75 if paid monthly"}}
+      @with-variant(P.primaryButton)
+      tierAction {label {contents: "Book a demo"}}
+      tierList {
+        listLead {contents: "Everything in Starter, plus"}
+        i1 {label {contents: "Payroll in up to 14 countries"}}
+        i2 {label {contents: "Unlimited plan scenarios"}}
+        i3 {label {contents: "Approval rules by amount and entity"}}
+        i4 {label {contents: "Ledger and ATS sync"}}
+        i5 {label {contents: "Guided onboarding in 2 weeks"}}
+      }
+    }
+    scale = frame : P.priceCard {
+      tierHead {
+        tierNameRow {tierName {contents: "Scale"}}
+        tierDesc {contents: "For 1,000+ employees across entities."}
+      }
+      tierPrice {priceRow {amount {contents: "€16"}} priceNote {contents: "Billed yearly · €20 if paid monthly"}}
+      tierAction {label {contents: "Talk to sales"}}
+      tierList {
+        listLead {contents: "Everything in Growth, plus"}
+        i1 {label {contents: "Multi-entity consolidation"}}
+        i2 {label {contents: "SSO, SCIM and audit export"}}
+        i3 {label {contents: "Custom approval chains"}}
+        i4 {label {contents: "99.9% uptime SLA"}}
+        i5 {label {contents: "Named success manager"}}
+      }
+    }
+  }
+
+  fineprint = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [compare, volume]
+    compare = frame : P.textLink {}
+    volume = text : P.small {contents: "Over 2,000 employees? Volume pricing starts at 1,500 seats. Prices exclude VAT.", subrange: [{range: [0, 21], font-style: T.weights.medium, fill: T.colors.ink}]}
+  }
+}

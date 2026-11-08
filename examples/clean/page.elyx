@@ -1,0 +1,28 @@
+// Page: the seven Tessel sections composed in reading order; one brand, one blue, one rhythm (120px sections, 1200px grid).
+// Motion: each section reveals on first view (fade + 16–40px rise, 500–700ms heavy ease-out); nothing loops.
+import "clean/tokens.elyx" as T
+import "clean/nav.elyx" as Nav
+import "clean/hero.elyx" as Hero
+import "clean/features.elyx" as Features
+import "clean/testimonials.elyx" as Testimonials
+import "clean/pricing.elyx" as Pricing
+import "clean/cta.elyx" as Cta
+import "clean/footer.elyx" as Footer
+
+page = frame {
+  left: 0px,
+  top: 0px,
+  width: 1440px,
+  layout: {direction: .column},
+  fill: T.colors.bg,
+  children: [nav, hero, features, testimonials, pricing, cta, footer]
+
+  nav = frame : Nav.nav {}
+  hero = frame : Hero.hero {}
+  features = frame : Features.features {}
+  testimonials = frame : Testimonials.testimonials {}
+  pricing = frame : Pricing.pricing {}
+  // Pricing already closes with 120px; the CTA panel follows without adding its own top padding.
+  cta = frame : Cta.cta {padding: [0px, T.space.gutter, T.space.section, T.space.gutter]}
+  footer = frame : Footer.footer {}
+}

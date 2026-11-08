@@ -1,0 +1,165 @@
+// Editorial hero: a page-wide serif headline with an oxblood italic turn, a ruled meta row, then lead copy beside two overlapping drawn magazine covers.
+// Motion: headline lines rise 24px and unblur over 700ms ease-out, 120ms apart; meta row fades in; covers drop in 40px with rotation settling 2deg over 600ms.
+import "editorial/tokens.elyx" as T
+import "editorial/parts.elyx" as P
+
+export hero = frame {
+  left: 0px, top: 0px, width: 1440px,
+  fill: T.colors.bg,
+  padding: [T.space.block, T.space.gutter],
+  layout: {direction: .column, item-gap: T.space.group},
+  children: [headline, meta, spread]
+
+  headline = text {
+    contents: "A home for magazines that refuse to be content.",
+    width: 100%,
+    font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.display,
+    line-height: T.leading.display, letter-spacing: T.tracking.display, fill: T.colors.ink,
+    subrange: [{range: [26, 47], font-style: T.weights.italic, fill: T.colors.accent}]
+  }
+
+  // Article-style meta row between two hairlines: muted label, ink value.
+  meta = frame {
+    width: 100%, padding: [16px, 0px],
+    border: {color: T.colors.line, width: 1px, sides: [.top, .bottom]},
+    layout: {direction: .row, justify-content: .space-between},
+    children: [forWho, readTime, titles, folio]
+    forWho = text : P.label {contents: "FOR INDEPENDENT PUBLISHERS", fill: T.colors.ink}
+    readTime = text : P.label {contents: "READING TIME   2 MIN", subrange: [{range: [15, 20], fill: T.colors.ink}]}
+    titles = text : P.label {contents: "IN PRINT & ONLINE   3,214 TITLES", subrange: [{range: [20, 32], fill: T.colors.ink}]}
+    folio = text : P.label {contents: "NO. 48   P. 01", subrange: [{range: [9, 14], fill: T.colors.ink}]}
+  }
+
+  spread = frame {
+    width: 100%, padding-top: 40px,
+    layout: {direction: .row, justify-content: .space-between},
+    children: [intro, covers]
+
+    intro = frame {
+      width: 456px, padding-top: 56px,
+      layout: {direction: .column, item-gap: 40px},
+      children: [lead, actions, proof]
+      lead = text {
+        contents: "Marlow is where small magazines and newsletters are written, laid out issue by issue, and paid for by the readers who love them. One quiet tool, from first draft to hundredth member.",
+        width: 100%,
+        font-family: T.fonts.body, font-size: T.size.lead, line-height: T.leading.body, letter-spacing: T.tracking.body, fill: T.colors.ink
+      }
+      actions = frame {
+        layout: {direction: .row, align-items: .center, item-gap: 28px},
+        children: [start, showcase]
+        start = frame : P.buttonPrimary {label {contents: "Start your magazine"}}
+        showcase = frame : P.textLink {label {contents: "See it in print"}}
+      }
+      proof = frame {
+        width: 100%, padding-top: 20px,
+        border: {color: T.colors.line, width: 1px, sides: [.top]},
+        layout: {direction: .column},
+        children: [proofText]
+        proofText = text {
+        contents: "Trusted by the editors of Undertow, Kiln and three thousand other small presses.",
+        width: 100%,
+        font-family: T.fonts.body, font-size: T.size.body, line-height: T.leading.body, fill: T.colors.muted,
+        subrange: [
+          {range: [26, 34], font-family: T.fonts.display, font-style: T.weights.italic, font-size: T.size.lead, fill: T.colors.ink},
+          {range: [36, 40], font-family: T.fonts.display, font-style: T.weights.italic, font-size: T.size.lead, fill: T.colors.ink}
+        ]
+        }
+      }
+    }
+
+    // Signature: two drawn covers, the back one tilted clockwise, the front one counter-clockwise.
+    covers = frame {
+      width: 712px, height: 664px, overflow: .visible,
+      children: [kiln, undertow, caption]
+
+      kiln = frame {
+        left: 336px, top: 0px, width: 348px, height: 456px,
+        transform: [0.9962, -0.0872, 0, 0.0872, 0.9962, 0],
+        fill: T.colors.accent-soft, padding: 24px,
+        layout: {direction: .column, justify-content: .space-between},
+        children: [kTop, kArt, kLine]
+        kTop = frame {
+          width: 100%, layout: {direction: .column, align-items: .end, item-gap: 4px},
+          children: [kMast, kSub]
+          kMast = text {contents: "Kiln.", font-family: T.fonts.display, font-size: T.size.display, line-height: 0.85, letter-spacing: T.tracking.display, fill: T.colors.ink}
+          kSub = text : P.label {contents: "A JOURNAL OF CERAMICS · NO. 7", fill: T.colors.ink}
+        }
+        kArt = frame {
+          width: 100%, height: 150px,
+          children: [ring1, ring2, ring3]
+          ring1 = shape {type: .ellipse, left: 130px, top: 0px, width: 150px, height: 150px, border: {color: T.colors.ink, width: 1px}}
+          ring2 = shape {type: .ellipse, left: 155px, top: 25px, width: 100px, height: 100px, border: {color: T.colors.ink, width: 1px}}
+          ring3 = shape {type: .ellipse, left: 185px, top: 55px, width: 40px, height: 40px, fill: T.colors.ink}
+        }
+        kLine = text {contents: "Glaze, fire and patience", width: 100%, align: .right, font-family: T.fonts.display, font-style: T.weights.italic, font-size: T.size.h3, fill: T.colors.ink}
+      }
+
+      undertow = frame {
+        left: 24px, top: 100px, width: 400px, height: 524px,
+        transform: [0.9986, 0.0523, 0, -0.0523, 0.9986, 0],
+        fill: T.colors.deep, padding: 24px,
+        layout: {direction: .column, justify-content: .space-between},
+        children: [uTop, uMast, uArt, uLine, uFoot]
+        uTop = frame {
+          width: 100%, layout: {direction: .row, justify-content: .space-between},
+          children: [uNo, uSeason, uPrice]
+          uNo = text : P.label {contents: "NO. 12", fill: T.colors.on-deep}
+          uSeason = text : P.label {contents: "WINTER 2026", fill: T.colors.deep-muted}
+          uPrice = text : P.label {contents: "£14", fill: T.colors.deep-muted}
+        }
+        uMast = text {contents: "Undertow", width: 100%, font-family: T.fonts.display, font-size: T.size.cover, line-height: 0.9, letter-spacing: T.tracking.display, fill: T.colors.on-deep}
+        // A sun setting into a ruled sea, its reflection stacked in shrinking bars.
+        uArt = frame {
+          width: 100%, height: 168px,
+          border: {color: T.colors.deep-muted, width: 1px, sides: [.top]},
+          children: [sun, sea]
+          sun = shape {type: .ellipse, left: 108px, top: 24px, width: 136px, height: 136px, fill: T.colors.accent-soft}
+          sea = frame {
+            left: 0px, top: 92px, width: 352px, height: 76px, fill: T.colors.deep,
+            layout: {direction: .column, align-items: .center, item-gap: 6px}, padding-top: 6px,
+            children: [r1, r2, r3, r4, r5]
+            r1 = frame {width: 120px, height: 2px, fill: T.colors.accent-soft}
+            r2 = frame {width: 88px, height: 2px, fill: T.colors.accent-soft, opacity: 0.8}
+            r3 = frame {width: 60px, height: 2px, fill: T.colors.accent-soft, opacity: 0.6}
+            r4 = frame {width: 36px, height: 2px, fill: T.colors.accent-soft, opacity: 0.4}
+            r5 = frame {width: 16px, height: 2px, fill: T.colors.accent-soft, opacity: 0.25}
+          }
+        }
+        uLine = text {contents: "The last keepers of the light", width: 300px, font-family: T.fonts.display, font-style: T.weights.italic, font-size: T.size.h3, line-height: 1.05, fill: T.colors.on-deep}
+        uFoot = frame {
+          width: 100%, layout: {direction: .row, justify-content: .space-between, align-items: .end},
+          children: [uContents, barcode]
+          uContents = frame {
+            layout: {direction: .column, item-gap: 4px},
+            children: [c1, c2]
+            c1 = text {contents: "Swimming through winter  34", font-family: T.fonts.body, font-size: T.size.ui, fill: T.colors.deep-muted}
+            c2 = text {contents: "New fiction by Ines Varga  52", font-family: T.fonts.body, font-size: T.size.ui, fill: T.colors.deep-muted}
+          }
+          barcode = frame {
+            height: 30px, padding: [4px, 5px], fill: T.colors.on-deep,
+            layout: {direction: .row, item-gap: 2px},
+            children: [b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12]
+            b1 = frame {width: 2px, height: 100%, fill: T.colors.ink}
+            b2 = frame {width: 1px, height: 100%, fill: T.colors.ink}
+            b3 = frame {width: 3px, height: 100%, fill: T.colors.ink}
+            b4 = frame {width: 1px, height: 100%, fill: T.colors.ink}
+            b5 = frame {width: 1px, height: 100%, fill: T.colors.ink}
+            b6 = frame {width: 2px, height: 100%, fill: T.colors.ink}
+            b7 = frame {width: 3px, height: 100%, fill: T.colors.ink}
+            b8 = frame {width: 1px, height: 100%, fill: T.colors.ink}
+            b9 = frame {width: 2px, height: 100%, fill: T.colors.ink}
+            b10 = frame {width: 1px, height: 100%, fill: T.colors.ink}
+            b11 = frame {width: 3px, height: 100%, fill: T.colors.ink}
+            b12 = frame {width: 1px, height: 100%, fill: T.colors.ink}
+          }
+        }
+      }
+
+      caption = text : P.label {
+        left: 32px, top: 648px,
+        contents: "FIG. 1 — UNDERTOW NO. 12 AND KILN NO. 7, BOTH SET ON MARLOW",
+        subrange: [{range: [9, 60], fill: T.colors.ink}]
+      }
+    }
+  }
+}

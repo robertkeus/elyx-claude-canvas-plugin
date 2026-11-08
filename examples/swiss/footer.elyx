@@ -1,0 +1,68 @@
+// Footer: a black link grid that repeats the nav's six 2-column cells and numbered index, mono contact and build data, then the wordmark at poster scale, cropped by the page edge.
+// Motion: columns fade in left to right, 400ms ease-out, 80ms stagger; the wordmark rises 40px into its crop over 700ms as the footer enters; links underline in 150ms on hover.
+import "swiss/tokens.elyx" as T
+import "swiss/parts.elyx" as P
+
+export footer = frame {
+  left: 0px, top: 0px, width: 1440px, fill: T.colors.deep,
+  padding: [T.space.block, T.space.gutter, 0px, T.space.gutter],
+  layout: {direction: .column, item-gap: 40px},
+  children: [links, rule, legal, wordmark]
+
+  // The nav's grid again: six 2-column cells — brand, the four numbered groups, contact.
+  links = frame {
+    width: 100%, layout: {direction: .row, item-gap: T.space.column-gap}, children: [brand, product, engineering, pricing, journal, contact]
+
+    brand = frame {
+      width: T.grid.c2, layout: {direction: .column, item-gap: 16px}, children: [logo, line]
+      logo = frame : P.logo {word {fill: T.colors.on-deep}}
+      line = text : P.mono {width: 100%, line-height: T.leading.body, fill: T.colors.deep-muted, contents: "Structural analysis software, Zürich"}
+    }
+
+    // Local source: a numbered link group.
+    linkGroup = frame {width: T.grid.c2, layout: {direction: .column, item-gap: 12px}, children: [title, l1, l2, l3, l4]
+      title = text : P.mono {fill: T.colors.deep-muted, contents: "01 Product"}
+      l1 = text {contents: "Modelling", font-family: T.fonts.body, font-size: T.size.body, fill: T.colors.on-deep}
+      l2 = text {contents: "Load cases", font-family: T.fonts.body, font-size: T.size.body, fill: T.colors.on-deep}
+      l3 = text {contents: "Meshing", font-family: T.fonts.body, font-size: T.size.body, fill: T.colors.on-deep}
+      l4 = text {contents: "Review", font-family: T.fonts.body, font-size: T.size.body, fill: T.colors.on-deep}
+    }
+    product = frame : linkGroup {}
+    engineering = frame : linkGroup {title {contents: "02 Engineering"} l1 {contents: "Solver notes"} l2 {contents: "Verification"} l3 {contents: "Design codes"} l4 {contents: "API"}}
+    pricing = frame : linkGroup {title {contents: "03 Pricing"} l1 {contents: "Plans"} l2 {contents: "Compare"} l3 {contents: "Education"} l4 {contents: "Enterprise"}}
+    journal = frame : linkGroup {title {contents: "04 Journal"} l1 {contents: "Field reports"} l2 {contents: "Releases"} l3 {contents: "Events"} l4 {contents: "Careers"}}
+
+    contact = frame {
+      width: T.grid.c2, layout: {direction: .column, item-gap: 12px}, children: [title, address, phone, mail]
+      title = text : P.mono {fill: T.colors.deep-muted, contents: "Contact"}
+      address = text : P.mono {font-size: T.size.small, line-height: T.leading.body, fill: T.colors.on-deep, contents: "Gridform AG\nHardstrasse 219\n8005 Zürich"}
+      phone = text : P.mono {font-size: T.size.small, fill: T.colors.on-deep, contents: "+41 44 508 31 18"}
+      mail = text : P.mono {font-size: T.size.small, fill: T.colors.on-deep, contents: "engineers@gridform.ch"}
+    }
+  }
+
+  rule = frame : P.rule {width: 100%, fill: T.colors.deep-line}
+
+  // Legal row on the same cells: copyright, build, solver status, legal links flush right.
+  legal = frame {
+    width: 100%, layout: {direction: .row, align-items: .center, item-gap: T.space.column-gap}, children: [copyright, build, status, terms]
+    copyright = text : P.mono {width: T.grid.c2, fill: T.colors.deep-muted, contents: "© 2026 Gridform AG"}
+    build = text : P.mono {width: T.grid.c4, fill: T.colors.deep-muted, contents: "Version 4.2.1 · build 2026.10.14"}
+    status = frame {width: T.grid.c2, layout: {direction: .row, align-items: .center, item-gap: T.space.item}, children: [dot, label]
+      dot = frame {width: 6px, height: 6px, fill: T.colors.on-deep}
+      label = text : P.mono {fill: T.colors.deep-muted, contents: "Solver online"}
+    }
+    terms = text : P.mono {width: T.grid.c4, align: .right, fill: T.colors.deep-muted, contents: "Privacy   Terms   Imprint"}
+  }
+
+  // The wordmark across all 12 columns, cropped by the bottom edge.
+  wordmark = frame {
+    width: 100%, height: 188px, children: [mark, word]
+    mark = frame {left: 0px, top: 32px, width: T.grid.c2, height: T.grid.c2, fill: T.colors.accent}
+    word = text {
+      left: 228px, top: 0px, contents: "Gridform",
+      font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.mega,
+      line-height: T.leading.display, letter-spacing: T.tracking.display, fill: T.colors.on-deep
+    }
+  }
+}

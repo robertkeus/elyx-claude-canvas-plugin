@@ -1,0 +1,75 @@
+// Footer: cream, a brand column with a small kite-and-confetti cluster, four link groups, then a hairline and a legal row with a language chip.
+// Motion: none on entry (the footer should feel settled); links underline on 150ms hover; the kite in the cluster sways ±3° on hover over 600ms.
+import "soft/tokens.elyx" as T
+import "soft/parts.elyx" as P
+import "soft/art/kite-a.svg" as kiteA
+import "soft/art/kite-b.svg" as kiteB
+import "soft/art/squiggle.svg" as squiggleArt
+import "soft/art/star.svg" as starArt
+import "icons/chevron-down.svg" as chevronIcon
+
+export footer = frame {
+  left: 0px, top: 0px, width: 1440px,
+  padding: [T.space.half, T.space.gutter, 40px, T.space.gutter], fill: T.colors.bg,
+  layout: {direction: .column, item-gap: T.space.block},
+  children: [top, base]
+
+  top = frame {width: 100%, layout: {direction: .row, justify-content: .space-between}, children: [brandCol, groups]
+    brandCol = frame {width: 340px, layout: {direction: .column, item-gap: 20px}, children: [brand, tagline, cluster]
+      brand = frame : P.logo {}
+      tagline = text : P.bodyText {width: 100%, contents: "Calm homework for ages 11 to 16, and calmer evenings for everyone else."}
+      // A small flying-kite cluster: the footer's one decorative moment.
+      cluster = frame {width: 260px, height: 104px, children: [kiteBack, kiteFront, dotButter, pillMint, wave, starSky]
+        kiteBack = asset {left: 12px, top: 30px, width: 56px, height: 67px, contents: kiteA, fill: T.colors.accent, transform: [0.9848, 0.1736, 0, -0.1736, 0.9848, 0]}
+        kiteFront = asset {left: 12px, top: 30px, width: 56px, height: 67px, contents: kiteB, fill: T.colors.peach, transform: [0.9848, 0.1736, 0, -0.1736, 0.9848, 0]}
+        dotButter = frame {left: 96px, top: 58px, width: 30px, height: 30px, corner-radius: T.radius.pill, fill: T.colors.butter}
+        pillMint = frame {left: 132px, top: 14px, width: 46px, height: 18px, corner-radius: 9px, fill: T.colors.mint, transform: [0.9397, -0.342, 0, 0.342, 0.9397, 0]}
+        wave = asset {left: 150px, top: 64px, width: 70px, height: 22px, contents: squiggleArt, fill: T.colors.pink}
+        starSky = asset {left: 222px, top: 18px, width: 26px, height: 26px, contents: starArt, fill: T.colors.sky}}}
+
+    groups = frame {layout: {direction: .row, item-gap: 56px}, children: [product, families, schools, company]
+      product = frame {width: 168px, layout: {direction: .column, item-gap: 14px}, children: [productTitle, p1, p2, p3, p4, p5]
+        productTitle = text : P.smallText {contents: "Product", font-style: T.weights.strong, fill: T.colors.ink}
+        p1 = text : P.bodyText {contents: "Weekly planner", fill: T.colors.ink-soft}
+        p2 = text : P.bodyText {contents: "Focus timer", fill: T.colors.ink-soft}
+        p3 = text : P.bodyText {contents: "Grade tracker", fill: T.colors.ink-soft}
+        p4 = text : P.bodyText {contents: "Sunday summary", fill: T.colors.ink-soft}
+        p5 = text : P.bodyText {contents: "What's new", fill: T.colors.ink-soft}}
+      families = frame {width: 168px, layout: {direction: .column, item-gap: 14px}, children: [familiesTitle, f1, f2, f3, f4]
+        familiesTitle = text : P.smallText {contents: "Families", font-style: T.weights.strong, fill: T.colors.ink}
+        f1 = text : P.bodyText {contents: "Parents' guide", fill: T.colors.ink-soft}
+        f2 = text : P.bodyText {contents: "Family plan", fill: T.colors.ink-soft}
+        f3 = text : P.bodyText {contents: "Privacy for kids", fill: T.colors.ink-soft}
+        f4 = text : P.bodyText {contents: "Gift Kitebook", fill: T.colors.ink-soft}}
+      schools = frame {width: 168px, layout: {direction: .column, item-gap: 14px}, children: [schoolsTitle, s1, s2, s3, s4]
+        schoolsTitle = text : P.smallText {contents: "Schools", font-style: T.weights.strong, fill: T.colors.ink}
+        s1 = text : P.bodyText {contents: "Classrooms", fill: T.colors.ink-soft}
+        s2 = text : P.bodyText {contents: "Teacher resources", fill: T.colors.ink-soft}
+        s3 = text : P.bodyText {contents: "Pilot programme", fill: T.colors.ink-soft}
+        s4 = text : P.bodyText {contents: "Data protection", fill: T.colors.ink-soft}}
+      company = frame {width: 168px, layout: {direction: .column, item-gap: 14px}, children: [companyTitle, k1, k2, k3, k4]
+        companyTitle = text : P.smallText {contents: "Company", font-style: T.weights.strong, fill: T.colors.ink}
+        k1 = text : P.bodyText {contents: "About us", fill: T.colors.ink-soft}
+        k2 = text : P.bodyText {contents: "Careers", fill: T.colors.ink-soft}
+        k3 = text : P.bodyText {contents: "Press kit", fill: T.colors.ink-soft}
+        k4 = text : P.bodyText {contents: "Contact", fill: T.colors.ink-soft}}}
+  }
+
+  base = frame {width: 100%, layout: {direction: .column, item-gap: T.space.group}, children: [rule, legal]
+    rule = frame {width: 100%, height: 1.5px, fill: T.colors.line}
+
+    legal = frame {width: 100%, layout: {direction: .row, justify-content: .space-between, align-items: .center}, children: [copyright, legalRight]
+      copyright = text : P.smallText {contents: "© 2026 Kitebook Ltd. Made in Bristol for school nights."}
+      legalRight = frame {layout: {direction: .row, align-items: .center, item-gap: 28px}, children: [privacy, terms, cookies, safety, language]
+        privacy = text : P.smallText {contents: "Privacy"}
+        terms = text : P.smallText {contents: "Terms"}
+        cookies = text : P.smallText {contents: "Cookies"}
+        safety = text : P.smallText {contents: "Safety centre"}
+        language = frame {height: 40px, padding: [0px, 14px, 0px, 6px], corner-radius: T.radius.pill, fill: T.colors.surface, border: {color: T.colors.line, width: 1.5px}, layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [langCode, langName, langChevron]
+          langCode = frame {width: 28px, height: 28px, corner-radius: T.radius.pill, fill: T.colors.sky-soft, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [langCodeLabel]
+            langCodeLabel = text : P.microText {contents: "EN", font-style: T.weights.strong, fill: T.colors.ink}}
+          langName = text : P.smallText {contents: "English (UK)", fill: T.colors.ink}
+          langChevron = asset {width: 16px, height: 16px, contents: chevronIcon, fill: T.colors.ink}}}
+    }
+  }
+}

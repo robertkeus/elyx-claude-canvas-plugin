@@ -1,0 +1,41 @@
+// Nav: a quiet 72px bar on a hairline, links truly centered by equal-width side groups; borrow the balanced three-zone split.
+// Motion: fades down 8px over 500ms ease-out on load; links brighten 60→100% white in 150ms; the button lifts 1px on hover.
+import "midnight/tokens.elyx" as T
+import "midnight/parts.elyx" as P
+import "icons/chevron-down.svg" as chevronDown
+
+export nav = frame {
+  left: 0px, top: 0px, width: 1440px, height: 72px, padding: [0px, T.space.gutter],
+  fill: T.colors.bg,
+  border: {color: T.colors.line, width: 1px, sides: [.bottom]},
+  layout: {direction: .row, align-items: .center, justify-content: .space-between},
+  children: [brand, links, actions]
+
+  brand = frame {
+    width: 280px, layout: {direction: .row, align-items: .center, item-gap: 16px}, overflow: .visible,
+    children: [logo, changelog]
+    logo = frame : P.logo {}
+    changelog = frame : P.dotChip {label {contents: "Changelog · 3.0"}}
+  }
+
+  links = frame {
+    layout: {direction: .row, align-items: .center, item-gap: 32px},
+    children: [product, solutions, docs, customers, pricing]
+    product = frame {layout: {direction: .row, align-items: .center, item-gap: 4px}, children: [l, c]
+      l = text {contents: "Product", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+      c = asset {width: 14px, height: 14px, contents: chevronDown, fill: T.colors.faint}}
+    solutions = frame {layout: {direction: .row, align-items: .center, item-gap: 4px}, children: [l, c]
+      l = text {contents: "Solutions", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+      c = asset {width: 14px, height: 14px, contents: chevronDown, fill: T.colors.faint}}
+    docs = text {contents: "Docs", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+    customers = text {contents: "Customers", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+    pricing = text {contents: "Pricing", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.muted}
+  }
+
+  actions = frame {
+    width: 280px, layout: {direction: .row, align-items: .center, justify-content: .end, item-gap: 24px}, overflow: .visible,
+    children: [signIn, start]
+    signIn = text {contents: "Sign in", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, letter-spacing: T.tracking.ui, fill: T.colors.ink-2}
+    start = frame : P.button {height: 40px, padding: [0px, 16px], label {contents: "Start free", font-size: T.size.small}}
+  }
+}

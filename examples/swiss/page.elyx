@@ -1,0 +1,22 @@
+// Page: the seven Gridform sections stacked on one 12-column grid — white sections divided by black rules, one red block, one black footer.
+// Motion: each section enters on scroll, 500–700ms heavy ease-out, children staggered 80–120ms; the nav stays pinned with its rule.
+import "swiss/tokens.elyx" as T
+import "swiss/nav.elyx" as Nav
+import "swiss/hero.elyx" as Hero
+import "swiss/features.elyx" as Features
+import "swiss/testimonials.elyx" as Testimonials
+import "swiss/pricing.elyx" as Pricing
+import "swiss/cta.elyx" as Cta
+import "swiss/footer.elyx" as Footer
+
+page = frame {
+  left: 0px, top: 0px, width: 1440px, layout: {direction: .column}, fill: T.colors.bg,
+  children: [nav, hero, features, testimonials, pricing, cta, footer]
+  nav = frame : Nav.nav {}
+  hero = frame : Hero.hero {}
+  features = frame : Features.features {}
+  testimonials = frame : Testimonials.testimonials {}
+  pricing = frame : Pricing.pricing {}
+  cta = frame : Cta.cta {}
+  footer = frame : Footer.footer {}
+}

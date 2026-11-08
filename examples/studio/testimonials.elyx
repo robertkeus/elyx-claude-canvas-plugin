@@ -1,0 +1,145 @@
+// Testimonials: one large quote card paired with the client's product proving it, and a segmented switcher for the next client; borrow the quote-plus-evidence split.
+// Motion: the card slides in from x −80 (500ms, cubic-bezier(.47,.01,.27,1)); switching clients crossfades quote and snapshot in 300ms while the active pill glides.
+import "studio/tokens.elyx" as T
+import "studio/parts.elyx" as P
+
+export testimonials = frame {
+  left: 0px, top: 0px, width: 1440px,
+  padding: [T.space.section-y, T.space.gutter],
+  layout: {direction: .column, align-items: .center, item-gap: 40px},
+  fill: T.colors.bg,
+  children: [label, card, switcher]
+
+  label = frame {
+    width: 100%, layout: {direction: .row, justify-content: .space-between},
+    children: [eyebrow, count]
+    eyebrow = text : P.eyebrow {contents: "IN THEIR WORDS"}
+    count = text {contents: "1 of 4 · from 38 client teams", font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.muted}
+  }
+
+  card = frame {
+    width: 100%, height: 560px,
+    layout: {direction: .row}, corner-radius: T.radius.panel, fill: T.colors.surface, shadow: T.shadows.ring,
+    children: [words, evidence]
+
+    words = frame {
+      width: 760px, height: 100%, padding: 56px,
+      layout: {direction: .column, justify-content: .space-between},
+      children: [client, quoteBlock, person]
+      client = frame {layout: {direction: .row, align-items: .center, item-gap: 10px}, children: [m, w]
+        m = frame {layout: {direction: .column, align-items: .end, item-gap: 3px}, children: [s1, s2, s3]
+          s1 = frame {width: 16px, height: 3px, fill: T.colors.ink}
+          s2 = frame {width: 11px, height: 3px, fill: T.colors.ink}
+          s3 = frame {width: 6px, height: 3px, fill: T.colors.ink}}
+        w = text {contents: "HAULIO", font-family: "Archivo", font-style: "Black", font-size: 18, letter-spacing: 6%, fill: T.colors.ink}}
+      // The glyph sits out of flow behind the first line, so the quote keeps its optical left edge.
+      quoteBlock = frame {
+        width: 100%, overflow: .visible, layout: {direction: .column},
+        children: [glyph, quote]
+        glyph = text {ignore-stack: .true, left: -6px, top: -116px, contents: "“", font-family: T.fonts.display, font-style: T.weights.heading, font-size: 260, line-height: 1, fill: T.colors.accent-soft}
+        quote = text {
+          contents: "Two years of arguing about our dispatch board, settled in ten weeks. Assigning a load now takes 41% less time.",
+          width: 100%, font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.quote,
+          line-height: 1.24, letter-spacing: -2%, fill: T.colors.ink
+        }
+      }
+      person = frame {
+        width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between},
+        children: [who, engagement]
+        who = frame {layout: {direction: .row, align-items: .center, item-gap: 14px}, children: [face, id]
+          face = frame : P.avatar {initials {contents: "MV"}}
+          id = frame {layout: {direction: .column, item-gap: 2px}, children: [name, role]
+            name = text {contents: "Marloes Visser", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.body, fill: T.colors.ink}
+            role = text {contents: "VP Product, Haulio", font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.muted}}}
+        // Two-tone meta: muted key, ink value.
+        engagement = frame {layout: {direction: .column, align-items: .end, item-gap: 2px}, children: [k, v]
+          k = text {contents: "Embedded team · 10 weeks", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.ink}
+          v = text {contents: "Live since 3 March 2026", font-family: T.fonts.body, font-size: T.size.small, fill: T.colors.muted}}
+      }
+    }
+
+    // The evidence: Haulio's own analytics, cropped by the card's corner like a screenshot on a desk.
+    evidence = frame {
+      width: 552px, height: 100%,
+      fill: [T.haulio.mist, {radial-gradient: {at: point(100%, 0%), radius: [80%, 80%], stops: [stop(0%, #1E40D824), stop(100%, #1E40D800)]}}],
+      children: [report]
+      report = frame {
+        left: 48px, top: 56px, width: 456px, height: 540px, padding: 24px,
+        layout: {direction: .column, item-gap: 20px}, corner-radius: T.radius.card, fill: T.haulio.paper,
+        shadow: [{drop-shadow: {color: #0B15331A, offset: point(0, 0), blur-radius: 0px, spread: 1px}}, {drop-shadow: {color: #1E40D824, offset: point(0, 24), blur-radius: 48px}}],
+        children: [head, stat, chart, legend, totals]
+        head = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [title, range]
+          title = text {contents: "Median time to assign a load", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui-md, fill: T.haulio.ink}
+          range = frame {height: 26px, padding: [0px, 10px], layout: {direction: .row, align-items: .center}, corner-radius: T.radius.chip, fill: T.haulio.mist, children: [r]
+            r = text {contents: "Last 16 weeks", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.ui-sm, fill: T.haulio.ink}}}
+        stat = frame {layout: {direction: .row, align-items: .center, item-gap: 12px}, children: [v, d]
+          v = text {contents: "2m 29s", font-family: T.fonts.body, font-style: T.weights.strong, font-size: 40, letter-spacing: -3%, font-features: {tnum: 1}, fill: T.haulio.ink}
+          d = frame {height: 24px, padding: [0px, 8px], layout: {direction: .row, align-items: .center}, corner-radius: T.radius.chip, fill: T.haulio.sky, children: [dt]
+            dt = text {contents: "−41% vs 4m 12s", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui-sm, fill: T.haulio.cobalt}}}
+        // Weekly bars on one baseline; the launch marker splits before (sky) from after (cobalt).
+        chart = frame {
+          width: 100%, height: 200px, overflow: .visible,
+          children: [bars, launch, launchTag]
+          bars = frame {
+            left: 0px, top: 0px, width: 408px, height: 200px,
+            layout: {direction: .row, align-items: .end, item-gap: 7px},
+            children: [w1, w2, w3, w4, w5, w6, w7, w8, w9, w10, w11, w12, w13, w14, w15, w16]
+            w1 = frame {width: 18px, height: 172px, corner-radius: 4px, fill: T.haulio.sky}
+            w2 = frame {width: 18px, height: 160px, corner-radius: 4px, fill: T.haulio.sky}
+            w3 = frame {width: 18px, height: 180px, corner-radius: 4px, fill: T.haulio.sky}
+            w4 = frame {width: 18px, height: 166px, corner-radius: 4px, fill: T.haulio.sky}
+            w5 = frame {width: 18px, height: 176px, corner-radius: 4px, fill: T.haulio.sky}
+            w6 = frame {width: 18px, height: 162px, corner-radius: 4px, fill: T.haulio.sky}
+            w7 = frame {width: 18px, height: 140px, corner-radius: 4px, fill: T.haulio.cobalt}
+            w8 = frame {width: 18px, height: 122px, corner-radius: 4px, fill: T.haulio.cobalt}
+            w9 = frame {width: 18px, height: 114px, corner-radius: 4px, fill: T.haulio.cobalt}
+            w10 = frame {width: 18px, height: 106px, corner-radius: 4px, fill: T.haulio.cobalt}
+            w11 = frame {width: 18px, height: 110px, corner-radius: 4px, fill: T.haulio.cobalt}
+            w12 = frame {width: 18px, height: 100px, corner-radius: 4px, fill: T.haulio.cobalt}
+            w13 = frame {width: 18px, height: 104px, corner-radius: 4px, fill: T.haulio.cobalt}
+            w14 = frame {width: 18px, height: 98px, corner-radius: 4px, fill: T.haulio.cobalt}
+            w15 = frame {width: 18px, height: 102px, corner-radius: 4px, fill: T.haulio.cobalt}
+            w16 = frame {width: 18px, height: 96px, corner-radius: 4px, fill: T.haulio.cobalt}
+          }
+          launch = frame {left: 147px, top: 0px, width: 1px, height: 200px, border: {color: T.haulio.ink, width: 1px, dash: [3px, 3px]}}
+          launchTag = frame {left: 155px, top: 0px, height: 22px, padding: [0px, 8px], layout: {direction: .row, align-items: .center}, corner-radius: T.radius.chip, fill: T.haulio.ink, children: [t]
+            t = text {contents: "New board live · 3 Mar", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui-sm, fill: T.haulio.paper}}
+        }
+        legend = frame {layout: {direction: .row, item-gap: 20px}, children: [before, after]
+          before = frame {layout: {direction: .row, align-items: .center, item-gap: 6px}, children: [sw, t]
+            sw = frame {width: 10px, height: 10px, corner-radius: 3px, fill: T.haulio.sky}
+            t = text {contents: "Old board", font-family: T.fonts.body, font-size: T.size.ui-sm, fill: T.haulio.muted}}
+          after = frame {layout: {direction: .row, align-items: .center, item-gap: 6px}, children: [sw, t]
+            sw = frame {width: 10px, height: 10px, corner-radius: 3px, fill: T.haulio.cobalt}
+            t = text {contents: "Fernhouse board", font-family: T.fonts.body, font-size: T.size.ui-sm, fill: T.haulio.muted}}}
+        totals = frame {width: 100%, padding: [16px, 0px, 0px, 0px], layout: {direction: .row, item-gap: 8px}, children: [t1, t2, t3]
+          t1 = frame {width: 132px, padding: 12px, layout: {direction: .column, item-gap: 2px}, corner-radius: T.radius.chip, fill: T.haulio.mist, children: [k, v]
+            k = text {contents: "Loads this week", font-family: T.fonts.body, font-size: T.size.ui-sm, fill: T.haulio.muted}
+            v = text {contents: "4,812", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui-lg, font-features: {tnum: 1}, fill: T.haulio.ink}}
+          t2 = frame {width: 132px, padding: 12px, layout: {direction: .column, item-gap: 2px}, corner-radius: T.radius.chip, fill: T.haulio.mist, children: [k, v]
+            k = text {contents: "Auto-assigned", font-family: T.fonts.body, font-size: T.size.ui-sm, fill: T.haulio.muted}
+            v = text {contents: "62%", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui-lg, font-features: {tnum: 1}, fill: T.haulio.ink}}
+          t3 = frame {width: 132px, padding: 12px, layout: {direction: .column, item-gap: 2px}, corner-radius: T.radius.chip, fill: T.haulio.mist, children: [k, v]
+            k = text {contents: "Overrides", font-family: T.fonts.body, font-size: T.size.ui-sm, fill: T.haulio.muted}
+            v = text {contents: "3.1%", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.ui-lg, font-features: {tnum: 1}, fill: T.haulio.ink}}}
+      }
+    }
+  }
+
+  // Segmented switcher: the active client is a raised white pill with a progress bar, not just a colour.
+  switcher = frame {
+    padding: 4px, layout: {direction: .row, align-items: .center, item-gap: 2px},
+    corner-radius: T.radius.pill, fill: T.colors.surface,
+    children: [haulio, kestrel, tessel, mossa]
+    haulio = frame {height: 44px, padding: [0px, 22px], layout: {direction: .row, align-items: .center, item-gap: 10px}, corner-radius: T.radius.pill, fill: T.colors.raised, shadow: T.shadows.control, children: [t, timer]
+      t = text {contents: "Haulio", font-family: T.fonts.body, font-style: T.weights.strong, font-size: T.size.small, fill: T.colors.ink}
+      timer = frame {width: 28px, height: 3px, corner-radius: T.radius.pill, fill: T.colors.surface-2, children: [done]
+        done = frame {left: 0px, top: 0px, width: 12px, height: 3px, corner-radius: T.radius.pill, fill: T.colors.ink}}}
+    kestrel = frame {height: 44px, padding: [0px, 22px], layout: {direction: .row, align-items: .center}, children: [t]
+      t = text {contents: "Kestrel", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.muted}}
+    tessel = frame {height: 44px, padding: [0px, 22px], layout: {direction: .row, align-items: .center}, children: [t]
+      t = text {contents: "Tessel", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.muted}}
+    mossa = frame {height: 44px, padding: [0px, 22px], layout: {direction: .row, align-items: .center}, children: [t]
+      t = text {contents: "Mossa", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.small, fill: T.colors.muted}}
+  }
+}

@@ -1,0 +1,30 @@
+// Swiss: white, black and one signal red on a strict 12-column grid; hairlines, big numbers, no radius.
+// For engineering, data, architecture and products that sell precision.
+use "fonts/Archivo-Variable.ttf"
+use "fonts/GeistMono-Variable.ttf"
+
+export colors = tokens {
+  bg: #FFFFFF,
+  surface: #F3F3F1,
+  ink: #0B0B0B,
+  muted: #6B6B6B,
+  faint: #A3A3A3,
+  line: #E2E2E0,
+  rule: #0B0B0B,
+  accent: #FF3B1F,
+  on-accent: #FFFFFF,
+  deep: #0B0B0B,
+  on-deep: #FFFFFF,
+  deep-muted: #8C8C8C,
+  deep-line: #2E2E2E
+}
+
+export fonts = tokens {display: "Archivo", body: "Inter", mono: "Geist Mono"}
+export weights = tokens {display: "SemiBold", heading: "SemiBold", regular: "Regular", medium: "Medium", strong: "SemiBold"}
+export size = tokens {display-xl: 156, display: 120, h2: 60, h3: 20, quote: 36, stat: 96, lead: 20, body: 16, small: 13, label: 12, mega: 300}
+export tracking = tokens {display: -5%, h2: -3.5%, h3: -1%, body: -0.5%, label: 2%}
+export leading = tokens {display: 0.9, h2: 1.0, h3: 1.2, quote: 1.15, body: 1.5}
+export space = tokens {section: 120px, gutter: 48px, column-gap: 24px, block: 64px, group: 24px, item: 8px}
+export radius = tokens {none: 0px}
+// 12-column grid: 1440 wide, 48px margins, 24px gaps, 90px columns. cN = the width of N columns plus their inner gaps.
+export grid = tokens {c1: 90px, c2: 204px, c3: 318px, c4: 432px, c5: 546px, c6: 660px, c7: 774px, c8: 888px, c9: 1002px, c10: 1116px, c11: 1230px, c12: 1344px}

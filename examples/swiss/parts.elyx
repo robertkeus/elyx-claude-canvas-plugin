@@ -1,0 +1,80 @@
+// Gridform parts: the shared Swiss pieces every section instances — type styles, buttons, logo, section head, rules, table marks, drawing glyphs.
+// Motion: on hover a button's arrow slides 4px right in 150ms ease-out; rules draw left to right in 500ms on entrance.
+import "swiss/tokens.elyx" as T
+import "icons/arrow-right.svg" as arrowRight
+import "swiss/glyphs/head-down.svg" as headDown
+import "swiss/glyphs/head-right.svg" as headRight
+import "swiss/glyphs/head-left.svg" as headLeft
+
+// Type styles. Instance them and override `contents` (and `width` to wrap copy).
+export mono = text {left: 48px, top: 40px, contents: "01 Product", font-family: T.fonts.mono, font-size: T.size.label, letter-spacing: T.tracking.label, fill: T.colors.ink}
+@variant export monoMuted = text : mono {left: 48px, top: 64px, contents: "Fig. 1", fill: T.colors.muted}
+export body = text {left: 48px, top: 96px, width: T.grid.c3, contents: "Body copy runs at 16px on 1.5 leading, three columns wide.", font-family: T.fonts.body, font-size: T.size.body, line-height: T.leading.body, letter-spacing: T.tracking.body, fill: T.colors.muted}
+export h3 = text {left: 48px, top: 170px, contents: "Title", font-family: T.fonts.display, font-style: T.weights.heading, font-size: T.size.h3, line-height: T.leading.h3, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+export stat = text {left: 48px, top: 210px, contents: "3.8s", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.stat, line-height: T.leading.display, letter-spacing: T.tracking.display, fill: T.colors.ink}
+
+// Rules: black for structure, hairline for rows inside a block.
+export rule = frame {left: 48px, top: 330px, width: T.grid.c12, height: 1px, fill: T.colors.rule}
+export hairline = frame {left: 48px, top: 350px, width: T.grid.c12, height: 1px, fill: T.colors.line}
+
+// The one filled action per section; ghost for the rest; small for the nav.
+// Give a button a grid width and `layout.justify-content: .space-between` to push the arrow to the edge.
+export button = frame {
+  left: 48px, top: 380px, height: 52px, padding: [0px, 20px], fill: T.colors.ink,
+  layout: {direction: .row, align-items: .center, item-gap: T.space.group},
+  children: [label, arrow]
+  label = text {contents: "Start a 30-day trial", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.body, fill: T.colors.on-deep}
+  arrow = asset {width: 16px, height: 16px, contents: arrowRight, fill: T.colors.on-deep}
+}
+@variant export buttonGhost = frame : button {
+  left: 320px, top: 380px, fill: [], border: {color: T.colors.ink, width: 1px}
+  label {fill: T.colors.ink}
+  arrow {fill: T.colors.ink}
+}
+@variant export buttonSmall = frame : button {left: 592px, top: 386px, height: 40px, padding: [0px, 16px]}
+
+// Logo: the red square is the brand's only use of red outside emphasis and actions.
+export logo = frame {
+  left: 48px, top: 460px, layout: {direction: .row, align-items: .center, item-gap: 10px}, children: [square, word]
+  square = frame {width: 16px, height: 16px, fill: T.colors.accent}
+  word = text {contents: "Gridform", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.h3, letter-spacing: T.tracking.h3, fill: T.colors.ink}
+}
+
+// Section head: a black rule, then index (col 1), name (cols 2–4) and an aside (cols 5–12, flush right).
+export sectionHead = frame {
+  left: 48px, top: 510px, width: T.grid.c12, layout: {direction: .column, item-gap: 14px}, children: [rule, row]
+  rule = frame {width: 100%, height: 1px, fill: T.colors.rule}
+  row = frame {
+    width: 100%, layout: {direction: .row, item-gap: T.space.column-gap}, children: [index, name, aside]
+    index = text : mono {width: T.grid.c1, contents: "01"}
+    name = text : mono {width: T.grid.c3, contents: "Product"}
+    aside = text : monoMuted {width: T.grid.c8, align: .right, contents: "Gridform 4.2"}
+  }
+}
+
+// Table marks: a black square for included, a short grey dash for not included — shape, not color, carries the state.
+export mark = frame {left: 48px, top: 580px, width: 10px, height: 10px, fill: T.colors.ink}
+@variant export dash = frame : mark {left: 80px, top: 584px, width: 12px, height: 1.5px, fill: T.colors.muted}
+
+// Drawing glyphs: nodes sit centered on member intersections; arrows carry loads.
+export node = frame {left: 48px, top: 620px, width: 8px, height: 8px, fill: T.colors.bg, border: {color: T.colors.ink, width: 1.5px}}
+@variant export nodeHot = frame : node {left: 72px, top: 620px, fill: T.colors.accent, border: {color: T.colors.accent, width: 1.5px}}
+export loadDown = frame {
+  left: 120px, top: 600px, layout: {direction: .column, align-items: .center}, children: [shaft, head]
+  shaft = frame {width: 1.5px, height: 30px, fill: T.colors.ink}
+  head = asset {width: 9px, height: 10px, contents: headDown, fill: T.colors.ink}
+}
+export loadRight = frame {
+  left: 160px, top: 616px, layout: {direction: .row, align-items: .center}, children: [shaft, head]
+  shaft = frame {width: 30px, height: 1.5px, fill: T.colors.ink}
+  head = asset {width: 10px, height: 9px, contents: headRight, fill: T.colors.ink}
+}
+export loadLeft = frame {
+  left: 220px, top: 616px, layout: {direction: .row, align-items: .center}, children: [head, shaft]
+  head = asset {width: 10px, height: 9px, contents: headLeft, fill: T.colors.ink}
+  shaft = frame {width: 30px, height: 1.5px, fill: T.colors.ink}
+}
+// Red arrows: the load path's own loads and reactions.
+@variant export loadDownHot = frame : loadDown {left: 280px, top: 600px, shaft {width: 2px, fill: T.colors.accent} head {fill: T.colors.accent}}
+@variant export loadRightHot = frame : loadRight {left: 300px, top: 616px, shaft {height: 2px, fill: T.colors.accent} head {fill: T.colors.accent}}
+@variant export loadLeftHot = frame : loadLeft {left: 360px, top: 616px, shaft {height: 2px, fill: T.colors.accent} head {fill: T.colors.accent}}

@@ -1,0 +1,42 @@
+// CTA: a full-bleed signal-red block — the page's one loud moment — with a huge black headline, mono small print and a single black button on the grid.
+// Motion: the red field wipes up from the bottom in 500ms cubic-bezier(.7,0,.2,1); the headline lines rise 32px, 600ms ease-out, 100ms stagger; the button arrow slides 4px on hover in 150ms.
+import "swiss/tokens.elyx" as T
+import "swiss/parts.elyx" as P
+
+export cta = frame {
+  left: 0px, top: 0px, width: 1440px, fill: T.colors.accent,
+  padding: [T.space.block, T.space.gutter, T.space.block, T.space.gutter],
+  layout: {direction: .column, item-gap: T.space.block},
+  children: [head, title, foot, load]
+
+  // On red, every label is ink: muted grey fails contrast here.
+  head = frame : P.sectionHead {
+    row {
+      index {contents: "→"}
+      name {contents: "Start"}
+      aside {fill: T.colors.ink, contents: "Studio plan · 30 days · no card"}
+    }
+  }
+
+  title = text {
+    width: T.grid.c10, contents: "Run it before\nyou build it.",
+    font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.display-xl,
+    line-height: T.leading.display, letter-spacing: T.tracking.display, fill: T.colors.ink
+  }
+
+  // Small print on cols 1–6, the button on cols 10–12, bottoms aligned.
+  foot = frame {
+    width: 100%, layout: {direction: .row, align-items: .end, item-gap: T.space.column-gap}, children: [print, gap, action]
+    print = frame {
+      width: T.grid.c6, layout: {direction: .column, item-gap: T.space.item}, children: [p1, p2, p3]
+      p1 = text : P.mono {contents: "01  Import IFC or Revit, or start from a grid"}
+      p2 = text : P.mono {contents: "02  Eurocode, ASCE 7 and AS/NZS load libraries included"}
+      p3 = text : P.mono {contents: "03  Models export as IFC and stay yours"}
+    }
+    gap = frame {width: T.grid.c3}
+    action = frame : P.button {width: T.grid.c3, layout.justify-content: .space-between}
+  }
+
+  // Signature: the brand's load arrow at poster scale, landing on the button's own arrow.
+  load = frame : P.loadDown {ignore-stack: .true, left: 1342px, top: 159px, shaft {width: 8px, height: 273px} head {width: 44px, height: 48px}}
+}

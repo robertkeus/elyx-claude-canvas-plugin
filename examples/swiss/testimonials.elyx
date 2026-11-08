@@ -1,0 +1,93 @@
+// Testimonials: one large quote on cols 1–7 and, on cols 9–12, the firm, the person and the project as a mono data sheet — proof set like a drawing's title block.
+// Motion: the quote fades up line by line, 600ms ease-out, 90ms stagger; data rows follow at 80ms each; pager arrows nudge 3px on hover in 150ms.
+import "swiss/tokens.elyx" as T
+import "swiss/parts.elyx" as P
+import "icons/arrow-right.svg" as arrowRight
+import "icons/chevron-left.svg" as chevronLeft
+import "icons/chevron-right.svg" as chevronRight
+
+export testimonials = frame {
+  left: 0px, top: 0px, width: 1440px, fill: T.colors.bg,
+  padding: [T.space.block, T.space.gutter, T.space.section, T.space.gutter],
+  layout: {direction: .column, item-gap: T.space.block},
+  children: [head, story]
+
+  head = frame : P.sectionHead {
+    row {
+      index {contents: "02"}
+      name {contents: "Engineering"}
+      aside {contents: "Field report 07 of 12"}
+    }
+  }
+
+  story = frame {
+    width: 100%, layout: {direction: .row, item-gap: T.space.column-gap}, children: [voice, gap, sheet]
+
+    // Cols 1–7: the quote, then a quiet pager.
+    voice = frame {
+      width: T.grid.c7, layout: {direction: .column, item-gap: T.space.block}, children: [quote, pager]
+      quote = text {
+        width: 100%, contents: "“We used to find the weak brace on site. Now we find it on a Tuesday, in the model, with the architect in the room.”",
+        font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.h2,
+        line-height: T.leading.quote, letter-spacing: T.tracking.h2, fill: T.colors.ink
+      }
+      pager = frame {
+        width: 100%, layout: {direction: .row, align-items: .center, item-gap: T.space.column-gap}, children: [steps, count, more]
+        step = frame {width: 44px, height: 44px, border: {color: T.colors.ink, width: 1px}, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [glyph]
+          glyph = asset {width: 16px, height: 16px, contents: chevronLeft, fill: T.colors.ink}
+        }
+        steps = frame {width: T.grid.c1, layout: {direction: .row, justify-content: .space-between}, children: [prev, next]
+          prev = frame : step {}
+          next = frame : step {glyph {contents: chevronRight}}
+        }
+        count = text : P.mono {width: T.grid.c2, contents: "07 / 12"}
+        more = frame {layout: {direction: .row, align-items: .center, item-gap: T.space.item}, children: [moreLabel, moreArrow]
+          moreLabel = text {contents: "Read the full field report", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.body, underline: .single, fill: T.colors.ink}
+          moreArrow = asset {width: 16px, height: 16px, contents: arrowRight, fill: T.colors.ink}
+        }
+      }
+    }
+    gap = frame {width: T.grid.c1}
+
+    // Cols 9–12: firm, person, project — label on 2 columns, value on 2 columns.
+    sheet = frame {
+      width: T.grid.c4, layout: {direction: .column, item-gap: 40px}, children: [firm, person, facts]
+      firm = frame {
+        width: 100%, layout: {direction: .column, item-gap: T.space.item}, children: [wordmark, about]
+        wordmark = frame {layout: {direction: .row, align-items: .center, item-gap: 10px}, children: [glyph, name]
+          glyph = frame {width: 18px, height: 18px, border: {color: T.colors.ink, width: 4px}}
+          name = text {contents: "BRASK & LUND", font-family: T.fonts.display, font-style: "Bold", font-size: T.size.h3, letter-spacing: 12%, fill: T.colors.ink}
+        }
+        about = text : P.monoMuted {contents: "Structural engineers · Oslo, since 1987"}
+      }
+      person = frame {
+        width: 100%, layout: {direction: .row, align-items: .center, item-gap: 16px}, children: [initials, who]
+        initials = frame {width: 52px, height: 52px, fill: T.colors.ink, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [letters]
+          letters = text : P.mono {font-size: T.size.body, fill: T.colors.on-deep, contents: "IH"}
+        }
+        who = frame {layout: {direction: .column, item-gap: 2px}, children: [name, role]
+          name = text {contents: "Ingrid Halvorsen", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.body, fill: T.colors.ink}
+          role = text {contents: "Associate Director, Structures", font-family: T.fonts.body, font-size: T.size.body, fill: T.colors.muted}
+        }
+      }
+      facts = frame {
+        width: 100%, layout: {direction: .column}, children: [project, system, steel, floors, members, saved, end]
+        // Local source: one row of the data sheet, hairline above.
+        row = frame {width: 100%, layout: {direction: .column}, children: [line, cells]
+          line = frame : P.hairline {width: 100%}
+          cells = frame {width: 100%, padding: [12px, 0px], layout: {direction: .row, item-gap: T.space.column-gap}, children: [label, value]
+            label = text : P.monoMuted {width: T.grid.c2, contents: "Project"}
+            value = text : P.mono {width: T.grid.c2, contents: "Kvarteret Nord, Oslo"}
+          }
+        }
+        project = frame : row {}
+        system = frame : row {cells {label {contents: "Structure"} value {contents: "Steel, braced core"}}}
+        steel = frame : row {cells {label {contents: "Steel"} value {contents: "1,840 t"}}}
+        floors = frame : row {cells {label {contents: "Floors"} value {contents: "22 above, 2 below"}}}
+        members = frame : row {cells {label {contents: "Members"} value {contents: "9,612"}}}
+        saved = frame : row {cells {label {contents: "Hours saved"} value {contents: "1,150 h"}}}
+        end = frame : P.rule {width: 100%}
+      }
+    }
+  }
+}

@@ -43,13 +43,20 @@ In the desktop app, where `/plugin` does not run: click **+** next to the prompt
 
 | You type | What happens |
 | --- | --- |
-| `/elyx` | Claude asks what you want to design |
+| `/elyx` | Claude asks what you want to design, and in which style |
 | `/elyx design a pricing card` | Claude writes the design, checks it and opens it on the canvas |
+| `/elyx improve screens/home.elyx` | The improve agent scores the screen, fixes its weakest points within your design system, and shows before and after |
 | `/elyx export the tokens of a.elyx` | Claude picks the right `elyx` command and runs it |
 | `/elyx a.elyx` | Opens the file on the canvas right away |
 | `/elyx --app a.elyx` | Opens the project in the Elyx app, if you have it |
 
 The canvas opens in the Browser pane of the Claude desktop app. Elsewhere you get a URL to open yourself.
+
+### Styles and examples
+
+Claude designs against a library of examples instead of from scratch: six styles (studio, midnight, editorial, swiss, soft and clean), each with a nav, hero, features, pricing, testimonials, call to action and footer, plus a full page. Name a style, or Claude offers them. They live in [`examples`](examples), with open-license fonts and a [reference of 260 free icon sets](examples/icon-libraries.md) Claude fetches icons from.
+
+Every new design gets a second look from the improve agent before you see it. You can also point it at anything you already have.
 
 ## The canvas
 
@@ -110,5 +117,9 @@ Drag a screen and the new position is saved to the file. Drag empty canvas, or h
 Edits change one property and leave every other line alone, so your diffs show only what you changed. Each edit is checked with `elyx diagnostics`. A change that adds a problem is reverted, and Undo takes back the rest.
 
 While it draws, the canvas keeps a short-lived file in a hidden `.elyx-canvas` folder in your project, because imports only resolve from inside it. The folder goes away with the canvas.
+
+## License
+
+MIT, see [LICENSE](LICENSE). The bundled Lucide icons keep their own license, see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 <sub>Driftwood, the product in these images, is a made-up sample.</sub>

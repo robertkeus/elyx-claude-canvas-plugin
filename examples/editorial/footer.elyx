@@ -1,0 +1,72 @@
+// Editorial footer as a colophon: typesetting credits and address beside four link columns, a page-wide serif wordmark, and a hairline over the legal row.
+// Motion: link columns fade up 12px, 80ms apart; the wordmark rises 40px from behind the legal hairline over 700ms ease-out as it enters view.
+import "editorial/tokens.elyx" as T
+import "editorial/parts.elyx" as P
+
+export footer = frame {
+  left: 0px, top: 0px, width: 1440px,
+  fill: T.colors.bg,
+  padding: [T.space.block, T.space.gutter, T.space.group, T.space.gutter],
+  layout: {direction: .column, item-gap: T.space.block},
+  children: [colophon, imprint]
+
+  colophon = frame {
+    width: 100%,
+    border: {color: T.colors.rule, width: 1px, sides: [.top]},
+    padding-top: T.space.group,
+    layout: {direction: .row, justify-content: .space-between},
+    children: [credits, columns]
+
+    credits = frame {
+      width: 400px,
+      layout: {direction: .column, item-gap: 20px},
+      children: [heading, about, typeset, address]
+      heading = text : P.label {contents: "COLOPHON", fill: T.colors.ink}
+      about = text {
+        contents: "Marlow is made by a small team in Bristol and Porto for people who still care about the page.",
+        width: 100%,
+        font-family: T.fonts.body, font-size: T.size.body, line-height: T.leading.body, letter-spacing: T.tracking.body, fill: T.colors.ink
+      }
+      typeset = text {
+        contents: "Set in Instrument Serif and Inter Tight, with Geist Mono for the small print.",
+        width: 100%,
+        font-family: T.fonts.display, font-style: T.weights.italic, font-size: T.size.lead, line-height: 1.3, fill: T.colors.muted
+      }
+      address = text : P.label {contents: "MARLOW PRESS LTD\n14 HOPE STREET · BRISTOL BS1 5LT", line-height: 1.8}
+    }
+
+    columns = frame {
+      layout: {direction: .row, item-gap: 24px},
+      children: [product, publishers, company, help]
+      product = frame : P.linkColumn {heading {contents: "PRODUCT"}, links {contents: "Editor\nIssues\nMemberships\nLetters\nPricing"}}
+      publishers = frame : P.linkColumn {heading {contents: "PUBLISHERS"}, links {contents: "Showcase\nSmall-press grants\nMigrate your list\nStyle guide"}}
+      company = frame : P.linkColumn {heading {contents: "COMPANY"}, links {contents: "About\nJournal\nCareers\nPress kit"}}
+      help = frame : P.linkColumn {width: 144px, heading {contents: "HELP"}, links {contents: "Docs\nStatus\nContact the desk"}}
+    }
+  }
+
+  // Signature: the masthead again, set as large as the page allows, standing on the legal hairline.
+  imprint = frame {
+    width: 100%,
+    layout: {direction: .column, item-gap: 8px},
+    children: [wordmark, legal]
+    wordmark = text {
+      contents: "Marlow",
+      width: 100%, align: .center,
+      font-family: T.fonts.display, font-size: T.size.giant, line-height: 0.8, letter-spacing: T.tracking.display, fill: T.colors.ink
+    }
+
+    legal = frame {
+      width: 100%, padding-top: 20px,
+      border: {color: T.colors.rule, width: 1px, sides: [.top]},
+      layout: {direction: .row, justify-content: .space-between},
+      children: [copyright, policies, motto]
+      copyright = text : P.label {contents: "© 2026 MARLOW PRESS LTD"}
+      policies = frame {layout: {direction: .row, item-gap: 24px}, children: [privacy, terms, cookies]
+        privacy = text : P.label {contents: "PRIVACY", fill: T.colors.ink}
+        terms = text : P.label {contents: "TERMS", fill: T.colors.ink}
+        cookies = text : P.label {contents: "COOKIES", fill: T.colors.ink}}
+      motto = text : P.label {contents: "MADE FOR THE INDEPENDENT PRESS"}
+    }
+  }
+}

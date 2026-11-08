@@ -1,0 +1,116 @@
+// Testimonials: a quiet greyscale logo strip, a hairline, then three case cards that each lead with one big metric; borrow the metric-first card.
+// Motion: logos fade in together (400ms ease-out); cards rise 24px with 120ms stagger (600ms, cubic-bezier(.16,1,.3,1)); each metric counts up over 800ms.
+use "fonts/Archivo-Variable.ttf"
+use "fonts/InstrumentSerif-Regular.ttf"
+use "fonts/BricolageGrotesque-700.ttf"
+use "fonts/GeistMono-Variable.ttf"
+import "clean/tokens.elyx" as T
+import "clean/parts.elyx" as P
+
+export testimonials = frame {
+  left: 0px,
+  top: 0px,
+  width: 1440px,
+  padding: [T.space.section, T.space.gutter],
+  fill: T.colors.surface,
+  layout: {direction: .column, item-gap: T.space.block},
+  overflow: .visible,
+  children: [trust, divider, stories]
+
+  trust = frame {width: 100%, layout: {direction: .column, align-items: .center, item-gap: 32px}, children: [trustLine, logoRow]
+    trustLine = text : P.small {contents: "Trusted by 2,300 HR and finance teams in 22 countries"}
+    // Invented customers: each wordmark gets its own face and a small drawn mark, all in one muted grey.
+    logoRow = frame {width: 100%, layout: {direction: .row, align-items: .center, justify-content: .space-between}, children: [kestrel, oakline, lumio, parcelway, brightwater, veldt]
+      kestrel = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [kestrelMark, kestrelName]
+        kestrelMark = frame {width: 22px, height: 14px, children: [kWing1, kWing2]
+          kWing1 = frame {left: 0px, top: 0px, width: 12px, height: 14px, fill: T.colors.muted, transform: [1, 0, 0, 0, 1, 0]}
+          kWing2 = frame {left: 8px, top: 0px, width: 6px, height: 14px, fill: T.colors.muted, transform: [1, -0.5, 7, 0, 1, 0]}
+        }
+        kestrelName = text {contents: "KESTREL", font-family: "Archivo", font-style: "Black", font-size: T.size.h3, letter-spacing: T.tracking.caps, fill: T.colors.muted}
+      }
+      oakline = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [oakMark, oakName]
+        oakMark = frame {width: 18px, height: 18px, corner-radius: T.radius.pill, border: {color: T.colors.muted, width: 2px}, children: [oakStem]
+          oakStem = frame {left: 8px, top: 3px, width: 2px, height: 12px, fill: T.colors.muted}
+        }
+        oakName = text {contents: "Oakline", font-family: "Instrument Serif", font-style: "Regular", font-size: T.size.kpi, fill: T.colors.muted}
+      }
+      lumio = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [lumioMark, lumioName]
+        lumioMark = frame {width: 18px, height: 18px, corner-radius: T.radius.pill, fill: T.colors.muted, children: [lumioCut]
+          lumioCut = frame {left: 9px, top: 3px, width: 7px, height: 7px, corner-radius: T.radius.pill, fill: T.colors.surface}
+        }
+        lumioName = text {contents: "lumio health", font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.logo, letter-spacing: T.tracking.h2, fill: T.colors.muted, subrange: [{range: [6, 12], font-style: T.weights.regular}]}
+      }
+      parcelway = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [parcelMark, parcelName]
+        parcelMark = frame {width: 18px, height: 18px, corner-radius: 5px, fill: T.colors.muted, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [parcelCore]
+          parcelCore = frame {width: 6px, height: 6px, corner-radius: 1px, fill: T.colors.surface}
+        }
+        parcelName = text {contents: "Parcelway", font-family: "Bricolage Grotesque", font-style: "Bold", font-size: T.size.logo, letter-spacing: T.tracking.h3, fill: T.colors.muted}
+      }
+      brightwater = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [waterMark, waterName]
+        waterMark = frame {layout: {direction: .column, align-items: .center, item-gap: 2px}, children: [w1, w2, w3]
+          w1 = frame {width: 18px, height: 3px, corner-radius: 2px, fill: T.colors.muted}
+          w2 = frame {width: 12px, height: 3px, corner-radius: 2px, fill: T.colors.muted}
+          w3 = frame {width: 6px, height: 3px, corner-radius: 2px, fill: T.colors.muted}
+        }
+        waterName = text {contents: "Brightwater", font-family: T.fonts.body, font-style: T.weights.medium, font-size: T.size.h3, letter-spacing: T.tracking.h3, fill: T.colors.muted}
+      }
+      veldt = frame {layout: {direction: .row, align-items: .center, item-gap: 8px}, children: [veldtMark, veldtName]
+        veldtMark = frame {width: 24px, height: 16px, children: [v1, v2]
+          v1 = frame {left: 0px, top: 0px, width: 16px, height: 16px, corner-radius: T.radius.pill, border: {color: T.colors.muted, width: 2px}}
+          v2 = frame {left: 8px, top: 0px, width: 16px, height: 16px, corner-radius: T.radius.pill, border: {color: T.colors.muted, width: 2px}}
+        }
+        veldtName = text {contents: "VELDT & CO", font-family: "Geist Mono", font-style: "Medium", font-size: T.size.body, letter-spacing: T.tracking.label, fill: T.colors.muted}
+      }
+    }
+  }
+
+  divider = frame {width: 100%, height: 1px, fill: T.colors.line}
+
+  stories = frame {width: 100%, layout: {direction: .column, item-gap: 48px}, overflow: .visible, children: [storiesHead, cases]
+    storiesHead = frame {width: 100%, layout: {direction: .row, align-items: .end, justify-content: .space-between}, children: [head, allStories]
+      head = frame : P.sectionHead {
+        width: 720px,
+        layout: {direction: .column, align-items: .start, item-gap: 16px},
+        kicker {contents: "CUSTOMER STORIES"}
+        heading {width: 100%, align: .left, contents: "What changes in the first year"}
+        intro {width: 560px, align: .left, contents: "Three customers on what they measured after moving payroll and planning into Tessel."}
+      }
+      allStories = frame : P.textLink {label {contents: "Read all stories"}}
+    }
+    cases = frame {width: 100%, layout: {direction: .row, align-items: .stretch, item-gap: 24px}, overflow: .visible, children: [kestrelCase, oaklineCase, lumioCase]
+      kestrelCase = frame : P.caseCard {
+        caseTop {
+          caseTag {caseTagText {contents: "Logistics · 640 employees"}}
+          caseMetric {metricValue {contents: "−62%"} metricLabel {contents: "payroll errors in the first year"}}
+          caseQuote {contents: "“We used to find mistakes after people were paid. Now approvals catch them two days before the run.”"}
+        }
+        casePerson {
+          personAvatar {initials {contents: "PN"}}
+          personText {personName {contents: "Priya Natarajan"} personRole {contents: "Head of People Ops, Kestrel Freight"}}
+        }
+      }
+      oaklineCase = frame : P.caseCard {
+        caseTop {
+          caseTag {caseTagText {contents: "Retail · 1,150 employees"}}
+          caseMetric {metricValue {contents: "1 day"} metricLabel {contents: "to close payroll, down from four"}}
+          caseQuote {contents: "“Our CFO signs off the headcount plan in Tessel instead of chasing six spreadsheets across three countries.”"}
+        }
+        casePerson {
+          personAvatar {fill: T.colors.deep, initials {contents: "TB", fill: T.colors.on-deep}}
+          personText {personName {contents: "Tomás Berger"} personRole {contents: "VP Finance, Oakline"}}
+        }
+      }
+      lumioCase = frame : P.caseCard {
+        caseTop {
+          caseTag {caseTagText {contents: "Healthcare · 220 employees"}}
+          caseMetric {metricValue {contents: "€410k"} metricLabel {contents: "saved on unplanned hires in 2025"}}
+          caseQuote {contents: "“Seeing plan versus actual every week stopped us over-hiring in Q3. That alone paid for Tessel.”"}
+        }
+        casePerson {
+          personAvatar {fill: T.colors.surface-2, initials {contents: "HO", fill: T.colors.ink}}
+          personText {personName {contents: "Hannah Okoye"} personRole {contents: "COO, Lumio Health"}}
+        }
+      }
+    }
+  }
+}

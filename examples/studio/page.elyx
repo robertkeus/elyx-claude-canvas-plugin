@@ -1,0 +1,23 @@
+// Page: the seven Fernhouse sections composed in order; light sections share 80px padding so neighbours sit 160px apart, and the two aubergine panels close the page as inset tiles.
+// Motion: each section runs its own entrance once, on entering the viewport; the nav condenses to a floating pill after 80px of scroll.
+import "studio/tokens.elyx" as T
+import "studio/nav.elyx" as Nav
+import "studio/hero.elyx" as Hero
+import "studio/features.elyx" as Features
+import "studio/testimonials.elyx" as Testimonials
+import "studio/pricing.elyx" as Pricing
+import "studio/cta.elyx" as Cta
+import "studio/footer.elyx" as Footer
+
+page = frame {
+  left: 0px, top: 0px, width: 1440px,
+  layout: {direction: .column}, fill: T.colors.bg,
+  children: [nav, hero, features, testimonials, pricing, cta, footer]
+  nav = frame : Nav.nav {}
+  hero = frame : Hero.hero {}
+  features = frame : Features.features {}
+  testimonials = frame : Testimonials.testimonials {}
+  pricing = frame : Pricing.pricing {}
+  cta = frame : Cta.cta {}
+  footer = frame : Footer.footer {}
+}

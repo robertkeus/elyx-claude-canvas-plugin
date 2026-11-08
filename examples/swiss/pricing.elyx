@@ -1,0 +1,169 @@
+// Pricing: a comparison table on the grid — features on cols 1–3, one plan per 3 columns, hairline rows, black squares for included, a red bar over the recommended plan.
+// Motion: plan headers rise 16px and fade, 500ms ease-out, 100ms stagger; table rows follow at 60ms each; the red bar grows from 1px to 4px in 400ms.
+import "swiss/tokens.elyx" as T
+import "swiss/parts.elyx" as P
+
+export pricing = frame {
+  left: 0px, top: 0px, width: 1440px, fill: T.colors.bg,
+  padding: [T.space.block, T.space.gutter, T.space.section, T.space.gutter],
+  layout: {direction: .column, item-gap: T.space.block},
+  children: [head, intro, plans, table]
+
+  head = frame : P.sectionHead {
+    row {
+      index {contents: "03"}
+      name {contents: "Pricing"}
+      aside {contents: "Per seat, per month · excl. VAT"}
+    }
+  }
+
+  // H2 on cols 1–8; billing toggle on cols 10–12, on the same baseline.
+  intro = frame {
+    width: 100%, layout: {direction: .row, align-items: .end, item-gap: T.space.column-gap}, children: [title, gap, billing]
+    title = text {
+      width: T.grid.c8, contents: "Pay per seat. Every plan runs the same solver.",
+      font-family: T.fonts.display, font-style: T.weights.display, font-size: T.size.h2,
+      line-height: T.leading.h2, letter-spacing: T.tracking.h2, fill: T.colors.ink
+    }
+    gap = frame {width: T.grid.c1}
+    billing = frame {
+      width: T.grid.c3, height: 44px, border: {color: T.colors.ink, width: 1px}, layout: {direction: .row}, children: [yearly, monthly]
+      yearly = frame {width: 50%, height: 100%, fill: T.colors.surface, layout: {direction: .row, align-items: .center, justify-content: .center, item-gap: T.space.item}, children: [on, yearlyLabel]
+        on = frame {width: 6px, height: 6px, fill: T.colors.ink}
+        yearlyLabel = text : P.mono {contents: "Yearly −15%"}
+      }
+      monthly = frame {width: 50%, height: 100%, layout: {direction: .row, align-items: .center, justify-content: .center}, children: [monthlyLabel]
+        monthlyLabel = text : P.monoMuted {contents: "Monthly"}
+      }
+    }
+  }
+
+  // Plan headers: cols 1–3 hold the shared note, then one plan per 3 columns.
+  plans = frame {
+    width: 100%, layout: {direction: .row, item-gap: T.space.column-gap}, children: [shared, practice, studio, firm]
+    shared = frame {
+      width: T.grid.c3, layout: {direction: .column, item-gap: 16px}, children: [rule, label, note]
+      rule = frame : P.rule {width: 100%}
+      label = text : P.mono {contents: "All plans"}
+      note = text : P.body {width: 100%, contents: "Eurocode, ASCE 7 and AS/NZS load libraries, IFC import and unlimited free viewers."}
+    }
+
+    // Local source: one plan header.
+    plan = frame {
+      width: T.grid.c3, layout: {direction: .column, item-gap: 16px}, children: [bar, meta, name, about, price, unit, choose]
+      bar = frame {width: 100%, height: 1px, fill: T.colors.rule, overflow: .visible, children: [flag]
+        flag = frame {display: .none, left: 0px, top: 0px, width: 100%, height: 4px, fill: T.colors.accent}
+      }
+      meta = frame {width: 100%, layout: {direction: .row, justify-content: .space-between, align-items: .center}, children: [index, pick]
+        index = text : P.mono {contents: "A"}
+        pick = frame {display: .none, layout: {direction: .row, align-items: .center, item-gap: T.space.item}, children: [pickMark, pickLabel]
+          pickMark = frame {width: 8px, height: 8px, fill: T.colors.accent}
+          pickLabel = text : P.mono {contents: "Recommended"}
+        }
+      }
+      name = text : P.h3 {contents: "Practice"}
+      about = text : P.body {width: 100%, contents: "For one engineer checking frames and members."}
+      price = text : P.stat {contents: "€49", subrange: [{range: [0, 1], font-size: T.size.h2}]}
+      unit = text : P.monoMuted {contents: "per seat / month, billed yearly"}
+      choose = frame : P.buttonGhost {width: 100%, layout.justify-content: .space-between, label {contents: "Start with Practice"}}
+    }
+    practice = frame : plan {}
+    studio = frame : plan {
+      bar {flag {display: .visible}}
+      meta {index {contents: "B"} pick {display: .visible}}
+      name {contents: "Studio"}
+      about {contents: "For teams sharing one model across a live project."}
+      price {contents: "€119"}
+      @with-variant(P.button)
+      choose {label {contents: "Start with Studio"}}
+    }
+    firm = frame : plan {
+      meta {index {contents: "C"}}
+      name {contents: "Firm"}
+      about {contents: "For practices running many projects and audits."}
+      price {contents: "€229"}
+      choose {label {contents: "Start with Firm"}}
+    }
+  }
+
+  // Feature rows: hairline above each; text values in mono, inclusion as a square or a dash.
+  table = frame {
+    width: 100%, layout: {direction: .column}, children: [modelling, members, cases, ifc, analysis, linear, pdelta, seismic, team, review, history, sso, support, end]
+
+    groupHead = frame {width: 100%, padding: [32px, 0px, 12px, 0px], layout: {direction: .column, item-gap: 12px}, children: [rule, title]
+      rule = frame : P.rule {width: 100%}
+      title = text : P.mono {contents: "Modelling"}
+    }
+    values = frame {width: 100%, layout: {direction: .column}, children: [line, cells]
+      line = frame : P.hairline {width: 100%}
+      cells = frame {width: 100%, height: 52px, layout: {direction: .row, align-items: .center, item-gap: T.space.column-gap}, children: [label, a, b, c]
+        label = text {width: T.grid.c3, contents: "Members per model", font-family: T.fonts.body, font-size: T.size.body, fill: T.colors.ink}
+        a = text : P.mono {width: T.grid.c3, font-size: T.size.small, contents: "2,000"}
+        b = text : P.mono {width: T.grid.c3, font-size: T.size.small, contents: "25,000"}
+        c = text : P.mono {width: T.grid.c3, font-size: T.size.small, contents: "Unlimited"}
+      }
+    }
+    marks = frame {width: 100%, layout: {direction: .column}, children: [line, cells]
+      line = frame : P.hairline {width: 100%}
+      cells = frame {width: 100%, height: 52px, layout: {direction: .row, align-items: .center, item-gap: T.space.column-gap}, children: [label, a, b, c]
+        label = text {width: T.grid.c3, contents: "IFC and Revit import", font-family: T.fonts.body, font-size: T.size.body, fill: T.colors.ink}
+        a = frame {width: T.grid.c3, layout: {direction: .row}, children: [sym]
+          sym = frame : P.mark {}
+        }
+        b = frame {width: T.grid.c3, layout: {direction: .row}, children: [sym]
+          sym = frame : P.mark {}
+        }
+        c = frame {width: T.grid.c3, layout: {direction: .row}, children: [sym]
+          sym = frame : P.mark {}
+        }
+      }
+    }
+
+    modelling = frame : groupHead {}
+    members = frame : values {}
+    cases = frame : values {cells {label {contents: "Load cases and combinations"} a {contents: "12"} b {contents: "Unlimited"} c {contents: "Unlimited"}}}
+    ifc = frame : marks {}
+    analysis = frame : groupHead {title {contents: "Analysis"}}
+    linear = frame : marks {cells {label {contents: "Linear static"}}}
+    pdelta = frame : marks {
+      cells {
+        label {contents: "P-Delta and buckling"}
+        a {
+          @with-variant(P.dash)
+          sym {}
+        }
+      }
+    }
+    seismic = frame : marks {
+      cells {
+        label {contents: "Response spectrum, seismic"}
+        a {
+          @with-variant(P.dash)
+          sym {}
+        }
+        b {
+          @with-variant(P.dash)
+          sym {}
+        }
+      }
+    }
+    team = frame : groupHead {title {contents: "Team"}}
+    review = frame : marks {cells {label {contents: "Shared review links"}}}
+    history = frame : values {cells {label {contents: "Version history"} a {contents: "30 days"} b {contents: "1 year"} c {contents: "Unlimited"}}}
+    sso = frame : marks {
+      cells {
+        label {contents: "SSO and audit log"}
+        a {
+          @with-variant(P.dash)
+          sym {}
+        }
+        b {
+          @with-variant(P.dash)
+          sym {}
+        }
+      }
+    }
+    support = frame : values {cells {label {contents: "Support"} a {contents: "Email, 2 days"} b {contents: "Priority, 4 hours"} c {contents: "Named engineer"}}}
+    end = frame : P.rule {width: 100%}
+  }
+}
