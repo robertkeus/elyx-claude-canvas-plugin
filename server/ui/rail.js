@@ -246,7 +246,9 @@ const usesOf = (file, symbol) => state.usage?.components[`${file}#${symbol}`] ??
 
 const componentRail = () => {
   const { file } = state.view
-  const { exports } = state.project.files.find(item => item.file === file)
+  const item = state.project.files.find(candidate => candidate.file === file)
+  if (!item) return recentRail()
+  const { exports } = item
   const uses = exports.flatMap(({ name }) => usesOf(file, name))
   const screens = [...new Set(uses.map(use => use.file))]
   return [el('div', { className: 'rail-body' },
