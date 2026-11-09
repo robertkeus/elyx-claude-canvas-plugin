@@ -96,6 +96,12 @@ const route = async () => {
   closePlay()
   if (isNarrow() && !state.token) document.body.classList.remove('rail-open')
   const [kind = 'home', first, second, third] = decodeURIComponent(location.hash.slice(1)).split(':')
+  // History entries from before a project switch name files of the other project.
+  const isStale = (kind === 'board' || kind === 'component') && first !== state.project.opened && !state.project.files.some(item => item.file === first)
+  if (isStale) {
+    history.replaceState(null, '', `#board:${state.project.opened}`)
+    return route()
+  }
   const previous = state.view
   const isSameBoard = kind === 'board' && previous.kind === 'board' && previous.file === first
   if (!isSameBoard) leaveRevision(false)
@@ -385,7 +391,8 @@ try {
   ;[state.project, state.projects] = await Promise.all([get('project'), get('projects')])
   applyProject()
   if (!location.hash) history.replaceState(null, '', `#board:${state.project.opened}`)
-  await route()
+  // A failed first view must not keep the page from following switches and edits.
+  await route().catch(report)
   state.revision = state.project.stamp
   new EventSource('events').onmessage = event => {
     if (event.data === 'switched') {
